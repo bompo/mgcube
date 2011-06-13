@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.g3d.test.utils.PerspectiveCamController;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.scenes.scene2d.Interpolator;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
 
@@ -30,7 +31,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	boolean hasNormals = false;
 	BoundingBox bounds = new BoundingBox();
 	ImmediateModeRenderer renderer;
-	float angle = 0;
+	float angleX = 0;
+	float angleY = 0;
+	float angleXTarget = 0;
+	float angleYTarget = 0;
 	String fileName;
 	String[] textureFileNames;
 	FPSLogger fps = new FPSLogger();
@@ -38,6 +42,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	BitmapFont font;
 	Texture diffuse;
 	Texture lightMaps;
+	boolean animate = false;
 
 	public GameScreen(Game game) {
 		super(game);
@@ -49,19 +54,54 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		diffuse = new Texture(Gdx.files.internal("data/qbob/world_blobbie_blocks.png"), true);
 
-		cam = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(00, 00, 5f);
+		cam = new PerspectiveCamera(45, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(00, 00, 4f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
 		cam.far = 1000;
 
-		controller = new PerspectiveCamController(cam);
-		Gdx.input.setInputProcessor(controller);
+//		controller = new PerspectiveCamController(cam);
+//		Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
 		font = new BitmapFont();
+		
+		initRender();
 
+	}
+	
+	private void initRender() {
+		Gdx.graphics.getGL10().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		Gdx.graphics.getGL10().glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		float[] light_ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
+		float[] light_diffuse = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+		float[] light_specular = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+		/* light_position is NOT default value */
+		float[] light_position0 = new float[] { 1.0f, 10.0f, 1.0f, 0.0f };
+		float[] light_position1 = new float[] { -1.0f, -10.0f, -1.0f, 0.0f };
+
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, light_ambient, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, light_diffuse, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light_specular, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light_position0, 0);
+
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT, light_ambient, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE, light_diffuse, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_SPECULAR, light_specular, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, light_position1, 0);
+
+		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHTING);
+		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHT0);
+		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHT1);
+
+		Gdx.graphics.getGL10().glShadeModel(GL10.GL_SMOOTH);
+		Gdx.graphics.getGL10().glEnable(GL10.GL_DEPTH_TEST);
+		Gdx.graphics.getGL10().glDepthFunc(GL10.GL_LESS);
+
+		Gdx.graphics.getGL10().glClearColor(0.7f, 0.7f, 0.7f, 0f);
 	}
 
 	@Override
@@ -70,7 +110,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		cam.update();
@@ -79,19 +119,44 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 
-//		Gdx.gl.glActiveTexture(GL10.GL_TEXTURE0);
-//		Gdx.gl.glEnable(GL10.GL_TEXTURE_2D);
-//		diffuse.bind();
-//		diffuse.setFilter(TextureFilter.MipMapNearestNearest, TextureFilter.Linear);
-//
-//		Gdx.gl.glActiveTexture(GL10.GL_TEXTURE1);
-//		Gdx.gl.glEnable(GL10.GL_TEXTURE_2D);
-//
-//		lightMaps.bind();
-//		lightMaps.setFilter(TextureFilter.MipMapNearestNearest, TextureFilter.Linear);
-//		setCombiners();
-
+		
+		if(animate) {
+			if(angleXTarget < angleX) {
+				angleX -= delta * 150f;
+				if(angleX < angleXTarget) {
+					angleX = angleXTarget;
+					animate = false;
+				}
+			}
+			if(angleXTarget > angleX) {
+				angleX += delta * 150f;
+				if(angleX > angleXTarget) {
+					angleX = angleXTarget;
+					animate = false;
+				}
+			}
+			
+			if(angleYTarget < angleY) {
+				angleY -= delta * 150f;
+				if(angleY < angleYTarget) {
+					angleY = angleYTarget;
+					animate = false;
+				}
+			}
+			if(angleYTarget > angleY) {
+				angleY += delta * 150f;
+				if(angleY > angleYTarget) {
+					angleY = angleYTarget;
+					animate = false;
+				}
+			}
+		}
+		
+		Gdx.gl11.glPushMatrix();
+		Gdx.gl11.glRotatef(angleX, 0,1,0);
+		Gdx.gl11.glRotatef(angleY, 0,0,1);
 		model.render();
+		Gdx.gl11.glPopMatrix();
 
 		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 		batch.begin();
@@ -118,6 +183,22 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		if (keycode == Input.Keys.ESCAPE) {
 			System.exit(0);
+		}
+		if (keycode == Input.Keys.LEFT && animate == false) {
+			angleXTarget = angleX + 90;
+			animate = true;
+		}
+		if (keycode == Input.Keys.RIGHT && animate == false) {
+			angleXTarget = angleX - 90;
+			animate = true;
+		}
+		if (keycode == Input.Keys.UP && animate == false) {
+			angleYTarget = angleY + 90;
+			animate = true;
+		}
+		if (keycode == Input.Keys.DOWN && animate == false) {
+			angleYTarget = angleY - 90;
+			animate = true;
 		}
 		return false;
 	}
