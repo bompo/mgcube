@@ -6,73 +6,107 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL11;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.loaders.collada.ColladaLoader;
-import com.badlogic.gdx.graphics.g3d.loaders.wavefront.ObjLoader;
-import com.badlogic.gdx.graphics.g3d.model.Model;
 import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.g3d.test.utils.PerspectiveCamController;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.scenes.scene2d.Interpolator;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	double startTime = 0;
 	PerspectiveCamera cam;
 	PerspectiveCamController controller;
-	StillModel model;
-	Texture[] textures = null;
-	boolean hasNormals = false;
+	StillModel blockModel;
+	StillModel playerModel;
+	StillModel targetModel;
+	StillModel worldModel;
 	BoundingBox bounds = new BoundingBox();
 	ImmediateModeRenderer renderer;
 	float angleX = 0;
 	float angleY = 0;
+	float angleZ = 0;
 	float angleXTarget = 0;
 	float angleYTarget = 0;
-	String fileName;
-	String[] textureFileNames;
+	float angleZTarget = 0;
+	Vector3 worldRotation = new Vector3(0,1,0);
 	FPSLogger fps = new FPSLogger();
 	SpriteBatch batch;
 	BitmapFont font;
-	Texture diffuse;
-	Texture lightMaps;
-	boolean animate = false;
+	Player player = new Player();
+	Target target = new Target();
+	Array<Block> blocks = new Array<Block>();
+	boolean animateWorld = false;
+	boolean animatePlayer = false;
 
 	public GameScreen(Game game) {
 		super(game);
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(this);
 
-		model = ColladaLoader.loadStillModel(Gdx.files.internal("data/cube.dae"));
-		lightMaps = new Texture(Gdx.files.internal("data/qbob/world_blobbie_lm_01.jpg"), true);
+		blockModel = ColladaLoader.loadStillModel(Gdx.files
+				.internal("data/cube.dae"));
 
-		diffuse = new Texture(Gdx.files.internal("data/qbob/world_blobbie_blocks.png"), true);
+		playerModel = ColladaLoader.loadStillModel(Gdx.files
+				.internal("data/player.dae"));
 
-		cam = new PerspectiveCamera(45, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(00, 00, 4f);
+		targetModel = ColladaLoader.loadStillModel(Gdx.files
+				.internal("data/target.dae"));
+		
+		worldModel = ColladaLoader.loadStillModel(Gdx.files
+				.internal("data/cubeWorld.dae"));
+
+		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
+		cam.position.set(4.5f, 4.5f, 15f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
 		cam.far = 1000;
 
-//		controller = new PerspectiveCamController(cam);
-//		Gdx.input.setInputProcessor(controller);
+		// controller = new PerspectiveCamController(cam);
+		// Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-		
+
+		initLevel();
 		initRender();
 
 	}
-	
+
+	private void initLevel() {
+		// finde player pos
+		int z = 0, y = 0, x = 0;
+		for (z = 0; z < 10; z++) {
+			for (y = 0; y < 10; y++) {
+				for (x = 0; x < 10; x++) {
+					if (Resources.getInstance().level1[z][y][x] == 1) {
+						blocks.add(new Block(x, y, z));
+					}
+					if (Resources.getInstance().level1[z][y][x] == 2) {
+						player.x = x;
+						player.y = y;
+						player.z = z;
+					}
+					if (Resources.getInstance().level1[z][y][x] == 3) {
+						target.x = x;
+						target.y = y;
+						target.z = z;
+					}
+				}
+			}
+		}
+	}
+
 	private void initRender() {
-		Gdx.graphics.getGL10().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.graphics.getGL10().glViewport(0, 0, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 
 		Gdx.graphics.getGL10().glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -83,15 +117,23 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		float[] light_position0 = new float[] { 1.0f, 10.0f, 1.0f, 0.0f };
 		float[] light_position1 = new float[] { -1.0f, -10.0f, -1.0f, 0.0f };
 
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, light_ambient, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, light_diffuse, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light_specular, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light_position0, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT,
+				light_ambient, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE,
+				light_diffuse, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR,
+				light_specular, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION,
+				light_position0, 0);
 
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT, light_ambient, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE, light_diffuse, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_SPECULAR, light_specular, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, light_position1, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT,
+				light_ambient, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE,
+				light_diffuse, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_SPECULAR,
+				light_specular, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION,
+				light_position1, 0);
 
 		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHTING);
 		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHT0);
@@ -119,59 +161,134 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 
+		if(animatePlayer) {
+			if (player.moveXPos ==true) {
+				player.x += delta * 50f;
+			}
+			if (player.moveXNeg ==true) {
+				player.x -= delta * 50f;
+			}
+			if (player.moveYPos ==true) {
+				player.y += delta * 50f;
+			}
+			if (player.moveYNeg ==true) {
+				player.y -= delta * 50f;
+			}
+			if (player.moveZPos ==true) {
+				player.z += delta * 50f;
+			}
+			if (player.moveZNeg ==true) {
+				player.z -= delta * 50f;
+			}
+			
+			
+			//TODO check collision
+		}
 		
-		if(animate) {
-			if(angleXTarget < angleX) {
+		if (animateWorld) {
+			if (angleXTarget < angleX) {
+				cam.translate(-4.5f,-4.5f,-20.5f);
+				cam.rotate(delta*150f, 0, 1, 0);
+				cam.translate(4.5f,4.5f,20.5f);
+				//cam.lookAt(4.5f, 4.5f, 4.5f);
+				cam.update();
+				cam.apply(Gdx.gl10);
+				Gdx.app.log("", delta +"");
 				angleX -= delta * 150f;
-				if(angleX < angleXTarget) {
+				if (angleX < angleXTarget) {
 					angleX = angleXTarget;
-					animate = false;
+					animateWorld = false;
 				}
 			}
-			if(angleXTarget > angleX) {
+			if (angleXTarget > angleX) {
 				angleX += delta * 150f;
-				if(angleX > angleXTarget) {
+				if (angleX > angleXTarget) {
 					angleX = angleXTarget;
-					animate = false;
+					animateWorld = false;
+				}
+			}
+
+			if (angleYTarget < angleY) {
+				angleY -= delta * 150f;
+				if (angleY < angleYTarget) {
+					angleY = angleYTarget;
+					animateWorld = false;
+				}
+			}
+			if (angleYTarget > angleY) {
+				angleY += delta * 150f;
+				if (angleY > angleYTarget) {
+					angleY = angleYTarget;
+					animateWorld = false;
 				}
 			}
 			
-			if(angleYTarget < angleY) {
-				angleY -= delta * 150f;
-				if(angleY < angleYTarget) {
-					angleY = angleYTarget;
-					animate = false;
+			if (angleZTarget < angleZ) {
+				angleZ -= delta * 150f;
+				if (angleZ < angleZTarget) {
+					angleZ = angleZTarget;
+					animateWorld = false;
 				}
 			}
-			if(angleYTarget > angleY) {
-				angleY += delta * 150f;
-				if(angleY > angleYTarget) {
-					angleY = angleYTarget;
-					animate = false;
+			if (angleZTarget > angleZ) {
+				angleZ += delta * 150f;
+				if (angleZ > angleZTarget) {
+					angleZ = angleZTarget;
+					animateWorld = false;
 				}
 			}
 		}
+
+//		Gdx.gl11.glPushMatrix();
+//		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+////		Gdx.gl11.glTranslatef(2.5f,2.5f,0);
+//		Gdx.gl11.glRotatef(angleX, 0, 1, 0);
+//		Gdx.gl11.glRotatef(angleY, 0, 0, 1);
+//		Gdx.gl11.glRotatef(angleZ, 1, 0, 0);
+////		Gdx.gl11.glTranslatef(-2.5f,-2.5f,0);
+//		Gdx.gl11.glTranslatef(5, 5, 0);
+//		blockModel.render();
+//		Gdx.gl11.glPopMatrix();
 		
+		// render Blocks
+		for (Block block : blocks) {
+			Gdx.gl11.glPushMatrix();
+			
+			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+			Gdx.gl11.glTranslatef(block.x, block.y, block.z);
+			blockModel.render();
+			Gdx.gl11.glPopMatrix();
+		}
+
+		// render Player
 		Gdx.gl11.glPushMatrix();
-		Gdx.gl11.glRotatef(angleX, 0,1,0);
-		Gdx.gl11.glRotatef(angleY, 0,0,1);
-		model.render();
+		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+		Gdx.gl11.glTranslatef(player.x, player.y, player.z);
+		playerModel.render();
 		Gdx.gl11.glPopMatrix();
 
+		// render Target
+		Gdx.gl11.glPushMatrix();
+		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+		Gdx.gl11.glTranslatef(target.x, target.y, target.z);
+		targetModel.render();
+		Gdx.gl11.glPopMatrix();
+
+//		// render Wire
+//		Gdx.gl11.glPushMatrix();
+//		Gdx.gl11.glScalef(5f, 5f, 5f);
+//		Gdx.gl11.glRotatef(angleX, 0, 1, 0);
+//		Gdx.gl11.glRotatef(angleY, 0, 0, 1);
+//		Gdx.gl11.glTranslatef(0, 0, 0);
+//		worldModel.render();
+////		Gdx.gl11.glPopMatrix();
+		
+		
 		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 		batch.begin();
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 		batch.end();
 
-		fps.log();
-
-	}
-
-	private void setCombiners() {
-		Gdx.gl11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_COMBINE);
-		Gdx.gl11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_COMBINE_RGB, GL11.GL_ADD_SIGNED);
-		Gdx.gl11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC0_RGB, GL11.GL_PREVIOUS);
-		Gdx.gl11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_SRC1_RGB, GL11.GL_TEXTURE);
 	}
 
 	@Override
@@ -181,24 +298,38 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+
+		Gdx.app.log("", "AngleX: " + angleXTarget  + "  " + "AngleY: " + angleYTarget );
 		if (keycode == Input.Keys.ESCAPE) {
 			System.exit(0);
 		}
-		if (keycode == Input.Keys.LEFT && animate == false) {
-			angleXTarget = angleX + 90;
-			animate = true;
-		}
-		if (keycode == Input.Keys.RIGHT && animate == false) {
+		if (keycode == Input.Keys.LEFT && animateWorld == false) {
 			angleXTarget = angleX - 90;
-			animate = true;
+			animateWorld = true;
 		}
-		if (keycode == Input.Keys.UP && animate == false) {
-			angleYTarget = angleY + 90;
-			animate = true;
+		if (keycode == Input.Keys.RIGHT && animateWorld == false) {
+			angleXTarget = angleX + 90;
+			animateWorld = true;
 		}
-		if (keycode == Input.Keys.DOWN && animate == false) {
-			angleYTarget = angleY - 90;
-			animate = true;
+		if (keycode == Input.Keys.UP && animateWorld == false) {
+//			if(angleX%180 ==0 ) {
+//				angleZTarget = angleZ - 90;
+//			} else {
+				angleYTarget = angleY + 90;
+//			}
+			animateWorld = true;
+		}
+		if (keycode == Input.Keys.DOWN && animateWorld == false) {
+//			if(angleX%180 ==0) {
+//				angleZTarget = angleZ + 90;
+//			} else {
+				angleYTarget = angleY - 90;
+//			}
+			animateWorld = true;
+		}
+		if (keycode == Input.Keys.SPACE && animateWorld == false) {
+			player.moveXPos = true;
+			animatePlayer = true;
 		}
 		return false;
 	}
