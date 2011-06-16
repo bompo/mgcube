@@ -39,7 +39,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	float angleXTarget = 0;
 	float angleYTarget = 0;
 	float angleZTarget = 0;
-	Vector3 worldRotation = new Vector3(0,1,0);
+	Vector3 worldRotation = new Vector3(0, 1, 0);
 	FPSLogger fps = new FPSLogger();
 	SpriteBatch batch;
 	BitmapFont font;
@@ -48,34 +48,32 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Array<Block> blocks = new Array<Block>();
 	boolean animateWorld = false;
 	boolean animatePlayer = false;
-	
+
 	Matrix4 rotate = new Matrix4().idt();
-	Vector3 xAxis = new Vector3(1,0,0);
-	Vector3 yAxis = new Vector3(0,1,0);
-	Vector3 zAxis = new Vector3(0,0,1);
+	Vector3 xAxis = new Vector3(1, 0, 0);
+	Vector3 yAxis = new Vector3(0, 1, 0);
+	Vector3 zAxis = new Vector3(0, 0, 1);
 	protected Quaternion rotator = new Quaternion(0, 0, 0, 0);
 	protected Quaternion rotation = Quaternion.idt();
+	
+    float touchStartX = 0;
+    float touchStartY = 0;
 
 	public GameScreen(Game game) {
 		super(game);
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(this);
 
-		blockModel = ColladaLoader.loadStillModel(Gdx.files
-				.internal("data/cube.dae"));
+		blockModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/cube.dae"));
 
-		playerModel = ColladaLoader.loadStillModel(Gdx.files
-				.internal("data/player.dae"));
+		playerModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/player.dae"));
 
-		targetModel = ColladaLoader.loadStillModel(Gdx.files
-				.internal("data/target.dae"));
-		
-		worldModel = ColladaLoader.loadStillModel(Gdx.files
-				.internal("data/cubeWorld.dae"));
+		targetModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/target.dae"));
 
-		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
-		cam.position.set(0,0, 15f);
+		worldModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/cubeWorld.dae"));
+
+		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(0, 0, 10f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -89,7 +87,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		initLevel();
 		initRender();
-
 	}
 
 	private void initLevel() {
@@ -107,7 +104,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						player.z = -4.5f + z;
 					}
 					if (Resources.getInstance().level1[z][y][x] == 3) {
-						target.x = -4.5f + x; 
+						target.x = -4.5f + x;
 						target.y = -4.5f + y;
 						target.z = -4.5f + z;
 					}
@@ -117,8 +114,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void initRender() {
-		Gdx.graphics.getGL10().glViewport(0, 0, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
+		Gdx.graphics.getGL10().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		Gdx.graphics.getGL10().glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -129,23 +125,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		float[] light_position0 = new float[] { 1.0f, 10.0f, 1.0f, 0.0f };
 		float[] light_position1 = new float[] { -1.0f, -10.0f, -1.0f, 0.0f };
 
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT,
-				light_ambient, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE,
-				light_diffuse, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR,
-				light_specular, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION,
-				light_position0, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, light_ambient, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, light_diffuse, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, light_specular, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, light_position0, 0);
 
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT,
-				light_ambient, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE,
-				light_diffuse, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_SPECULAR,
-				light_specular, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION,
-				light_position1, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_AMBIENT, light_ambient, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE, light_diffuse, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_SPECULAR, light_specular, 0);
+		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, light_position1, 0);
 
 		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHTING);
 		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHT0);
@@ -162,54 +150,55 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public void show() {
 	}
 
-	  protected int lastTouchX;
-	  protected int lastTouchY;
-	
+	protected int lastTouchX;
+	protected int lastTouchY;
+
 	@Override
 	public void render(float delta) {
+		GL10 gl = Gdx.graphics.getGL10();
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-	  
-//		cam.position.x = 0f;
-//		cam.position.y = 0f;
-//		cam.position.z = 15f;
-//		cam.update();
-//		
-//		cam.position.x = cam.position.x * rotation.x;
-//		cam.position.y = cam.position.y * rotation.y;
-//		cam.position.z = cam.position.z * rotation.z;
-//		cam.lookAt(0f, 0f, 0f);
-		
+
+		// cam.position.x = 0f;
+		// cam.position.y = 0f;
+		// cam.position.z = 15f;
+		// cam.update();
+		//
+		// cam.position.x = cam.position.x * rotation.x;
+		// cam.position.y = cam.position.y * rotation.y;
+		// cam.position.z = cam.position.z * rotation.z;
+		// cam.lookAt(0f, 0f, 0f);
+
 		cam.update();
 		cam.apply(Gdx.gl10);
 
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 
-//		if(animatePlayer) {
-//			if (player.moveXPos ==true) {
-//				player.x += delta * 50f;
-//			}
-//			if (player.moveXNeg ==true) {
-//				player.x -= delta * 50f;
-//			}
-//			if (player.moveYPos ==true) {
-//				player.y += delta * 50f;
-//			}
-//			if (player.moveYNeg ==true) {
-//				player.y -= delta * 50f;
-//			}
-//			if (player.moveZPos ==true) {
-//				player.z += delta * 50f;
-//			}
-//			if (player.moveZNeg ==true) {
-//				player.z -= delta * 50f;
-//			}
-//			
-//			
-//			//TODO check collision
-//		}
-//		
+		// if(animatePlayer) {
+		// if (player.moveXPos ==true) {
+		// player.x += delta * 50f;
+		// }
+		// if (player.moveXNeg ==true) {
+		// player.x -= delta * 50f;
+		// }
+		// if (player.moveYPos ==true) {
+		// player.y += delta * 50f;
+		// }
+		// if (player.moveYNeg ==true) {
+		// player.y -= delta * 50f;
+		// }
+		// if (player.moveZPos ==true) {
+		// player.z += delta * 50f;
+		// }
+		// if (player.moveZNeg ==true) {
+		// player.z -= delta * 50f;
+		// }
+		//
+		//
+		// //TODO check collision
+		// }
+		//
 		if (animateWorld) {
 			if (angleXTarget < angleX) {
 				angleX -= delta * 150f;
@@ -240,7 +229,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					animateWorld = false;
 				}
 			}
-			
+
 			if (angleZTarget < angleZ) {
 				angleZ -= delta * 150f;
 				if (angleZ < angleZTarget) {
@@ -256,17 +245,20 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 			}
 		}
-		
+
 		// render Blocks
 		for (Block block : blocks) {
-			Gdx.gl11.glPushMatrix();			
-			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+			Gdx.gl11.glPushMatrix();
 			
+			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+
+
 			float[] currentModelViewMatrix = new float[16];
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);	
-			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);
-			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
+			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
+			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+
 			
 			Gdx.gl11.glTranslatef(block.x, block.y, block.z);
 			blockModel.render();
@@ -274,48 +266,46 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		{
-		// render Player
-		Gdx.gl11.glPushMatrix();
-		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
-		
-		float[] currentModelViewMatrix = new float[16];
-		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);	
-		Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);
-		Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
-		
-		Gdx.gl11.glTranslatef(player.x, player.y, player.z);
-		playerModel.render();
-		Gdx.gl11.glPopMatrix();
+			// render Player
+			Gdx.gl11.glPushMatrix();
+			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+
+			float[] currentModelViewMatrix = new float[16];
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
+			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
+			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+
+			Gdx.gl11.glTranslatef(player.x, player.y, player.z);
+			playerModel.render();
+			Gdx.gl11.glPopMatrix();
 		}
 
 		{
-		// render Target
-		Gdx.gl11.glPushMatrix();
-		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
-		
-		float[] currentModelViewMatrix = new float[16];
-		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);	
-		Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);
-		Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
-		
-		Gdx.gl11.glTranslatef(target.x, target.y, target.z);
-		targetModel.render();
-		Gdx.gl11.glPopMatrix();
-		}
-		
+			// render Target
+			Gdx.gl11.glPushMatrix();
+			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
 
-//		// render Wire
-//		Gdx.gl11.glPushMatrix();
-//		Gdx.gl11.glScalef(5f, 5f, 5f);
-//		Gdx.gl11.glRotatef(angleX, 0, 1, 0);
-//		Gdx.gl11.glRotatef(angleY, 0, 0, 1);
-//		Gdx.gl11.glTranslatef(0, 0, 0);
-//		worldModel.render();
-////		Gdx.gl11.glPopMatrix();
-		
-		
+			float[] currentModelViewMatrix = new float[16];
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
+			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
+			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+
+			Gdx.gl11.glTranslatef(target.x, target.y, target.z);
+			targetModel.render();
+			Gdx.gl11.glPopMatrix();
+		}
+
+		// // render Wire
+		// Gdx.gl11.glPushMatrix();
+		// Gdx.gl11.glScalef(5f, 5f, 5f);
+		// Gdx.gl11.glRotatef(angleX, 0, 1, 0);
+		// Gdx.gl11.glRotatef(angleY, 0, 0, 1);
+		// Gdx.gl11.glTranslatef(0, 0, 0);
+		// worldModel.render();
+		// // Gdx.gl11.glPopMatrix();
+
 		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 		batch.begin();
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
@@ -331,7 +321,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 
-		Gdx.app.log("", "AngleX: " + angleXTarget  + "  " + "AngleY: " + angleYTarget );
+		Gdx.app.log("", "AngleX: " + angleXTarget + "  " + "AngleY: " + angleYTarget);
 		if (keycode == Input.Keys.ESCAPE) {
 			System.exit(0);
 		}
@@ -374,8 +364,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-		y = 480 - y;
 
+	    touchStartX = x;
+        touchStartY = y;
+        
 		return false;
 	}
 
@@ -383,13 +375,20 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-		y = 480 - y;
+		
 
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
+		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
+		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
+		
+        angleY += (x - touchStartX);
+        angleX += (y - touchStartY);
+        touchStartX = x;
+        touchStartY = y;
 		return false;
 	}
 
