@@ -20,11 +20,11 @@ public class StillModel implements Model {
 		int len = subMeshes.length;
 		for (int i = 0; i < len; i++) {
 			StillSubMesh subMesh = subMeshes[i];
-			if (i == 0) {
-				subMesh.material.bind();
-			} else if (!subMeshes[i - 1].material.equals(subMesh.material)) {
-				subMesh.material.bind();
-			}
+//			if (i == 0) {
+//				subMesh.material.bind();
+//			} else if (!subMeshes[i - 1].material.equals(subMesh.material)) {
+//				subMesh.material.bind();
+//			}
 			subMesh.mesh.render(subMesh.primitiveType);
 		}
 	}
@@ -33,6 +33,19 @@ public class StillModel implements Model {
 	public void render(ShaderProgram program) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void render(int primitiveType) {
+		int len = subMeshes.length;
+		for (int i = 0; i < len; i++) {
+			StillSubMesh subMesh = subMeshes[i];
+			if (i == 0) {
+				subMesh.material.bind();
+			} else if (!subMeshes[i - 1].material.equals(subMesh.material)) {
+				subMesh.material.bind();
+			}
+			subMesh.mesh.render(primitiveType);
+		}
 	}
 
 	@Override
