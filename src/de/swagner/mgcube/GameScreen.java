@@ -234,20 +234,38 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 
-		// if(!Gdx.input.isTouched()) {
-		// while(angleX%90 != 0) {
-		// if(angleX%90 >= 45)
-		// angleX++;
-		// else
-		// angleX--;
-		// }
-		// while(angleY%90 != 0) {
-		// if(angleY%90 >= 45)
-		// angleY++;
-		// else
-		// angleY--;
-		// }
-		// }
+		 if(!Gdx.input.isTouched()) {
+		 if(Math.abs(player.direction.x) > Math.abs(player.direction.y) && Math.abs(player.direction.x) > Math.abs(player.direction.z)) {
+			 while(player.direction.x != -1 && player.direction.x != 1 ) {
+				 if(player.direction.x<0) player.direction.x--;
+				 else player.direction.x++;
+				 if(player.direction.x<-1) player.direction.x = -1;
+				 if(player.direction.x> 1) player.direction.x = 1;
+				 player.direction.y = 0;
+				 player.direction.z = 0;
+			 }
+		 }
+		 if(Math.abs(player.direction.y) > Math.abs(player.direction.x) && Math.abs(player.direction.y) > Math.abs(player.direction.z)) {
+		 while(player.direction.y != -1 && player.direction.y != 1 ) {
+			 if(player.direction.y<0) player.direction.y--;
+			 else player.direction.y++;
+			 if(player.direction.y<-1) player.direction.y = -1;
+			 if(player.direction.y> 1) player.direction.y = 1;
+			 player.direction.x = 0;
+			 player.direction.z = 0;
+		 }
+		 }
+		 if(Math.abs(player.direction.z) > Math.abs(player.direction.y) && Math.abs(player.direction.z) > Math.abs(player.direction.y)) {
+		 while(player.direction.z != -1 && player.direction.z != 1 ) {
+			 if(player.direction.z<0) player.direction.z--;
+			 else player.direction.z++;
+			 if(player.direction.z<-1) player.direction.z = -1;
+			 if(player.direction.z> 1) player.direction.z = 1;
+			 player.direction.y = 0;
+			 player.direction.x = 0;
+		 }
+		 }
+		 }
 
 		// render Blocks
 		for (Block block : blocks) {
@@ -281,7 +299,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
 			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
 //			player.direction.mul(new Matrix4().setToRotation(-angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]));
-//Gdx.app.log("", player.direction.nor().toString());
+Gdx.app.log("", player.direction.nor().toString());
 			Gdx.gl11.glTranslatef(player.position.x, player.position.y, player.position.z);
 			playerModel.render();
 			Gdx.gl11.glPopMatrix();
