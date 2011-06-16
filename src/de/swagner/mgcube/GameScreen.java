@@ -112,6 +112,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 	}
+	
+	private void reset() {
+		animateWorld = false;
+		animatePlayer = false;
+		initLevel();
+	}
 
 	private void initRender() {
 		Gdx.graphics.getGL10().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -347,6 +353,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if (keycode == Input.Keys.SPACE && animateWorld == false) {
 			//player.direction = cam.direction.tmp().rot(new Matrix4().setToRotation(xAxis, angleX)).rot(new Matrix4().setToRotation(yAxis, angleY)).nor();
 			animatePlayer = true;
+		}
+		
+		if (keycode == Input.Keys.R) {
+			reset();
 		}
 		return false;
 	}
