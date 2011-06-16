@@ -1,7 +1,8 @@
 package de.swagner.mgcube;
 
+import com.badlogic.gdx.math.Vector3;
+
 public class Player {
-	public float x=0,y=0,z=0;	
-	public boolean moveXPos=false,moveYPos=false,moveZPos=false;
-	public boolean moveXNeg=false,moveYNeg=false,moveZNeg=false;
+	public Vector3 position = new Vector3();
+	public Vector3 direction = new Vector3(0,0,-1);
 }
