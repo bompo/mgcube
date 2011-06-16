@@ -345,9 +345,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		if (animatePlayer)
-			return false;
-		
 		touchTime = 0;
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
@@ -360,8 +357,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (animatePlayer)
-			return false;
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
@@ -372,9 +367,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		if (animatePlayer)
-			return false;
-		
 		touchTime += Gdx.graphics.getDeltaTime();
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
@@ -382,10 +374,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleY += ((x - touchStartX) / 5.f);
 		angleX += ((y - touchStartY) / 5.f);
 
-		player.direction.set(0, 0, -1);
-		player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
-		player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
-
+		if(!animatePlayer) {
+			player.direction.set(0, 0, -1);
+			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
+		}
+		
 		light_position0.set(10.0f, 10.0f, 20.75f);
 		light_position0.rot(new Matrix4().setToRotation(xAxis, angleX));
 		light_position0.rot(new Matrix4().setToRotation(yAxis, angleY));
