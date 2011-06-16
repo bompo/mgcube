@@ -1,11 +1,14 @@
 package de.swagner.mgcube;
 
+import java.nio.FloatBuffer;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL11;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,6 +16,8 @@ import com.badlogic.gdx.graphics.g3d.loaders.collada.ColladaLoader;
 import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.g3d.test.utils.PerspectiveCamController;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
@@ -43,6 +48,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Array<Block> blocks = new Array<Block>();
 	boolean animateWorld = false;
 	boolean animatePlayer = false;
+	
+	Matrix4 rotate = new Matrix4().idt();
+	Vector3 xAxis = new Vector3(1,0,0);
+	Vector3 yAxis = new Vector3(0,1,0);
+	Vector3 zAxis = new Vector3(0,0,1);
+	protected Quaternion rotator = new Quaternion(0, 0, 0, 0);
+	protected Quaternion rotation = Quaternion.idt();
 
 	public GameScreen(Game game) {
 		super(game);
@@ -63,7 +75,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
-		cam.position.set(4.5f, 4.5f, 15f);
+		cam.position.set(0,0, 15f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -87,17 +99,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
 					if (Resources.getInstance().level1[z][y][x] == 1) {
-						blocks.add(new Block(x, y, z));
+						blocks.add(new Block(-4.5f + x, -4.5f + y, -4.5f + z));
 					}
 					if (Resources.getInstance().level1[z][y][x] == 2) {
-						player.x = x;
-						player.y = y;
-						player.z = z;
+						player.x = -4.5f + x;
+						player.y = -4.5f + y;
+						player.z = -4.5f + z;
 					}
 					if (Resources.getInstance().level1[z][y][x] == 3) {
-						target.x = x;
-						target.y = y;
-						target.z = z;
+						target.x = -4.5f + x; 
+						target.y = -4.5f + y;
+						target.z = -4.5f + z;
 					}
 				}
 			}
@@ -150,50 +162,56 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public void show() {
 	}
 
+	  protected int lastTouchX;
+	  protected int lastTouchY;
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
+	  
+//		cam.position.x = 0f;
+//		cam.position.y = 0f;
+//		cam.position.z = 15f;
+//		cam.update();
+//		
+//		cam.position.x = cam.position.x * rotation.x;
+//		cam.position.y = cam.position.y * rotation.y;
+//		cam.position.z = cam.position.z * rotation.z;
+//		cam.lookAt(0f, 0f, 0f);
+		
 		cam.update();
 		cam.apply(Gdx.gl10);
 
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 
-		if(animatePlayer) {
-			if (player.moveXPos ==true) {
-				player.x += delta * 50f;
-			}
-			if (player.moveXNeg ==true) {
-				player.x -= delta * 50f;
-			}
-			if (player.moveYPos ==true) {
-				player.y += delta * 50f;
-			}
-			if (player.moveYNeg ==true) {
-				player.y -= delta * 50f;
-			}
-			if (player.moveZPos ==true) {
-				player.z += delta * 50f;
-			}
-			if (player.moveZNeg ==true) {
-				player.z -= delta * 50f;
-			}
-			
-			
-			//TODO check collision
-		}
-		
+//		if(animatePlayer) {
+//			if (player.moveXPos ==true) {
+//				player.x += delta * 50f;
+//			}
+//			if (player.moveXNeg ==true) {
+//				player.x -= delta * 50f;
+//			}
+//			if (player.moveYPos ==true) {
+//				player.y += delta * 50f;
+//			}
+//			if (player.moveYNeg ==true) {
+//				player.y -= delta * 50f;
+//			}
+//			if (player.moveZPos ==true) {
+//				player.z += delta * 50f;
+//			}
+//			if (player.moveZNeg ==true) {
+//				player.z -= delta * 50f;
+//			}
+//			
+//			
+//			//TODO check collision
+//		}
+//		
 		if (animateWorld) {
 			if (angleXTarget < angleX) {
-				cam.translate(-4.5f,-4.5f,-20.5f);
-				cam.rotate(delta*150f, 0, 1, 0);
-				cam.translate(4.5f,4.5f,20.5f);
-				//cam.lookAt(4.5f, 4.5f, 4.5f);
-				cam.update();
-				cam.apply(Gdx.gl10);
-				Gdx.app.log("", delta +"");
 				angleX -= delta * 150f;
 				if (angleX < angleXTarget) {
 					angleX = angleXTarget;
@@ -238,41 +256,55 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 			}
 		}
-
-//		Gdx.gl11.glPushMatrix();
-//		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
-////		Gdx.gl11.glTranslatef(2.5f,2.5f,0);
-//		Gdx.gl11.glRotatef(angleX, 0, 1, 0);
-//		Gdx.gl11.glRotatef(angleY, 0, 0, 1);
-//		Gdx.gl11.glRotatef(angleZ, 1, 0, 0);
-////		Gdx.gl11.glTranslatef(-2.5f,-2.5f,0);
-//		Gdx.gl11.glTranslatef(5, 5, 0);
-//		blockModel.render();
-//		Gdx.gl11.glPopMatrix();
 		
 		// render Blocks
 		for (Block block : blocks) {
-			Gdx.gl11.glPushMatrix();
-			
+			Gdx.gl11.glPushMatrix();			
 			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+			
+			float[] currentModelViewMatrix = new float[16];
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);	
+			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
+			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);
+			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+			
 			Gdx.gl11.glTranslatef(block.x, block.y, block.z);
 			blockModel.render();
 			Gdx.gl11.glPopMatrix();
 		}
 
+		{
 		// render Player
 		Gdx.gl11.glPushMatrix();
 		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+		
+		float[] currentModelViewMatrix = new float[16];
+		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);	
+		Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
+		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);
+		Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+		
 		Gdx.gl11.glTranslatef(player.x, player.y, player.z);
 		playerModel.render();
 		Gdx.gl11.glPopMatrix();
+		}
 
+		{
 		// render Target
 		Gdx.gl11.glPushMatrix();
 		Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+		
+		float[] currentModelViewMatrix = new float[16];
+		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);	
+		Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
+		Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix,0);
+		Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+		
 		Gdx.gl11.glTranslatef(target.x, target.y, target.z);
 		targetModel.render();
 		Gdx.gl11.glPopMatrix();
+		}
+		
 
 //		// render Wire
 //		Gdx.gl11.glPushMatrix();
@@ -312,19 +344,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			animateWorld = true;
 		}
 		if (keycode == Input.Keys.UP && animateWorld == false) {
-//			if(angleX%180 ==0 ) {
-//				angleZTarget = angleZ - 90;
-//			} else {
-				angleYTarget = angleY + 90;
-//			}
+			angleYTarget = angleY - 90;
 			animateWorld = true;
 		}
 		if (keycode == Input.Keys.DOWN && animateWorld == false) {
-//			if(angleX%180 ==0) {
-//				angleZTarget = angleZ + 90;
-//			} else {
-				angleYTarget = angleY - 90;
-//			}
+			angleYTarget = angleY + 90;
 			animateWorld = true;
 		}
 		if (keycode == Input.Keys.SPACE && animateWorld == false) {
