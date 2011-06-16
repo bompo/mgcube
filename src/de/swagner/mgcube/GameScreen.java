@@ -57,7 +57,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	public GameScreen(Game game) {
 		super(game);
-		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(this);
 
 		blockModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/cube.dae"));
