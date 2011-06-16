@@ -326,18 +326,22 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		if (keycode == Input.Keys.LEFT && animateWorld == false) {
 			angleXTarget = angleX - 90;
+			player.direction.rot(new Matrix4().setToRotation(xAxis,90));
 			animateWorld = true;
 		}
 		if (keycode == Input.Keys.RIGHT && animateWorld == false) {
 			angleXTarget = angleX + 90;
+			player.direction.rot(new Matrix4().setToRotation(xAxis, -90));
 			animateWorld = true;
 		}
 		if (keycode == Input.Keys.UP && animateWorld == false) {
 			angleYTarget = angleY - 90;
+			player.direction.rot(new Matrix4().setToRotation(yAxis, 90));
 			animateWorld = true;
 		}
 		if (keycode == Input.Keys.DOWN && animateWorld == false) {
 			angleYTarget = angleY + 90;
+			player.direction.rot(new Matrix4().setToRotation(yAxis, -90));
 			animateWorld = true;
 		}
 		if (keycode == Input.Keys.SPACE && animateWorld == false) {
