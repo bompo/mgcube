@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g3d.loaders.collada.ColladaLoader;
 import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.g3d.test.utils.PerspectiveCamController;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -83,6 +84,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		// Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = new BitmapFont();
 
 		initLevel();
@@ -96,7 +98,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
 					if (Resources.getInstance().level1[z][y][x] == 1) {
-						blocks.add(new Block(-4.5f + x, -4.5f + y, -4.5f + z));
+						blocks.add(new Block(new Vector3(-4.5f + x, -4.5f + y, -4.5f + z)));
 					}
 					if (Resources.getInstance().level1[z][y][x] == 2) {
 						player.position.x = -4.5f + x;
@@ -165,16 +167,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
-		// cam.position.x = 0f;
-		// cam.position.y = 0f;
-		// cam.position.z = 15f;
-		// cam.update();
-		//
-		// cam.position.x = cam.position.x * rotation.x;
-		// cam.position.y = cam.position.y * rotation.y;
-		// cam.position.z = cam.position.z * rotation.z;
-		// cam.lookAt(0f, 0f, 0f);
-
 		cam.update();
 		cam.apply(Gdx.gl10);
 
@@ -182,9 +174,21 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 
 		if (animatePlayer) {
-			player.position.add(player.direction);
+			player.position.add(player.direction.x * delta*10f, player.direction.y * delta*10f,player.direction.z * delta*10f);
 	
-			// TODO check collision
+			for(Block block:blocks) {
+				//TODO only check blocks in moving direction
+				//block.position.dst(player.position);
+				
+				//distance < 2?
+				float dst = block.position.dst(player.position);
+				if(dst < 2f)	{
+					animatePlayer =false;
+					player.position.sub(player.direction.x * delta*10f, player.direction.y * delta*10f,player.direction.z * delta*10f);
+					break;
+				}
+			}
+
 		}
 
 		if (animateWorld) {
@@ -279,7 +283,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
 			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
 
-			Gdx.gl11.glTranslatef(block.x, block.y, block.z);
+			Gdx.gl11.glTranslatef(block.position.x, block.position.y, block.position.z);
 			blockModel.render();
 			Gdx.gl11.glPopMatrix();
 		}
@@ -289,17 +293,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Gdx.gl11.glPushMatrix();
 			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
 			
-//			player.direction = new Vector3(0,0,-1);
-			
 			float[] currentModelViewMatrix = new float[16];
 			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
 			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-//			player.direction.mul(new Matrix4().setToRotation(-angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]));
-			
 			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
 			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
-//			player.direction.mul(new Matrix4().setToRotation(-angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]));
-Gdx.app.log("", player.direction.nor().toString());
+			
 			Gdx.gl11.glTranslatef(player.position.x, player.position.y, player.position.z);
 			playerModel.render();
 			Gdx.gl11.glPopMatrix();
@@ -330,6 +329,7 @@ Gdx.app.log("", player.direction.nor().toString());
 		// worldModel.render();
 		// // Gdx.gl11.glPopMatrix();
 
+		Gdx.gl.glDisable(GL10.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 		batch.begin();
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
@@ -343,34 +343,13 @@ Gdx.app.log("", player.direction.nor().toString());
 
 	@Override
 	public boolean keyDown(int keycode) {
-
-		Gdx.app.log("", "AngleX: " + angleXTarget + "  " + "AngleY: " + angleYTarget);
+		if(Gdx.input.isTouched()) return false;
 		if (keycode == Input.Keys.ESCAPE) {
 			System.exit(0);
 		}
-		if (keycode == Input.Keys.LEFT && animateWorld == false) {
-			angleYTarget = angleY - 90;
-			player.direction.rot(new Matrix4().setToRotation(yAxis,90));
-			animateWorld = true;
-		}
-		if (keycode == Input.Keys.RIGHT && animateWorld == false) {
-			angleYTarget = angleY + 90;
-			player.direction.rot(new Matrix4().setToRotation(yAxis,-90));
-			animateWorld = true;
-		}
-		if (keycode == Input.Keys.UP && animateWorld == false) {
-			angleXTarget = angleX - 90;
-			player.direction.rot(new Matrix4().setToRotation(xAxis, 90));
-			animateWorld = true;
-		}
-		if (keycode == Input.Keys.DOWN && animateWorld == false) {
-			angleXTarget = angleX + 90;
-			player.direction.rot(new Matrix4().setToRotation(xAxis, -90));
-			animateWorld = true;
-		}
-		if (keycode == Input.Keys.SPACE && animateWorld == false) {
-			//player.direction = cam.direction.tmp().rot(new Matrix4().setToRotation(xAxis, angleX)).rot(new Matrix4().setToRotation(yAxis, angleY)).nor();
-			animatePlayer = true;
+		
+		if (keycode == Input.Keys.SPACE) {
+			animatePlayer =true;
 		}
 		
 		if (keycode == Input.Keys.R) {
@@ -393,6 +372,7 @@ Gdx.app.log("", player.direction.nor().toString());
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
+		if(animatePlayer) return false;
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
@@ -404,6 +384,7 @@ Gdx.app.log("", player.direction.nor().toString());
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
+		if(animatePlayer) return false;
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
@@ -412,11 +393,12 @@ Gdx.app.log("", player.direction.nor().toString());
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
+		if(animatePlayer) return false;
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		angleY += (x - touchStartX);
-		angleX += (y - touchStartY);
+		angleY += ((x - touchStartX)/5.f);
+		angleX += ((y - touchStartY)/5.f);
 		
 		player.direction.set(0,0,-1);
 		player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));

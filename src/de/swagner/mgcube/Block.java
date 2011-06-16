@@ -1,12 +1,12 @@
 package de.swagner.mgcube;
 
+import com.badlogic.gdx.math.Vector3;
+
 public class Block {
 
-	public float x=0, y=0, z=0;
+	public Vector3 position;
 
-	public Block(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public Block(Vector3 position) {
+		this.position = position;
 	}
 }
