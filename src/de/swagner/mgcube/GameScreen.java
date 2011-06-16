@@ -389,6 +389,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		angleY += (x - touchStartX);
 		angleX += (y - touchStartY);
+		
+		player.direction.set(0,0,-1);
+		player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
+		player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
+		
 		touchStartX = x;
 		touchStartY = y;
 		return false;
