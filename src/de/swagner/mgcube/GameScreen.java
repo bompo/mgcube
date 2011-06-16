@@ -41,6 +41,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Array<Block> blocks = new Array<Block>();
 	boolean animateWorld = false;
 	boolean animatePlayer = false;
+	
+	float touchTime = 0;
 
 	Vector3 xAxis = new Vector3(1, 0, 0);
 	Vector3 yAxis = new Vector3(0, 1, 0);
@@ -177,6 +179,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				if (dst < 2f) {
 					animatePlayer = false;
 					player.position.sub(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
+					break;
+				}
+				if (dst > 50f) {
+					reset();
 					break;
 				}
 			}
@@ -341,6 +347,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		if (animatePlayer)
 			return false;
+		
+		touchTime = 0;
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
@@ -357,6 +365,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
+		if(touchTime<0.1) animatePlayer = true;
+		
 		return false;
 	}
 
@@ -364,6 +374,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchDragged(int x, int y, int pointer) {
 		if (animatePlayer)
 			return false;
+		
+		touchTime += Gdx.graphics.getDeltaTime();
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
