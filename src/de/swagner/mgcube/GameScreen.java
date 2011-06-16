@@ -102,9 +102,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						player.position.z = -10f + (z*2);
 					}
 					if (Resources.getInstance().level1[z][y][x] == 3) {
-						target.x = -10f + (x*2);
-						target.y = -10f + (y*2);
-						target.z = -10f + (z*2);
+						target.position.x = -10f + (x*2);
+						target.position.y = -10f + (y*2);
+						target.position.z = -10f + (z*2);
 					}
 				}
 			}
@@ -170,13 +170,20 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if (animatePlayer) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 
+			// Win?
+			float targetdst = target.position.dst(player.position);
+			if (targetdst < 2f) {
+				animatePlayer = false;
+				reset();
+			}
+			
 			for (Block block : blocks) {
 				// TODO only check blocks in moving direction
 				// block.position.dst(player.position);
-
+				
 				// distance < 2?
 				float dst = block.position.dst(player.position);
-				if (dst < 2f) {
+				if (dst < 2.1f) {
 					animatePlayer = false;
 					player.position.sub(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 					break;
@@ -281,7 +288,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
 			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
 
-			Gdx.gl11.glTranslatef(target.x, target.y, target.z);
+			Gdx.gl11.glTranslatef(target.position.x, target.position.y, target.position.z);
 			targetModel.render();
 			Gdx.gl11.glPopMatrix();
 		}
@@ -360,7 +367,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		if(touchTime<0.1) animatePlayer = true;
+		if(touchTime<0.15) animatePlayer = true;
 		
 		return false;
 	}
