@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
@@ -226,6 +227,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			resetter = true;
 		}
 		
+		//player out of bound?
+		BoundingBox box = new BoundingBox(new Vector3(-10f,-10f,-10f), new Vector3(10f,10f,10f));
+		if(!box.contains(player.position))
+		{
+			animatePlayer = false;
+			reset();
+		}
+		
 		
 		if (animatePlayer) {
 			
@@ -237,30 +246,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				nextLevel();
 				reset();
 			}
-			
-			// Win?
-//			float targetdst = target.position.dst(player.position);
-//			if (targetdst < 2f) {
-//				animatePlayer = false;
-//				reset();
-//			}
-//			
-//			for (Block block : blocks) {
-//				// TODO only check blocks in moving direction
-//				// block.position.dst(player.position);
-//				
-//				// distance < 2?
-//				float dst = block.position.dst(player.position);
-//				if (dst < 2.1f) {
-//					animatePlayer = false;
-//					player.position.sub(player.direction.x * delta * 8f, player.direction.y * delta * 8f, player.direction.z * delta * 8f);
-//					break;
-//				}
-//				if (dst > 50f) {
-//					reset();
-//					break;
-//				}
-//			}
 
 		}
 
@@ -455,6 +440,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			model.idt();
 			modelView.idt();
 			
+			
+			
 			tmp.setToScaling(5.5f, 5.5f, 5.5f);
 			model.mul(tmp);
 						
@@ -462,6 +449,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			model.mul(tmp);
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
+			
 			
 //			modelView.set(cam.view);
 //			modelView.mul(model);			
@@ -475,6 +463,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //			
 			tmp.setToTranslation(0,0,0);
 			model.mul(tmp);
+
 			
 			shader.begin();		
 
@@ -505,7 +494,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 		batch.end();
 		
-		Gdx.app.log("animate",""+ animatePlayer);
 
 	}
 
