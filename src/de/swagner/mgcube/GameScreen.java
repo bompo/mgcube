@@ -21,10 +21,12 @@ import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.g3d.test.utils.PerspectiveCamController;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
@@ -186,32 +188,63 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 
+		
+		//collision
+		Ray pRay = new Ray(player.position, player.direction);
+		
+		for(Block block : blocks)
+		{
+			Vector3 intersection = new Vector3();
+			boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
+			float dst = intersection.dst(player.position);
+			if(dst < 1.2f && intersect)
+			{
+				animatePlayer = false;
+				break;
+			}
+		}
+		Vector3 Targetintersection = new Vector3();
+		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, Targetintersection);
+		float targetdst = Targetintersection.dst(player.position);
+		boolean resetter = false;
+		if (targetdst < 1.2f) {
+			resetter = true;
+		}
+		
+		
 		if (animatePlayer) {
+			
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
-
-			// Win?
-			float targetdst = target.position.dst(player.position);
-			if (targetdst < 2f) {
+			
+			if(resetter)
+			{
 				animatePlayer = false;
 				reset();
 			}
 			
-			for (Block block : blocks) {
-				// TODO only check blocks in moving direction
-				// block.position.dst(player.position);
-				
-				// distance < 2?
-				float dst = block.position.dst(player.position);
-				if (dst < 2.1f) {
-					animatePlayer = false;
-					player.position.sub(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
-					break;
-				}
-				if (dst > 50f) {
-					reset();
-					break;
-				}
-			}
+			// Win?
+//			float targetdst = target.position.dst(player.position);
+//			if (targetdst < 2f) {
+//				animatePlayer = false;
+//				reset();
+//			}
+//			
+//			for (Block block : blocks) {
+//				// TODO only check blocks in moving direction
+//				// block.position.dst(player.position);
+//				
+//				// distance < 2?
+//				float dst = block.position.dst(player.position);
+//				if (dst < 2.1f) {
+//					animatePlayer = false;
+//					player.position.sub(player.direction.x * delta * 8f, player.direction.y * delta * 8f, player.direction.z * delta * 8f);
+//					break;
+//				}
+//				if (dst > 50f) {
+//					reset();
+//					break;
+//				}
+//			}
 
 		}
 
