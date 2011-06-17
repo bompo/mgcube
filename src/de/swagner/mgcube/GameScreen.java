@@ -1,5 +1,8 @@
 package de.swagner.mgcube;
 
+import java.io.Console;
+import java.util.logging.ConsoleHandler;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -14,8 +17,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
 import de.swagner.gdx.obj.normalmap.helper.ObjLoaderTan;
@@ -105,8 +111,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = new BitmapFont();
 
-		initLevel();
 		initShader();
+		initLevel(1);
 		initRender();
 	}
 
@@ -118,21 +124,38 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 	}
 
-	private void initLevel() {
+	private void initLevel(int levelnumber) {
+		blocks.clear();
+		int[][][] level;
+		switch (levelnumber) {
+		case 1:
+			level = Resources.getInstance().level1;
+			break;
+		case 2:
+			level = Resources.getInstance().level2;
+			break;
+			
+			//more levels
+
+		default:
+			level = Resources.getInstance().level1;
+			break;
+		}
+		
 		// finde player pos
 		int z = 0, y = 0, x = 0;
 		for (z = 0; z < 10; z++) {
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
-					if (Resources.getInstance().level1[z][y][x] == 1) {
+					if (level[z][y][x] == 1) {
 						blocks.add(new Block(new Vector3(-10f + (x*2), -10f + (y*2), -10f + (z*2))));
 					}
-					if (Resources.getInstance().level1[z][y][x] == 2) {
+					if (level[z][y][x] == 2) {
 						player.position.x = -10f + (x*2);
 						player.position.y = -10f + (y*2);
 						player.position.z = -10f + (z*2);
 					}
-					if (Resources.getInstance().level1[z][y][x] == 3) {
+					if (level[z][y][x] == 3) {
 						target.position.x = -10f + (x*2);
 						target.position.y = -10f + (y*2);
 						target.position.z = -10f + (z*2);
@@ -145,7 +168,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	private void reset() {
 		animateWorld = false;
 		animatePlayer = false;
-		initLevel();
+		initLevel(Resources.getInstance().currentlevel);
 	}
 
 	private void initRender() {
@@ -172,32 +195,63 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
+		
+		//collision
+		Ray pRay = new Ray(player.position, player.direction);
+		
+		for(Block block : blocks)
+		{
+			Vector3 intersection = new Vector3();
+			boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
+			float dst = intersection.dst(player.position);
+			if(dst < 1.2f && intersect)
+			{
+				animatePlayer = false;
+				break;
+			}
+		}
+		Vector3 Targetintersection = new Vector3();
+		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, Targetintersection);
+		float targetdst = Targetintersection.dst(player.position);
+		boolean resetter = false;
+		if (targetdst < 1.2f) {
+			resetter = true;
+		}
+		
+		
 		if (animatePlayer) {
+			
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
-
-			// Win?
-			float targetdst = target.position.dst(player.position);
-			if (targetdst < 2f) {
+			
+			if(resetter)
+			{
 				animatePlayer = false;
 				reset();
 			}
 			
-			for (Block block : blocks) {
-				// TODO only check blocks in moving direction
-				// block.position.dst(player.position);
-				
-				// distance < 2?
-				float dst = block.position.dst(player.position);
-				if (dst < 2.1f) {
-					animatePlayer = false;
-					player.position.sub(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
-					break;
-				}
-				if (dst > 50f) {
-					reset();
-					break;
-				}
-			}
+			// Win?
+//			float targetdst = target.position.dst(player.position);
+//			if (targetdst < 2f) {
+//				animatePlayer = false;
+//				reset();
+//			}
+//			
+//			for (Block block : blocks) {
+//				// TODO only check blocks in moving direction
+//				// block.position.dst(player.position);
+//				
+//				// distance < 2?
+//				float dst = block.position.dst(player.position);
+//				if (dst < 2.1f) {
+//					animatePlayer = false;
+//					player.position.sub(player.direction.x * delta * 8f, player.direction.y * delta * 8f, player.direction.z * delta * 8f);
+//					break;
+//				}
+//				if (dst > 50f) {
+//					reset();
+//					break;
+//				}
+//			}
 
 		}
 
@@ -432,6 +486,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		if (keycode == Input.Keys.R) {
 			reset();
+		}
+		
+		if (keycode == Input.Keys.RIGHT) {
+			Resources.getInstance().currentlevel++;
+			initLevel(Resources.getInstance().currentlevel);
+		}
+		
+		if (keycode == Input.Keys.LEFT) {
+			Resources.getInstance().currentlevel--;
+			initLevel(Resources.getInstance().currentlevel);
 		}
 		return false;
 	}
