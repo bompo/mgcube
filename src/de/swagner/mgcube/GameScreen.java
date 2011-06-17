@@ -1,5 +1,8 @@
 package de.swagner.mgcube;
 
+import java.io.Console;
+import java.util.logging.ConsoleHandler;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -82,25 +85,42 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = new BitmapFont();
 
-		initLevel();
+		initLevel(1);
 		initRender();
 	}
 
-	private void initLevel() {
+	private void initLevel(int levelnumber) {
+		blocks.clear();
+		int[][][] level;
+		switch (levelnumber) {
+		case 1:
+			level = Resources.getInstance().level1;
+			break;
+		case 2:
+			level = Resources.getInstance().level2;
+			break;
+			
+			//more levels
+
+		default:
+			level = Resources.getInstance().level1;
+			break;
+		}
+		
 		// finde player pos
 		int z = 0, y = 0, x = 0;
 		for (z = 0; z < 10; z++) {
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
-					if (Resources.getInstance().level1[z][y][x] == 1) {
+					if (level[z][y][x] == 1) {
 						blocks.add(new Block(new Vector3(-10f + (x*2), -10f + (y*2), -10f + (z*2))));
 					}
-					if (Resources.getInstance().level1[z][y][x] == 2) {
+					if (level[z][y][x] == 2) {
 						player.position.x = -10f + (x*2);
 						player.position.y = -10f + (y*2);
 						player.position.z = -10f + (z*2);
 					}
-					if (Resources.getInstance().level1[z][y][x] == 3) {
+					if (level[z][y][x] == 3) {
 						target.position.x = -10f + (x*2);
 						target.position.y = -10f + (y*2);
 						target.position.z = -10f + (z*2);
@@ -113,7 +133,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	private void reset() {
 		animateWorld = false;
 		animatePlayer = false;
-		initLevel();
+		initLevel(Resources.getInstance().currentlevel);
 	}
 
 	private void initRender() {
@@ -333,6 +353,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		if (keycode == Input.Keys.R) {
 			reset();
+		}
+		
+		if (keycode == Input.Keys.RIGHT) {
+			Resources.getInstance().currentlevel++;
+			initLevel(Resources.getInstance().currentlevel);
+		}
+		
+		if (keycode == Input.Keys.LEFT) {
+			Resources.getInstance().currentlevel--;
+			initLevel(Resources.getInstance().currentlevel);
 		}
 		return false;
 	}
