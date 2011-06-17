@@ -19,10 +19,11 @@ public class TnLShader {
         "#ifdef GL_ES\n" +
         "precision mediump float;\n" +
         "#endif\n" +
+        "uniform vec3 a_color;		\n"+
     	"varying vec3 DiffuseLight;	\n"+
     	"varying vec3 SpecularLight;	\n"+
     	"void main() {						\n"+
-    	"vec3 color = DiffuseLight + SpecularLight;\n"+
-    	"gl_FragColor = vec4(color, 1.0);	\n"+
-    	"}\n";
+    	"vec3 color = (a_color*DiffuseLight) + SpecularLight;\n"+
+    	"gl_FragColor = vec4(color, 0.5f);	\n"+
+    	"}\n"; 
 }

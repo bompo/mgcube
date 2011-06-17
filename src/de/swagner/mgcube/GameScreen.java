@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.Array;
 import de.swagner.gdx.obj.normalmap.helper.ObjLoaderTan;
 import de.swagner.gdx.obj.normalmap.shader.NormalMapShader;
 import de.swagner.gdx.obj.normalmap.shader.TnLShader;
+import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
 
@@ -98,7 +99,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0, 0, 15f);
+		cam.position.set(0, 0, 20f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -117,7 +118,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void initShader() {
-		shader = new ShaderProgram(TnLShader.mVertexShader, TnLShader.mFragmentShader);
+		shader = new ShaderProgram(TransShader.mVertexShader, TransShader.mFragmentShader);
 		if (shader.isCompiled() == false) {
             Gdx.app.log("ShaderTest", shader.getLog());
             System.exit(0);
@@ -175,6 +176,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		Gdx.graphics.getGL20().glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+		
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	@Override
@@ -186,8 +190,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		GL20 gl = Gdx.graphics.getGL20();
-		Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		cam.update();
@@ -338,8 +344,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 			
 			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
-			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+			
+			shader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
+			shader.setUniformf("alpha", 0.8f);
+			blockModel.render(shader, GL20.GL_LINE_STRIP);
+			
+			shader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
+			shader.setUniformf("alpha", 0.5f);
 			blockModel.render(shader, GL20.GL_TRIANGLES);
+			
+
 			shader.end();		
 		}
 
@@ -377,7 +391,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 			
 			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
-			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+//			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+						
+			shader.setUniformf("a_color", 1.0f, 1.0f, 0.0f);
+			shader.setUniformf("alpha", 0.5f);
 			playerModel.render(shader, GL20.GL_TRIANGLES);
 			shader.end();
 		}
@@ -416,8 +433,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 			
 			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
-			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+//			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+			
+			shader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
+			shader.setUniformf("alpha", 0.8f);
+			targetModel.render(shader, GL20.GL_LINE_STRIP);
+			
+			shader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
+			shader.setUniformf("alpha", 0.5f);
 			targetModel.render(shader, GL20.GL_TRIANGLES);
+			
 			shader.end();
 		}
 
@@ -455,8 +480,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 			
 			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
-			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+//			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+			
+			shader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
+			shader.setUniformf("alpha", 0.8f);
 			worldModel.render(shader, GL20.GL_LINE_STRIP);
+			
 			shader.end();
 		}
 
