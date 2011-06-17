@@ -1,32 +1,25 @@
 package de.swagner.mgcube;
 
-import java.io.Console;
-import java.util.logging.ConsoleHandler;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
 import de.swagner.gdx.obj.normalmap.helper.ObjLoaderTan;
-import de.swagner.gdx.obj.normalmap.shader.NormalMapShader;
-import de.swagner.gdx.obj.normalmap.shader.TnLShader;
 import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
@@ -63,6 +56,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Matrix4 tmp = new Matrix4().idt();
 	private ShaderProgram shader;
 	private Vector3 light = new Vector3(-2f, 1f, 10f);
+	FrameBuffer frameBuffer;
 	
 	float touchStartX = 0;
 	float touchStartY = 0;
@@ -179,6 +173,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		frameBuffer = new FrameBuffer(Format.RGB565, 512, 512, true);
 	}
 
 	@Override
@@ -190,6 +185,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
+
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
+//		frameBuffer.begin();
+//        Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+        
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		GL20 gl = Gdx.graphics.getGL20();
@@ -232,6 +234,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(resetter)
 			{
 				animatePlayer = false;
+				nextLevel();
 				reset();
 			}
 			
@@ -351,7 +354,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			shader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
 			shader.setUniformf("alpha", 0.5f);
-			blockModel.render(shader, GL20.GL_LINES);
+			blockModel.render(shader, GL20.GL_TRIANGLES);
 			
 
 			shader.end();		
@@ -489,6 +492,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			shader.end();
 		}
 
+//		frameBuffer.end();
+//		
+//		batch.begin();
+//		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 512, 512, 0, 0, frameBuffer.getColorBufferTexture().getWidth(),
+//                frameBuffer.getColorBufferTexture().getHeight(), false, true);
+//		batch.end();
+
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		batch.begin();
@@ -518,15 +528,23 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		if (keycode == Input.Keys.RIGHT) {
-			Resources.getInstance().currentlevel++;
-			initLevel(Resources.getInstance().currentlevel);
+			nextLevel();
 		}
 		
 		if (keycode == Input.Keys.LEFT) {
-			Resources.getInstance().currentlevel--;
-			initLevel(Resources.getInstance().currentlevel);
+			prevLevel();
 		}
 		return false;
+	}
+
+	private void nextLevel() {
+		Resources.getInstance().currentlevel++;
+		initLevel(Resources.getInstance().currentlevel);
+	}
+
+	private void prevLevel() {
+		Resources.getInstance().currentlevel--;
+		initLevel(Resources.getInstance().currentlevel);
 	}
 
 	@Override
