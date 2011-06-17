@@ -5,33 +5,31 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL11;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.loaders.collada.ColladaLoader;
-import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.materials.Material;
-import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
-import com.badlogic.gdx.graphics.g3d.test.utils.PerspectiveCamController;
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
+
+import de.swagner.gdx.obj.normalmap.helper.ObjLoaderTan;
+import de.swagner.gdx.obj.normalmap.shader.NormalMapShader;
+import de.swagner.gdx.obj.normalmap.shader.TnLShader;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	double startTime = 0;
 	PerspectiveCamera cam;
-	StillModel blockModel;
-	StillModel playerModel;
-	StillModel targetModel;
-	StillModel worldModel;
+	Mesh blockModel;
+	Mesh playerModel;
+	Mesh targetModel;
+	Mesh worldModel;
 	float angleX = 0;
 	float angleY = 0;
 	SpriteBatch batch;
@@ -51,7 +49,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Vector3 light_position0 = new Vector3(10.0f, 10.0f, 20.75f);
 	Vector3 light_position1 = new Vector3(-10.0f, -10.0f, -20.75f);
 	
-
+	//GLES20 
+	Matrix4 model = new Matrix4().idt();
+	Matrix4 modelView = new Matrix4().idt();
+	Matrix4 modelViewProjection = new Matrix4().idt();
+	Matrix4 tmp = new Matrix4().idt();
+	private ShaderProgram shader;
+	private Vector3 light = new Vector3(-2f, 1f, 10f);
+	
 	float touchStartX = 0;
 	float touchStartY = 0;
 
@@ -59,14 +64,32 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 
-		blockModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/cube.dae"));
-		blockModel.setMaterial(new Material("test", new ColorAttribute(Color.RED, "")));
-
-		playerModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/player.dae"));
-
-		targetModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/target.dae"));
-
-		worldModel = ColladaLoader.loadStillModel(Gdx.files.internal("data/cubeWorld.dae"));
+		blockModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cube.obj"));
+		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+		blockModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
+//		blockModel.getVertexAttribute(Usage.Color).alias = "a_color";
+		blockModel.getVertexAttribute(10).alias = "a_tangent";
+		blockModel.getVertexAttribute(11).alias = "a_binormal";
+//		blockModel.getVertexAttribute(Usage.TextureCoordinates).alias = "a_texcoord0";
+		
+		playerModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/sphere.obj"));
+		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+		playerModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
+		playerModel.getVertexAttribute(10).alias = "a_tangent";
+		playerModel.getVertexAttribute(11).alias = "a_binormal";
+		
+		targetModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cylinder.obj"));
+		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+		targetModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
+		targetModel.getVertexAttribute(10).alias = "a_tangent";
+		targetModel.getVertexAttribute(11).alias = "a_binormal";
+		
+		worldModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cube.obj"));
+		worldModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+		worldModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
+		worldModel.getVertexAttribute(10).alias = "a_tangent";
+		worldModel.getVertexAttribute(11).alias = "a_binormal";
+		
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 15f);
@@ -83,7 +106,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		font = new BitmapFont();
 
 		initLevel();
+		initShader();
 		initRender();
+	}
+
+	private void initShader() {
+		shader = new ShaderProgram(TnLShader.mVertexShader, TnLShader.mFragmentShader);
+		if (shader.isCompiled() == false) {
+            Gdx.app.log("ShaderTest", shader.getLog());
+            System.exit(0);
+		}
 	}
 
 	private void initLevel() {
@@ -117,30 +149,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void initRender() {
-		Gdx.graphics.getGL10().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		Gdx.graphics.getGL10().glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
-
-		float[] light_ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
-		float[] light_diffuse1 = new float[] { 0.7f, 0.7f, 0.7f, 1.0f };
-		float[] light_diffuse2 = new float[] { 0.3f, 0.3f, 0.3f, 1.0f };
-
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, light_ambient, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, light_diffuse1, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[] { light_position0.x, light_position0.y, light_position0.z, 1f }, 0);
-
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_DIFFUSE, light_diffuse2, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, new float[] { light_position1.x, light_position1.y, light_position1.z, 1f }, 0);
-
-		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHTING);
-		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHT0);
-		Gdx.graphics.getGL10().glEnable(GL10.GL_LIGHT1);
-
-		Gdx.graphics.getGL10().glShadeModel(GL10.GL_SMOOTH);
-		Gdx.graphics.getGL10().glEnable(GL10.GL_DEPTH_TEST);
-		Gdx.graphics.getGL10().glDepthFunc(GL10.GL_LESS);
-
-		Gdx.graphics.getGL10().glClearColor(0.7f, 0.7f, 0.7f, 0f);
+		Gdx.graphics.getGL20().glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 	}
 
 	@Override
@@ -152,19 +163,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		GL10 gl = Gdx.graphics.getGL10();
+		GL20 gl = Gdx.graphics.getGL20();
 		Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		cam.update();
-		cam.apply(Gdx.gl10);
 
-		// refresh lights
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, new float[] { light_position0.x, light_position0.y, light_position0.z,1f }, 0);
-		Gdx.graphics.getGL10().glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, new float[] { light_position1.x, light_position1.y, light_position1.z, 1f }, 0);
-
-		Gdx.gl.glEnable(GL10.GL_CULL_FACE);
-		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
 		if (animatePlayer) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
@@ -242,73 +248,166 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		// render Blocks
 		for (Block block : blocks) {
-			Gdx.gl11.glPushMatrix();
+			tmp.idt();
+			model.idt();
+			modelView.idt();
+			
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
+			
+			
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+			
+//			modelView.set(cam.view);
+//			modelView.mul(model);			
+//			tmp.setToRotation(angleY, modelView.getValues()[1], modelView.getValues()[5], modelView.getValues()[9]);
+//			model.mul(tmp);
+//			
+//			modelView.set(cam.view);
+//			modelView.mul(model);
+//			tmp.setToRotation(angleX, modelView.getValues()[0], modelView.getValues()[4], modelView.getValues()[8]);
+//			model.mul(tmp);
+//			
+			tmp.setToTranslation(block.position.x, block.position.y, block.position.z);
+			model.mul(tmp);
 
-			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+			tmp.setToScaling(0.95f, 0.95f, 0.95f);
+			model.mul(tmp);
+			
+			shader.begin();		
 
-			float[] currentModelViewMatrix = new float[16];
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
-
-			Gdx.gl11.glTranslatef(block.position.x, block.position.y, block.position.z);
-			Gdx.gl10.glColor4f(1f, 0, 0, 1);
-
-			Gdx.gl11.glScalef(0.95f, 0.95f, 0.95f);
-			blockModel.render();
-			Gdx.gl11.glPopMatrix();
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+			
+			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
+			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+			blockModel.render(shader, GL20.GL_TRIANGLES);
+			shader.end();		
 		}
 
 		{
 			// render Player
-			Gdx.gl11.glPushMatrix();
-			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+			tmp.idt();
+			model.idt();
+			modelView.idt();
+			
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
+						
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+			
+//			modelView.set(cam.view);
+//			modelView.mul(model);			
+//			tmp.setToRotation(angleY, modelView.getValues()[1], modelView.getValues()[5], modelView.getValues()[9]);
+//			model.mul(tmp);
+//			
+//			modelView.set(cam.view);
+//			modelView.mul(model);
+//			tmp.setToRotation(angleX, modelView.getValues()[0], modelView.getValues()[4], modelView.getValues()[8]);
+//			model.mul(tmp);
+//			
+			tmp.setToTranslation(player.position.x, player.position.y, player.position.z);
+			model.mul(tmp);
+			
+			shader.begin();		
 
-			float[] currentModelViewMatrix = new float[16];
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
-
-			Gdx.gl11.glTranslatef(player.position.x, player.position.y, player.position.z);
-			playerModel.render();
-			Gdx.gl11.glPopMatrix();
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+			
+			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
+			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+			playerModel.render(shader, GL20.GL_TRIANGLES);
+			shader.end();
 		}
 
 		{
 			// render Target
-			Gdx.gl11.glPushMatrix();
-			Gdx.gl11.glScalef(0.5f, 0.5f, 0.5f);
+			tmp.idt();
+			model.idt();
+			modelView.idt();
+			
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
+						
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+			
+//			modelView.set(cam.view);
+//			modelView.mul(model);			
+//			tmp.setToRotation(angleY, modelView.getValues()[1], modelView.getValues()[5], modelView.getValues()[9]);
+//			model.mul(tmp);
+//			
+//			modelView.set(cam.view);
+//			modelView.mul(model);
+//			tmp.setToRotation(angleX, modelView.getValues()[0], modelView.getValues()[4], modelView.getValues()[8]);
+//			model.mul(tmp);
+//			
+			tmp.setToTranslation(target.position.x, target.position.y, target.position.z);
+			model.mul(tmp);
+			
+			shader.begin();		
 
-			float[] currentModelViewMatrix = new float[16];
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
-
-			Gdx.gl11.glTranslatef(target.position.x, target.position.y, target.position.z);
-			targetModel.render();
-			Gdx.gl11.glPopMatrix();
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+			
+			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
+			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+			targetModel.render(shader, GL20.GL_TRIANGLES);
+			shader.end();
 		}
 
 		{
 			// render Wire
-			Gdx.gl11.glPushMatrix();
-			Gdx.gl11.glScalef(5.5f, 5.5f, 5.5f);
-			float[] currentModelViewMatrix = new float[16];
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleY, currentModelViewMatrix[1], currentModelViewMatrix[5], currentModelViewMatrix[9]);
-			Gdx.graphics.getGL11().glGetFloatv(GL11.GL_MODELVIEW_MATRIX, currentModelViewMatrix, 0);
-			Gdx.graphics.getGL11().glRotatef(angleX, currentModelViewMatrix[0], currentModelViewMatrix[4], currentModelViewMatrix[8]);
+			tmp.idt();
+			model.idt();
+			modelView.idt();
+			
+			tmp.setToScaling(5.5f, 5.5f, 5.5f);
+			model.mul(tmp);
+						
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+			
+//			modelView.set(cam.view);
+//			modelView.mul(model);			
+//			tmp.setToRotation(angleY, modelView.getValues()[1], modelView.getValues()[5], modelView.getValues()[9]);
+//			model.mul(tmp);
+//			
+//			modelView.set(cam.view);
+//			modelView.mul(model);
+//			tmp.setToRotation(angleX, modelView.getValues()[0], modelView.getValues()[4], modelView.getValues()[8]);
+//			model.mul(tmp);
+//			
+			tmp.setToTranslation(0,0,0);
+			model.mul(tmp);
+			
+			shader.begin();		
 
-			Gdx.gl11.glTranslatef(0, 0, 0);
-			worldModel.render(GL11.GL_LINE_STRIP);
-			Gdx.gl11.glPopMatrix();
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+			
+			shader.setUniformMatrix("MVPMatrix",modelViewProjection);
+			shader.setUniformf("LightDirection", light.x, light.y, light.z);
+			worldModel.render(shader, GL20.GL_LINE_STRIP);
+			shader.end();
 		}
 
-		Gdx.gl.glDisable(GL10.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		batch.begin();
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 		batch.end();
