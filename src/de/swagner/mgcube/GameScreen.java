@@ -351,7 +351,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			shader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
 			shader.setUniformf("alpha", 0.5f);
-			blockModel.render(shader, GL20.GL_TRIANGLES);
+			blockModel.render(shader, GL20.GL_LINES);
 			
 
 			shader.end();		
