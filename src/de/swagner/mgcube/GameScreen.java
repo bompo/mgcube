@@ -504,6 +504,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 		batch.end();
+		
+		Gdx.app.log("animate",""+ animatePlayer);
 
 	}
 
