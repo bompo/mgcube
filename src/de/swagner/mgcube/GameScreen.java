@@ -183,6 +183,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		case 2:
 			level = Resources.getInstance().level2;
 			break;
+		case 3:
+			level = Resources.getInstance().level3;
+			break;
 
 		// more levels
 
@@ -668,7 +671,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+			cam.translate(0, 0, 1 * amount);
+		if((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
+			cam.translate(0, 0, 1 * -amount);
 		return false;
 	}
 
