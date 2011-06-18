@@ -1,11 +1,13 @@
 package de.swagner.mgcube;
 
 import java.awt.geom.CubicCurve2D;
+import java.util.logging.FileHandler;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -78,7 +80,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public GameScreen(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
-
 		blockModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cube.obj"));
 		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 		blockModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
@@ -100,7 +101,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		targetModel.getVertexAttribute(10).alias = "a_tangent";
 		targetModel.getVertexAttribute(11).alias = "a_binormal";
 
-//		worldModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cube.obj"));
+//		worldModel = ObjLoaderTan.loadObj();
 //		worldModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 //		worldModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
 //		worldModel.getVertexAttribute(10).alias = "a_tangent";
@@ -169,8 +170,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		font = new BitmapFont();
-
+		font = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
+		font.setColor(1, 1, 1, 0.8f);
 		initShader();
 		initLevel(1);
 		initRender();
@@ -292,9 +293,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Vector3 Targetintersection = new Vector3();
 		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, Targetintersection);
 		float targetdst = Targetintersection.dst(player.position);
-		boolean resetter = false;
+		boolean win = false;
 		if (targetdst < 1.2f) {
-			resetter = true;
+			win = true;
 		}
 
 		// player out of bound?
@@ -308,7 +309,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 
-			if (resetter) {
+			if (win) {
 				animatePlayer = false;
 				nextLevel();
 				reset();
@@ -578,7 +579,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //		batch.end();
 
 		batch.begin();
-		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
+		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
+		font.draw(batch, "lives: 3", 620, 80);
+		font.draw(batch, "time: 00:30", 620, 60);
 		batch.end();
 
 	}
