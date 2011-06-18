@@ -1,8 +1,8 @@
 package de.swagner.mgcube;
 
+
 import java.awt.geom.CubicCurve2D;
 import java.util.logging.FileHandler;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,6 +11,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
@@ -71,43 +73,26 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	private ShaderProgram bloomShader;
 	private Vector3 light = new Vector3(-2f, 1f, 10f);
 	FrameBuffer frameBuffer;
+	FrameBuffer frameBuffer1;
 	Texture fbTexture;
 	Texture texture;
-
+	
 	float touchStartX = 0;
 	float touchStartY = 0;
 
 	public GameScreen(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
-		blockModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cube.obj"));
+
+		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
 		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-		blockModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
-		// blockModel.getVertexAttribute(Usage.Color).alias = "a_color";
-		blockModel.getVertexAttribute(10).alias = "a_tangent";
-		blockModel.getVertexAttribute(11).alias = "a_binormal";
-		// blockModel.getVertexAttribute(Usage.TextureCoordinates).alias =
-		// "a_texcoord0";
 
-		playerModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/sphere.obj"));
+		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
 		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-		playerModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
-		playerModel.getVertexAttribute(10).alias = "a_tangent";
-		playerModel.getVertexAttribute(11).alias = "a_binormal";
 
-		targetModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cylinder.obj"));
+		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
 		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-		targetModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
-		targetModel.getVertexAttribute(10).alias = "a_tangent";
-		targetModel.getVertexAttribute(11).alias = "a_binormal";
 
-//		worldModel = ObjLoaderTan.loadObj();
-//		worldModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-//		worldModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
-//		worldModel.getVertexAttribute(10).alias = "a_tangent";
-//		worldModel.getVertexAttribute(11).alias = "a_binormal";
-
-		
 		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
 		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
 				0.0f, 0.0f, // TexCoord 0
@@ -121,45 +106,45 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		short[] indices = { 0, 1, 2, 0, 2, 3 };
 		quadModel.setVertices(vertices);
 		quadModel.setIndices(indices);
-		
-		wireCubeModel = new Mesh(true, 20,20, new VertexAttribute(Usage.Position, 4, "a_vertex"));
+
+		wireCubeModel = new Mesh(true, 20, 20, new VertexAttribute(Usage.Position, 4, "a_vertex"));
 		float[] vertices2 = {
-                //front face
-               -1.0f,  1.0f,  1.0f, 1.0f, //0
-                1.0f,  1.0f,  1.0f, 1.0f, //1
-                1.0f, -1.0f,  1.0f, 1.0f, //2
-               -1.0f, -1.0f,  1.0f, 1.0f, //3
+				// front face
+				-1.0f, 1.0f, 1.0f, 1.0f, // 0
+				1.0f, 1.0f, 1.0f, 1.0f, // 1
+				1.0f, -1.0f, 1.0f, 1.0f, // 2
+				-1.0f, -1.0f, 1.0f, 1.0f, // 3
 
-                //left face
-               -1.0f,  1.0f,  1.0f, 1.0f, //0 
-               -1.0f,  1.0f, -1.0f, 1.0f, //4
-               -1.0f, -1.0f, -1.0f, 1.0f, //7
-               -1.0f, -1.0f,  1.0f, 1.0f, //3
+				// left face
+				-1.0f, 1.0f, 1.0f, 1.0f, // 0
+				-1.0f, 1.0f, -1.0f, 1.0f, // 4
+				-1.0f, -1.0f, -1.0f, 1.0f, // 7
+				-1.0f, -1.0f, 1.0f, 1.0f, // 3
 
-                //bottom face
-               -1.0f, -1.0f,  1.0f, 1.0f, //3
-                1.0f, -1.0f,  1.0f, 1.0f, //2
-                1.0f, -1.0f, -1.0f, 1.0f, //6
-               -1.0f, -1.0f, -1.0f, 1.0f, //7
+				// bottom face
+				-1.0f, -1.0f, 1.0f, 1.0f, // 3
+				1.0f, -1.0f, 1.0f, 1.0f, // 2
+				1.0f, -1.0f, -1.0f, 1.0f, // 6
+				-1.0f, -1.0f, -1.0f, 1.0f, // 7
 
-                //back face
-               -1.0f, -1.0f, -1.0f, 1.0f, //7
-               -1.0f,  1.0f, -1.0f, 1.0f, //4
-                1.0f,  1.0f, -1.0f, 1.0f, //5
-                1.0f, -1.0f, -1.0f, 1.0f, //6
+				// back face
+				-1.0f, -1.0f, -1.0f, 1.0f, // 7
+				-1.0f, 1.0f, -1.0f, 1.0f, // 4
+				1.0f, 1.0f, -1.0f, 1.0f, // 5
+				1.0f, -1.0f, -1.0f, 1.0f, // 6
 
-                //right face
-                1.0f, -1.0f, -1.0f, 1.0f, //6 
-                1.0f, -1.0f,  1.0f, 1.0f, //2
-                1.0f,  1.0f,  1.0f, 1.0f, //1
-                1.0f,  1.0f, -1.0f, 1.0f, //5
+				// right face
+				1.0f, -1.0f, -1.0f, 1.0f, // 6
+				1.0f, -1.0f, 1.0f, 1.0f, // 2
+				1.0f, 1.0f, 1.0f, 1.0f, // 1
+				1.0f, 1.0f, -1.0f, 1.0f, // 5
 		};
-		short[] indices2 = { 0, 1, 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+		short[] indices2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
 		wireCubeModel.setVertices(vertices2);
 		wireCubeModel.setIndices(indices2);
-		
+
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0, 0, 13f);
+		cam.position.set(0, 0, 16f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -183,7 +168,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Gdx.app.log("ShaderTest", transShader.getLog());
 			System.exit(0);
 		}
-		
+
 		bloomShader = new ShaderProgram(BloomShader.mVertexShader, BloomShader.mFragmentShader);
 		if (bloomShader.isCompiled() == false) {
 			Gdx.app.log("ShaderTest", bloomShader.getLog());
@@ -248,7 +233,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		frameBuffer = new FrameBuffer(Format.RGB565, 512, 512, true);
+		frameBuffer = new FrameBuffer(Format.RGB565, 800, 480, false);
+		frameBuffer1 = new FrameBuffer(Format.RGB565, 800, 480, false);
 	}
 
 	@Override
@@ -260,7 +246,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		startTime+= delta; 
+		startTime += delta;
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -540,10 +526,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
-			transShader.setUniformf("a_color",1.0f, 0.1f, 0.1f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
 			transShader.setUniformf("alpha", 0.2f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-			
+
 			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
 			transShader.setUniformf("alpha", 0.09f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
@@ -552,33 +538,34 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		frameBuffer.end();
-		
+
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-		
-		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+		frameBuffer.getColorBufferTexture().bind(0);
+
+		// Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(),
+		// Gdx.graphics.getHeight());
+
+		frameBuffer1.begin();
+		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
 		Gdx.graphics.getGL20().glDisable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-		Gdx.gl20.glActiveTexture( GL20.GL_TEXTURE0);
-		frameBuffer.getColorBufferTexture().bind(0);
-		
-		Gdx.gl.glDepthMask(false);
-		
-		bloomShader.begin(); 
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		bloomShader.begin();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
 		bloomShader.setUniformi("s_texture", 0);
-		bloomShader.setUniformf("bloomfactor", (MathUtils.sin(startTime*5f) * 0.1f) +1.0f);
-        quadModel.render(bloomShader,GL20.GL_TRIANGLE_FAN);
-        bloomShader.end();	
+		bloomShader.setUniformf("bloomfactor", (MathUtils.sin(startTime * 5f) * 0.1f) + 1.0f);
+		quadModel.render(bloomShader, GL20.GL_TRIANGLE_FAN);
+		bloomShader.end();
+		frameBuffer1.end();
 
-//		batch.begin();
-//		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-//		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0);
-//		batch.end();
-
+		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.begin();
+
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		batch.draw(frameBuffer1.getColorBufferTexture(), 0, 0);
+		
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
 		font.draw(batch, "lives: 3", 620, 80);
 		font.draw(batch, "time: 00:30", 620, 60);
@@ -667,7 +654,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
 		angleY += ((x - touchStartX) / 5.f);
-		angleX -= ((y - touchStartY) / 5.f);
+		angleX += ((y - touchStartY) / 5.f);
 
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
 
