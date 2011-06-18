@@ -31,41 +31,35 @@ import de.swagner.gdx.obj.normalmap.shader.BloomShader;
 import de.swagner.gdx.obj.normalmap.shader.Quad2Shader;
 import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
-public class GameScreen extends DefaultScreen implements InputProcessor {
+public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	float startTime = 0;
 	PerspectiveCamera cam;
+	Mesh quadModel;
 	Mesh blockModel;
 	Mesh playerModel;
 	Mesh targetModel;
 	Mesh worldModel;
-	Mesh quadModel;
 	Mesh wireCubeModel;
 	float angleX = 0;
 	float angleY = 0;
 	SpriteBatch batch;
 	BitmapFont font;
-	Player player = new Player();
-	Target target = new Target();
-	Array<Block> blocks = new Array<Block>();
-	boolean animateWorld = false;
-	boolean animatePlayer = false;
-	
-	//fade
 	SpriteBatch fadeBatch;
 	Sprite blackFade;
 	Sprite title;
 	float fade = 1.0f;
 	boolean finished = false;
-
-	float touchDistance = 0;
+	
+	Player player = new Player();
+	Target target = new Target();
+	Array<Block> blocks = new Array<Block>();
+	boolean animateWorld = false;
+	boolean animatePlayer = false;	
 
 	Vector3 xAxis = new Vector3(1, 0, 0);
 	Vector3 yAxis = new Vector3(0, 1, 0);
-	Vector3 zAxis = new Vector3(0, 0, 1);
-
-	Vector3 light_position0 = new Vector3(10.0f, 10.0f, 20.75f);
-	Vector3 light_position1 = new Vector3(-10.0f, -10.0f, -20.75f);
+	Vector3 zAxis = new Vector3(0, 0, 1);	
 
 	// GLES20
 	Matrix4 model = new Matrix4().idt();
@@ -74,18 +68,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Matrix4 tmp = new Matrix4().idt();
 	private ShaderProgram transShader;
 	private ShaderProgram bloomShader;
-	private Vector3 light = new Vector3(-2f, 1f, 10f);
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBuffer1;
 	Texture fbTexture;
 	Texture texture;
-	
-	float touchStartX = 0;
-	float touchStartY = 0;
 
-	public GameScreen(Game game) {
+	public MainMenuScreen(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
+		
+		title = new Sprite(new Texture(Gdx.files.internal("data/logo.png")));
+		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 
 		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
 		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
@@ -159,9 +152,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		font = new BitmapFont();
-		
-		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
+		font = new BitmapFont();		
+
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
@@ -182,6 +174,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Gdx.app.log("ShaderTest", bloomShader.getLog());
 			System.exit(0);
 		}
+	}
+
+	private void initRender() {
+		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		Gdx.graphics.getGL20().glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		frameBuffer = new FrameBuffer(Format.RGB565, 800, 480, false);
+		frameBuffer1 = new FrameBuffer(Format.RGB565, 800, 480, false);
 	}
 
 	private void initLevel(int levelnumber) {
@@ -227,35 +230,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 	}
-
-	private void reset() {
-		animateWorld = false;
-		animatePlayer = false;
-		initLevel(Resources.getInstance().currentlevel);
-	}
-
-	private void initRender() {
-		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-		Gdx.graphics.getGL20().glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
-
-		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		frameBuffer = new FrameBuffer(Format.RGB565, 800, 480, false);
-		frameBuffer1 = new FrameBuffer(Format.RGB565, 800, 480, false);
-	}
-
+	
 	@Override
 	public void show() {
 	}
-
-	protected int lastTouchX;
-	protected int lastTouchY;
 
 	@Override
 	public void render(float delta) {
 		startTime += delta;
 
+		angleX += MathUtils.sin(startTime);
+		angleY += MathUtils.cos(startTime);
+		
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -271,91 +257,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-
-		// collision
-		Ray pRay = new Ray(player.position, player.direction);
-
-		for (Block block : blocks) {
-			Vector3 intersection = new Vector3();
-			boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
-			float dst = intersection.dst(player.position);
-			if (dst < 1.2f && intersect) {
-				animatePlayer = false;
-				break;
-			}
-		}
-		Vector3 Targetintersection = new Vector3();
-		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, Targetintersection);
-		float targetdst = Targetintersection.dst(player.position);
-		boolean resetter = false;
-		if (targetdst < 1.2f) {
-			resetter = true;
-		}
-
-		// player out of bound?
-		BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
-		if (!box.contains(player.position)) {
-			animatePlayer = false;
-			reset();
-		}
-
-		if (animatePlayer) {
-
-			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
-
-			if (resetter) {
-				animatePlayer = false;
-				nextLevel();
-				reset();
-			}
-
-		}
-
-		if (!Gdx.input.isTouched()) {
-			if (Math.abs(player.direction.x) > Math.abs(player.direction.y) && Math.abs(player.direction.x) > Math.abs(player.direction.z)) {
-				while (player.direction.x != -1 && player.direction.x != 1) {
-					if (player.direction.x < 0)
-						player.direction.x--;
-					else
-						player.direction.x++;
-					if (player.direction.x < -1)
-						player.direction.x = -1;
-					if (player.direction.x > 1)
-						player.direction.x = 1;
-					player.direction.y = 0;
-					player.direction.z = 0;
-				}
-			}
-			if (Math.abs(player.direction.y) > Math.abs(player.direction.x) && Math.abs(player.direction.y) > Math.abs(player.direction.z)) {
-				while (player.direction.y != -1 && player.direction.y != 1) {
-					if (player.direction.y < 0)
-						player.direction.y--;
-					else
-						player.direction.y++;
-					if (player.direction.y < -1)
-						player.direction.y = -1;
-					if (player.direction.y > 1)
-						player.direction.y = 1;
-					player.direction.x = 0;
-					player.direction.z = 0;
-				}
-			}
-			if (Math.abs(player.direction.z) > Math.abs(player.direction.y) && Math.abs(player.direction.z) > Math.abs(player.direction.y)) {
-				while (player.direction.z != -1 && player.direction.z != 1) {
-					if (player.direction.z < 0)
-						player.direction.z--;
-					else
-						player.direction.z++;
-					if (player.direction.z < -1)
-						player.direction.z = -1;
-					if (player.direction.z > 1)
-						player.direction.z = 1;
-					player.direction.y = 0;
-					player.direction.x = 0;
-				}
-			}
-		}
-
+	
 		// render Blocks
 		for (Block block : blocks) {
 			tmp.idt();
@@ -408,95 +310,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		{
-			// render Player
-			tmp.idt();
-			model.idt();
-			modelView.idt();
-
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
-			tmp.setToTranslation(player.position.x, player.position.y, player.position.z);
-			model.mul(tmp);
-
-			transShader.begin();
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
-
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f);
-			transShader.setUniformf("alpha", 0.8f);
-			playerModel.render(transShader, GL20.GL_TRIANGLES);
-			transShader.end();
-		}
-
-		{
-			// render Target
-			tmp.idt();
-			model.idt();
-			modelView.idt();
-
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
-			tmp.setToTranslation(target.position.x, target.position.y, target.position.z);
-			model.mul(tmp);
-
-			transShader.begin();
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
-
-			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.5f);
-			targetModel.render(transShader, GL20.GL_TRIANGLES);
-
-			transShader.end();
-		}
-
-		{
 			// render Wire
 			tmp.idt();
 			model.idt();
@@ -544,7 +357,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.end();
 		}
-
+		
 		frameBuffer.end();
 
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
@@ -552,9 +365,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.graphics.getGL20().glDisable(GL20.GL_BLEND);
 
 		frameBuffer.getColorBufferTexture().bind(0);
-
-		// Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(),
-		// Gdx.graphics.getHeight());
 
 		frameBuffer1.begin();
 		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
@@ -571,7 +381,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.draw(frameBuffer1.getColorBufferTexture(), 0, 0);
-		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 		batch.end();
 		
 		if (!finished && fade > 0) {
@@ -589,7 +398,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			blackFade.draw(fadeBatch);
 			fadeBatch.end();
 			if (fade >= 1) {
-				game.setScreen(new MainMenuScreen(game));
+				game.setScreen(new GameScreen(game));
 			}
 		}
 
@@ -603,36 +412,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		if (Gdx.input.isTouched())
 			return false;
-		if (keycode == Input.Keys.ESCAPE) {
-			System.exit(0);
-		}
 
 		if (keycode == Input.Keys.SPACE) {
-			animatePlayer = true;
-		}
-
-		if (keycode == Input.Keys.R) {
-			reset();
-		}
-
-		if (keycode == Input.Keys.RIGHT) {
-			nextLevel();
-		}
-
-		if (keycode == Input.Keys.LEFT) {
-			prevLevel();
+			finished = true;
 		}
 		return false;
-	}
-
-	private void nextLevel() {
-		Resources.getInstance().currentlevel++;
-		initLevel(Resources.getInstance().currentlevel);
-	}
-
-	private void prevLevel() {
-		Resources.getInstance().currentlevel--;
-		initLevel(Resources.getInstance().currentlevel);
 	}
 
 	@Override
@@ -649,12 +433,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		touchDistance = 0;
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		touchStartX = x;
-		touchStartY = y;
+		finished = true;
 
 		return false;
 	}
@@ -664,9 +446,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		if (Math.abs(touchDistance) < 0.5f)
-			animatePlayer = true;
-
 		return false;
 	}
 
@@ -674,20 +453,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchDragged(int x, int y, int pointer) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-
-		angleY += ((x - touchStartX) / 5.f);
-		angleX += ((y - touchStartY) / 5.f);
-
-		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
-
-		if (!animatePlayer) {
-			player.direction.set(0, 0, -1);
-			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
-			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
-		}
-
-		touchStartX = x;
-		touchStartY = y;
 
 		return false;
 	}

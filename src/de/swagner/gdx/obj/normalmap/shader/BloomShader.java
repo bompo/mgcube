@@ -31,21 +31,9 @@ public class BloomShader {
         "            sum += texture2D(s_texture, v_texCoord + vec2(j, i)*0.004) * 0.25 * bloomfactor;\n" +
         "        }\n" +
         "   }\n" +
-        "       if (texture2D(s_texture, v_texCoord).r < 0.3)\n" +
-        "    {\n" +
+    
         "      gl_FragColor = sum*sum*0.012 + texture2D(s_texture, v_texCoord);\n" +
-        "    }\n" +
-        "    else\n" +
-        "    {\n" +
-        "        if (texture2D(s_texture, v_texCoord).r < 0.5)\n" +
-        "        {\n" +
-        "            gl_FragColor = sum*sum*0.009 + texture2D(s_texture, v_texCoord);\n" +
-        "        }\n" +
-        "        else\n" +
-        "        {\n" +
-        "             gl_FragColor = sum*sum*0.0075 + texture2D(s_texture, v_texCoord);\n" +
-        "        }\n" +
-        "    }\n" +
+       
         "}\n";
 
 }
