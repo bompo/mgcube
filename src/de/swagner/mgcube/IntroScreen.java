@@ -97,7 +97,22 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
+		initShader();
 		initRender();
+	}
+	
+	private void initShader() {
+		transShader = new ShaderProgram(TransShader.mVertexShader, TransShader.mFragmentShader);
+		if (transShader.isCompiled() == false) {
+			Gdx.app.log("ShaderTest", transShader.getLog());
+			System.exit(0);
+		}
+
+		bloomShader = new ShaderProgram(BloomShader.mVertexShader, BloomShader.mFragmentShader);
+		if (bloomShader.isCompiled() == false) {
+			Gdx.app.log("ShaderTest", bloomShader.getLog());
+			System.exit(0);
+		}
 	}
 
 	private void initRender() {
@@ -122,7 +137,8 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		frameBuffer.begin();
+		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
 
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -134,6 +150,29 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.draw(title, 0, 0);
+		batch.end();
+		
+		frameBuffer.end();
+		
+		Gdx.graphics.getGL20().glDisable(GL20.GL_BLEND);
+
+		frameBuffer.getColorBufferTexture().bind(0);
+
+		frameBuffer1.begin();
+		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
+		
+		bloomShader.begin();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
+		bloomShader.setUniformi("s_texture", 0);
+		bloomShader.setUniformf("bloomfactor", map(MathUtils.sin(startTime*0.5f),0,1,0.2f,0.3f) );
+		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+		bloomShader.end(); 
+		frameBuffer1.end();
+
+		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.begin();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		batch.draw(frameBuffer1.getColorBufferTexture(), 0, 0);
 		batch.end();
 		
 		if (!finished && fade > 0) {
@@ -156,6 +195,10 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 	}
+
+	float map(float value, float fromLow, float fromHigh, float toLow, float toHigh) {
+		return (value - fromLow) / fromHigh * (toHigh - toLow) + toLow;
+	}		 
 
 	@Override
 	public void hide() {
