@@ -658,7 +658,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
 		angleY += ((x - touchStartX) / 5.f);
-		angleX += ((y - touchStartY) / 5.f);
+		angleX -= ((y - touchStartY) / 5.f);
 
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
 
