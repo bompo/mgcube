@@ -158,7 +158,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		wireCubeModel.setIndices(indices2);
 		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0, 0, 18f);
+		cam.position.set(0, 0, 9f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -537,7 +537,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
 			transShader.setUniformf("a_color",1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 1.0f);
+			transShader.setUniformf("alpha", 0.2f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
@@ -551,6 +551,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		
+		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		Gdx.graphics.getGL20().glDisable(GL20.GL_BLEND);
+		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		Gdx.gl20.glActiveTexture( GL20.GL_TEXTURE0);
 		frameBuffer.getColorBufferTexture().bind(0);
@@ -569,8 +574,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0);
 //		batch.end();
 
-		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		batch.begin();
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 		batch.end();
