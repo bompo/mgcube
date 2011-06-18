@@ -1,5 +1,7 @@
 package de.swagner.mgcube;
 
+import java.awt.geom.CubicCurve2D;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -38,6 +40,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Mesh targetModel;
 	Mesh worldModel;
 	Mesh quadModel;
+	Mesh wireCubeModel;
 	float angleX = 0;
 	float angleY = 0;
 	SpriteBatch batch;
@@ -97,11 +100,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		targetModel.getVertexAttribute(10).alias = "a_tangent";
 		targetModel.getVertexAttribute(11).alias = "a_binormal";
 
-		worldModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cube.obj"));
-		worldModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-		worldModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
-		worldModel.getVertexAttribute(10).alias = "a_tangent";
-		worldModel.getVertexAttribute(11).alias = "a_binormal";
+//		worldModel = ObjLoaderTan.loadObj(Gdx.files.internal("data/cube.obj"));
+//		worldModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+//		worldModel.getVertexAttribute(Usage.Normal).alias = "a_normal";
+//		worldModel.getVertexAttribute(10).alias = "a_tangent";
+//		worldModel.getVertexAttribute(11).alias = "a_binormal";
 
 		
 		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
@@ -117,7 +120,42 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		short[] indices = { 0, 1, 2, 0, 2, 3 };
 		quadModel.setVertices(vertices);
 		quadModel.setIndices(indices);
+		
+		wireCubeModel = new Mesh(true, 20,20, new VertexAttribute(Usage.Position, 4, "a_vertex"));
+		float[] vertices2 = {
+                //front face
+               -1.0f,  1.0f,  1.0f, 1.0f, //0
+                1.0f,  1.0f,  1.0f, 1.0f, //1
+                1.0f, -1.0f,  1.0f, 1.0f, //2
+               -1.0f, -1.0f,  1.0f, 1.0f, //3
 
+                //left face
+               -1.0f,  1.0f,  1.0f, 1.0f, //0 
+               -1.0f,  1.0f, -1.0f, 1.0f, //4
+               -1.0f, -1.0f, -1.0f, 1.0f, //7
+               -1.0f, -1.0f,  1.0f, 1.0f, //3
+
+                //bottom face
+               -1.0f, -1.0f,  1.0f, 1.0f, //3
+                1.0f, -1.0f,  1.0f, 1.0f, //2
+                1.0f, -1.0f, -1.0f, 1.0f, //6
+               -1.0f, -1.0f, -1.0f, 1.0f, //7
+
+                //back face
+               -1.0f, -1.0f, -1.0f, 1.0f, //7
+               -1.0f,  1.0f, -1.0f, 1.0f, //4
+                1.0f,  1.0f, -1.0f, 1.0f, //5
+                1.0f, -1.0f, -1.0f, 1.0f, //6
+
+                //right face
+                1.0f, -1.0f, -1.0f, 1.0f, //6 
+                1.0f, -1.0f,  1.0f, 1.0f, //2
+                1.0f,  1.0f,  1.0f, 1.0f, //1
+                1.0f,  1.0f, -1.0f, 1.0f, //5
+		};
+		short[] indices2 = { 0, 1, 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+		wireCubeModel.setVertices(vertices2);
+		wireCubeModel.setIndices(indices2);
 		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 18f);
@@ -362,7 +400,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
 			transShader.setUniformf("alpha", 0.8f);
-			blockModel.render(transShader, GL20.GL_LINE_STRIP);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
 			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
 			transShader.setUniformf("alpha", 0.2f);
@@ -454,10 +492,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
 			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.8f);
-			targetModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
 			transShader.setUniformf("alpha", 0.5f);
 			targetModel.render(transShader, GL20.GL_TRIANGLES);
 
@@ -503,12 +537,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
 			transShader.setUniformf("a_color",1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.2f);
-			worldModel.render(transShader, GL20.GL_LINE_STRIP);
+			transShader.setUniformf("alpha", 1.0f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.1f);
-			worldModel.render(transShader, GL20.GL_TRIANGLES);
+			transShader.setUniformf("alpha", 0.09f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
 
 			transShader.end();
 		}
