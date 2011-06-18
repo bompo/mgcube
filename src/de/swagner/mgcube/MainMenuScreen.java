@@ -77,7 +77,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 		
-		title = new Sprite(new Texture(Gdx.files.internal("data/logo.png")));
+		title = new Sprite(new Texture(Gdx.files.internal("data/title.png")));
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 
 		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
@@ -358,10 +358,13 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			transShader.end();
 		}
 		
-		frameBuffer.end();
 
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		
+	
+		frameBuffer.end();
+		
 		Gdx.graphics.getGL20().glDisable(GL20.GL_BLEND);
 
 		frameBuffer.getColorBufferTexture().bind(0);
@@ -381,6 +384,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.draw(frameBuffer1.getColorBufferTexture(), 0, 0);
+		batch.end();
+		
+		batch.begin();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		batch.draw(title, 40, 370);
 		batch.end();
 		
 		if (!finished && fade > 0) {
