@@ -688,7 +688,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		cam.translate(0, 0, 1 * amount);
 		return false;
 	}
 
