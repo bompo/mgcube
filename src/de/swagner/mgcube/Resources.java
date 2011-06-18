@@ -33,6 +33,8 @@ public class Resources {
 	public int currentlevel =1;
 	
 	public int lives = 3;
+	
+	public float time = 0;
 
 	
 	public static Resources instance;

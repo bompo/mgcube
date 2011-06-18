@@ -242,6 +242,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Resources.getInstance().lives = 3;
 			Resources.getInstance().currentlevel = 1;
 			initLevel(Resources.getInstance().currentlevel);
+			Resources.getInstance().time = 0;
 		}
 	}
 
@@ -587,7 +588,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
 		font.draw(batch, "lives: " + Resources.getInstance().lives, 620, 80);
-		font.draw(batch, "time: 00:30", 620, 60);
+		Resources.getInstance().time += delta;
+		int seconds = (int) Resources.getInstance().time % 60;
+		int minutes = (int)Resources.getInstance().time / 60;
+		if(seconds > 9 && minutes > 9)
+			font.draw(batch, "time: " + minutes + ":" + seconds, 620, 60);
+		else if(seconds > 9 && minutes < 10)
+			font.draw(batch, "time: 0" + minutes + ":" + seconds, 620, 60);
+		else if(seconds < 10 && minutes > 9)
+			font.draw(batch, "time: " + minutes + ":0" + seconds, 620, 60);
+		else
+			font.draw(batch, "time: 0" + minutes + ":0" + seconds, 620, 60);
 		batch.end();
 		
 		if (!finished && fade > 0) {
@@ -629,6 +640,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		if (keycode == Input.Keys.R) {
 			reset();
+			Resources.getInstance().time = 0;
 		}
 
 		if (keycode == Input.Keys.RIGHT) {
@@ -643,6 +655,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	private void nextLevel() {
 		Resources.getInstance().currentlevel++;
+		Resources.getInstance().time = 0;
 		initLevel(Resources.getInstance().currentlevel);
 	}
 
