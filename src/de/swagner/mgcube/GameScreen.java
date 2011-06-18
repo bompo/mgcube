@@ -1,9 +1,13 @@
 package de.swagner.mgcube;
 
+
+import java.awt.geom.CubicCurve2D;
+import java.util.logging.FileHandler;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -96,7 +100,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
 		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 
-
 		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
 		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
 				0.0f, 0.0f, // TexCoord 0
@@ -159,12 +162,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		font = new BitmapFont();
-		
+
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
+		font = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
+		font.setColor(1, 1, 1, 0.8f);
 		initShader();
 		initLevel(1);
 		initRender();
@@ -287,9 +291,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Vector3 Targetintersection = new Vector3();
 		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, Targetintersection);
 		float targetdst = Targetintersection.dst(player.position);
-		boolean resetter = false;
+		boolean win = false;
 		if (targetdst < 1.2f) {
-			resetter = true;
+			win = true;
 		}
 
 		// player out of bound?
@@ -303,7 +307,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 
-			if (resetter) {
+			if (win) {
 				animatePlayer = false;
 				nextLevel();
 				reset();
@@ -569,9 +573,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.begin();
+
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.draw(frameBuffer1.getColorBufferTexture(), 0, 0);
-		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
+		
+		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
+		font.draw(batch, "lives: 3", 620, 80);
+		font.draw(batch, "time: 00:30", 620, 60);
 		batch.end();
 		
 		if (!finished && fade > 0) {
