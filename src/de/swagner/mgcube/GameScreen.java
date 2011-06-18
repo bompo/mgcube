@@ -158,7 +158,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		wireCubeModel.setIndices(indices2);
 		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0, 0, 9f);
+		cam.position.set(0, 0, 13f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -688,7 +688,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		cam.translate(0, 0, 1 * amount);
+			cam.translate(0, 0, 1 * amount);
+		if((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
+			cam.translate(0, 0, 1 * -amount);
 		return false;
 	}
 
