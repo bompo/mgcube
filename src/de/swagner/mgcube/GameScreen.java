@@ -236,6 +236,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		animateWorld = false;
 		animatePlayer = false;
 		initLevel(Resources.getInstance().currentlevel);
+		if(Resources.getInstance().lives < 1)
+		{
+			game.setScreen(new MainMenuScreen(game));
+			Resources.getInstance().lives = 3;
+			Resources.getInstance().currentlevel = 1;
+			initLevel(Resources.getInstance().currentlevel);
+		}
 	}
 
 	private void initRender() {
@@ -300,6 +307,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
 		if (!box.contains(player.position)) {
 			animatePlayer = false;
+			Resources.getInstance().lives--;
 			reset();
 		}
 
@@ -578,7 +586,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		batch.draw(frameBuffer1.getColorBufferTexture(), 0, 0);
 		
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
-		font.draw(batch, "lives: 3", 620, 80);
+		font.draw(batch, "lives: " + Resources.getInstance().lives, 620, 80);
 		font.draw(batch, "time: 00:30", 620, 60);
 		batch.end();
 		
