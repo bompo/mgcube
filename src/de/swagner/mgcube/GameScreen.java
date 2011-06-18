@@ -9,6 +9,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -71,7 +72,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	FrameBuffer frameBuffer;
 	Texture fbTexture;
 	Texture texture;
-
+	Pixmap tempPixmap = new Pixmap(512, 512, Format.RGB565);
+	
 	float touchStartX = 0;
 	float touchStartY = 0;
 
@@ -158,7 +160,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		wireCubeModel.setIndices(indices2);
 		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0, 0, 9f);
+		cam.position.set(0, 0, 16f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -549,34 +551,33 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		frameBuffer.end();
 		
+		
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-		
-		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		frameBuffer.getColorBufferTexture().bind(0);
+		 Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		 
+//		frameBuffer.begin();
+//		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
 
 		Gdx.graphics.getGL20().glDisable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-		Gdx.gl20.glActiveTexture( GL20.GL_TEXTURE0);
-		frameBuffer.getColorBufferTexture().bind(0);
-		
-		Gdx.gl.glDepthMask(false);
 		
 		bloomShader.begin(); 
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		batch.getProjectionMatrix().setToOrtho2D(0, 0,  Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		bloomShader.setUniformi("s_texture", 0);
 		bloomShader.setUniformf("bloomfactor", (MathUtils.sin(startTime*5f) * 0.1f) +1.0f);
         quadModel.render(bloomShader,GL20.GL_TRIANGLE_FAN);
         bloomShader.end();	
+//        frameBuffer.end();
 
+//        Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 //		batch.begin();
 //		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 //		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0);
+//		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
 //		batch.end();
-
-		batch.begin();
-		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 10, 20);
-		batch.end();
 
 	}
 
