@@ -108,6 +108,8 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		initShader();
 		initLevel(0);
 		initRender();
+		angleY = -90;
+		angleX = -10;
 	}
 
 	private void initShader() {
@@ -210,8 +212,8 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		
 		startTime += delta;
 
-		angleX += MathUtils.sin(startTime);
-		angleY += MathUtils.cos(startTime);
+		angleX += MathUtils.sin(startTime)/10f;
+		angleY += MathUtils.cos(startTime)/5f;
 
 		frameBuffer.begin();
 
