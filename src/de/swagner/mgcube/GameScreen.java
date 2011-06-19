@@ -84,6 +84,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	FrameBuffer frameBufferVert;
 	FrameBuffer frameBufferHori;
 	
+	//garbage collector
+	int seconds;
+	int minutes;
+	Ray pRay = new Ray(new Vector3(), new Vector3());
+	Vector3 intersection = new Vector3();
+	Vector3 Portalintersection1 = new Vector3();
+	Vector3 Portalintersection2 = new Vector3();
+	BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
+	
 	protected int lastTouchX;
 	protected int lastTouchY;
 	private float changeLevelEffect;
@@ -245,10 +254,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
 		// collision
-		Ray pRay = new Ray(player.position, player.direction);
+		pRay.set(player.position, player.direction);
 
 		for (Block block : blocks) {
-			Vector3 intersection = new Vector3();
 			boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
 			float dst = intersection.dst(player.position);
 			if (dst < 1.2f && intersect) {
@@ -256,9 +264,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				break;
 			}
 		}
-		Vector3 Targetintersection = new Vector3();
-		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, Targetintersection);
-		float targetdst = Targetintersection.dst(player.position);
+		
+		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
+		float targetdst = intersection.dst(player.position);
 		boolean win = false;
 		if (targetdst < 1.2f) {
 			win = true;
@@ -268,8 +276,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		boolean Portalintersect2 = false;
 		boolean warp = false;
 		if(!warplock) {
-			Vector3 Portalintersection1 = new Vector3();
-			Vector3 Portalintersection2 = new Vector3();
 			Portalintersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, Portalintersection1);
 			Portalintersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, Portalintersection2);
 			float portaldst1 = Portalintersection1.dst(player.position);
@@ -282,7 +288,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		// player out of bound?
-		BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
 		if (!box.contains(player.position)) {
 			animatePlayer = false;
 			Resources.getInstance().lives--;
@@ -396,12 +401,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.8f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.2f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 
 		}
@@ -449,8 +452,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 			
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f);
-			transShader.setUniformf("alpha", 0.4f);
+			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
 			playerModel.render(transShader, GL20.GL_TRIANGLES);
 			
 			tmp.setToScaling(2.0f, 2.0f, 2.0f);
@@ -462,8 +464,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			//render hull			
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f);
-			transShader.setUniformf("alpha", 0.4f);
+			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 		}
@@ -492,13 +493,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 			
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
-			transShader.setUniformf("alpha", 0.5f);
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 			
 			//render hull			
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
-			transShader.setUniformf("alpha", 0.4f);
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
 			blockModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 			
@@ -524,13 +523,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
-			transShader.setUniformf("alpha", 0.5f);
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 			
 			//render hull			
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
-			transShader.setUniformf("alpha", 0.4f);
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
 			blockModel.render(transShader, GL20.GL_LINE_STRIP);
 
 			}
@@ -570,15 +567,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
-			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.5f);
+			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f,0.5f);
 			targetModel.render(transShader, GL20.GL_TRIANGLES);
 			
 			//render hull			
-			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.4f);
+			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f, 0.4f);
 			targetModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 
@@ -596,18 +590,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
 			tmp.setToTranslation(0, 0, 0);
 			model.mul(tmp);
 
@@ -616,14 +598,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.2f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.09f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.09f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 		
@@ -641,18 +620,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY + angleYBack);
 			model.mul(tmp);
 
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
 			tmp.setToTranslation(0, 0, 0);
 			model.mul(tmp);
 
@@ -661,10 +628,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			modelViewProjection = tmp.mul(model);
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.1f);
-			transShader.setUniformf("alpha", 0.08f);
+			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.1f, 0.08f);
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 
@@ -701,6 +666,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		bloomShader.end(); 
 		frameBufferHori.end();
 		
+		batch.enableBlending();
 		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.begin();
@@ -710,13 +676,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		
 		//GUI
+		batch.disableBlending();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.begin();
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
 		font.draw(batch, "lives: " + Resources.getInstance().lives, 620, 80);
 		Resources.getInstance().time += delta;
-		int seconds = (int) Resources.getInstance().time % 60;
-		int minutes = (int)Resources.getInstance().time / 60;
+		seconds = (int) Resources.getInstance().time % 60;
+		minutes = (int)Resources.getInstance().time / 60;
 		if(seconds > 9 && minutes > 9)
 			font.draw(batch, "time: " + minutes + ":" + seconds, 620, 60);
 		else if(seconds > 9 && minutes < 10)

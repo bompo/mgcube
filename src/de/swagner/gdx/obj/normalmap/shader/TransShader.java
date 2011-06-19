@@ -13,9 +13,8 @@ public class TransShader {
         "#ifdef GL_ES\n" +
         "precision mediump float;\n" +
         "#endif\n" +
-        "uniform vec3 a_color;		\n"+
-        "uniform float alpha;		\n"+
+        "uniform vec4 a_color;		\n"+
     	"void main() {						\n"+
-    	"gl_FragColor = vec4(a_color, alpha);	\n"+
+    	"gl_FragColor = a_color;	\n"+
     	"}\n"; 
 }

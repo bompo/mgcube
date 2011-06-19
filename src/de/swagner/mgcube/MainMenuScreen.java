@@ -238,12 +238,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.8f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.2f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 
 			transShader.end();
@@ -287,12 +285,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.2f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
-			transShader.setUniformf("alpha", 0.09f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.09f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 
 			transShader.end();
@@ -304,7 +300,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glDisable(GL20.GL_BLEND);
-//		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
 		frameBuffer.getColorBufferTexture().bind(0);
 
