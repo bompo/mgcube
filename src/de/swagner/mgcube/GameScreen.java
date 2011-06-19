@@ -54,6 +54,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	BitmapFont font;
 	Player player = new Player();
 	Target target = new Target();
+	Portal portal = new Portal();
 	Array<Block> blocks = new Array<Block>();
 	boolean animateWorld = false;
 	boolean animatePlayer = false;
@@ -192,6 +193,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
 					}
+					if (level[z][y][x] == 4) {
+						if(portal.enterPosition.x == -1) {
+							portal.enterPosition.x = -10f + (x * 2);
+							portal.enterPosition.y = -10f + (y * 2);
+							portal.enterPosition.z = -10f + (z * 2);
+						} else {
+							portal.exitPosition.x = -10f + (x * 2);
+							portal.exitPosition.y = -10f + (y * 2);
+							portal.exitPosition.z = -10f + (z * 2);
+						}
+					}					
 				}
 			}
 		}
@@ -441,6 +453,79 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 			transShader.end();
+		}
+		
+		{
+			if(portal.enterPosition.x != -1 && portal.exitPosition.x != -1) {
+			// render Portal entry
+			tmp.idt();
+			model.idt();
+			modelView.idt();
+
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+
+			tmp.setToTranslation(portal.enterPosition.x, portal.enterPosition.y, portal.enterPosition.z);
+			model.mul(tmp);
+
+			transShader.begin();
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
+
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
+			transShader.setUniformf("alpha", 0.5f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+			
+			//render hull			
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
+			transShader.setUniformf("alpha", 0.4f);
+			blockModel.render(transShader, GL20.GL_LINE_STRIP);
+			
+			
+			// render Portal exit
+			tmp.idt();
+			model.idt();
+			modelView.idt();
+
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+
+			tmp.setToTranslation(portal.exitPosition.x, portal.exitPosition.y, portal.exitPosition.z);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
+
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
+			transShader.setUniformf("alpha", 0.5f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+			
+			//render hull			
+			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f);
+			transShader.setUniformf("alpha", 0.4f);
+			blockModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.end();
+			}
 		}
 
 		{
