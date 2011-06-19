@@ -431,7 +431,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f);
-			transShader.setUniformf("alpha", 0.1f);
+			transShader.setUniformf("alpha", 0.4f);
 			playerModel.render(transShader, GL20.GL_TRIANGLES);
 			
 			
