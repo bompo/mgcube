@@ -2,9 +2,14 @@ package de.swagner.mgcube;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
@@ -35,7 +40,15 @@ public class Resources {
 	public int lives = 3;
 	
 	public float time = 0;
-
+	
+	public Mesh blockModel;
+	public Mesh playerModel;
+	public Mesh targetModel;
+	public Mesh quadModel;
+	public Mesh wireCubeModel;
+	
+	public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
+	public Sound move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
 	
 	public static Resources instance;
 
@@ -51,7 +64,67 @@ public class Resources {
 	}
 	
 	public void reInit() {
+		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
+		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+
+		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
+		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+
+		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
+		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+
+		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
+		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
+				0.0f, 0.0f, // TexCoord 0
+				-1.0f, -1.0f, 0.0f, 1.0f, // Position 1
+				0.0f, 1.0f, // TexCoord 1
+				1.0f, -1.0f, 0.0f, 1.0f, // Position 2
+				1.0f, 1.0f, // TexCoord 2
+				1.0f, 1.0f, 0.0f, 1.0f, // Position 3
+				1.0f, 0.0f // TexCoord 3
+		};
+		short[] indices = { 0, 1, 2, 0, 2, 3 };
+		quadModel.setVertices(vertices);
+		quadModel.setIndices(indices);
+
+		wireCubeModel = new Mesh(true, 20, 20, new VertexAttribute(Usage.Position, 4, "a_vertex"));
+		float[] vertices2 = {
+				// front face
+				-1.0f, 1.0f, 1.0f, 1.0f, // 0
+				1.0f, 1.0f, 1.0f, 1.0f, // 1
+				1.0f, -1.0f, 1.0f, 1.0f, // 2
+				-1.0f, -1.0f, 1.0f, 1.0f, // 3
+
+				// left face
+				-1.0f, 1.0f, 1.0f, 1.0f, // 0
+				-1.0f, 1.0f, -1.0f, 1.0f, // 4
+				-1.0f, -1.0f, -1.0f, 1.0f, // 7
+				-1.0f, -1.0f, 1.0f, 1.0f, // 3
+
+				// bottom face
+				-1.0f, -1.0f, 1.0f, 1.0f, // 3
+				1.0f, -1.0f, 1.0f, 1.0f, // 2
+				1.0f, -1.0f, -1.0f, 1.0f, // 6
+				-1.0f, -1.0f, -1.0f, 1.0f, // 7
+
+				// back face
+				-1.0f, -1.0f, -1.0f, 1.0f, // 7
+				-1.0f, 1.0f, -1.0f, 1.0f, // 4
+				1.0f, 1.0f, -1.0f, 1.0f, // 5
+				1.0f, -1.0f, -1.0f, 1.0f, // 6
+
+				// right face
+				1.0f, -1.0f, -1.0f, 1.0f, // 6
+				1.0f, -1.0f, 1.0f, 1.0f, // 2
+				1.0f, 1.0f, 1.0f, 1.0f, // 1
+				1.0f, 1.0f, -1.0f, 1.0f, // 5
+		};
+		short[] indices2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
+		wireCubeModel.setVertices(vertices2);
+		wireCubeModel.setIndices(indices2);
 		
+		music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
+		move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
 	}
 	
 	public void dispose() {

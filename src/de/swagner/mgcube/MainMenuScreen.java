@@ -82,65 +82,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		title = new Sprite(new Texture(Gdx.files.internal("data/title.png")));
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 
-		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
-		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
-		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
-		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
-		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
-		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
-
-		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
-		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
-				0.0f, 0.0f, // TexCoord 0
-				-1.0f, -1.0f, 0.0f, 1.0f, // Position 1
-				0.0f, 1.0f, // TexCoord 1
-				1.0f, -1.0f, 0.0f, 1.0f, // Position 2
-				1.0f, 1.0f, // TexCoord 2
-				1.0f, 1.0f, 0.0f, 1.0f, // Position 3
-				1.0f, 0.0f // TexCoord 3
-		};
-		short[] indices = { 0, 1, 2, 0, 2, 3 };
-		quadModel.setVertices(vertices);
-		quadModel.setIndices(indices);
-
-		wireCubeModel = new Mesh(true, 20, 20, new VertexAttribute(Usage.Position, 4, "a_vertex"));
-		float[] vertices2 = {
-				// front face
-				-1.0f, 1.0f, 1.0f, 1.0f, // 0
-				1.0f, 1.0f, 1.0f, 1.0f, // 1
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
-
-				// left face
-				-1.0f, 1.0f, 1.0f, 1.0f, // 0
-				-1.0f, 1.0f, -1.0f, 1.0f, // 4
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
-
-				// bottom face
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-
-				// back face
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-				-1.0f, 1.0f, -1.0f, 1.0f, // 4
-				1.0f, 1.0f, -1.0f, 1.0f, // 5
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-
-				// right face
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				1.0f, 1.0f, 1.0f, 1.0f, // 1
-				1.0f, 1.0f, -1.0f, 1.0f, // 5
-		};
-		short[] indices2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-		wireCubeModel.setVertices(vertices2);
-		wireCubeModel.setIndices(indices2);
+		blockModel = Resources.getInstance().blockModel;
+		playerModel = Resources.getInstance().playerModel;
+		targetModel = Resources.getInstance().targetModel;
+		quadModel = Resources.getInstance().quadModel;
+		wireCubeModel = Resources.getInstance().wireCubeModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 16f);
@@ -202,6 +148,12 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBufferVert = new FrameBuffer(Format.RGB565, 128, 128, false);
 		frameBufferHori = new FrameBuffer(Format.RGB565, 128, 128, false);	
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		initRender();
 	}
 
 	private void initLevel(int levelnumber) {
