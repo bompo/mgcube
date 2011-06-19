@@ -434,18 +434,34 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			//
 			tmp.setToTranslation(player.position.x, player.position.y, player.position.z);
 			model.mul(tmp);
+			
+			tmp.setToRotation(xAxis, angleXBack);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleYBack);
+			model.mul(tmp);
+			
+
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
 
 			modelViewProjection.idt();
 			modelViewProjection.set(cam.combined);
 			modelViewProjection = tmp.mul(model);
-
+			
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f);
 			transShader.setUniformf("alpha", 0.4f);
 			playerModel.render(transShader, GL20.GL_TRIANGLES);
 			
+			tmp.setToScaling(2.0f, 2.0f, 2.0f);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
 			
 			//render hull			
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f);
 			transShader.setUniformf("alpha", 0.4f);
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
