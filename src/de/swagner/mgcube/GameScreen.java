@@ -225,14 +225,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		startTime += delta;
 		
-		angleXBack += MathUtils.sin(startTime);
-		angleYBack += MathUtils.cos(startTime);
+		angleXBack += MathUtils.sin(startTime)/10f;;
+		angleYBack += MathUtils.cos(startTime)/5f;;
 		
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		frameBuffer.begin();
-		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+		transShader.begin();
 
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -390,8 +390,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToScaling(0.95f, 0.95f, 0.95f);
 			model.mul(tmp);
 
-			transShader.begin();
-
 			modelViewProjection.idt();
 			modelViewProjection.set(cam.combined);
 			modelViewProjection = tmp.mul(model);
@@ -406,7 +404,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformf("alpha", 0.2f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 
-			transShader.end();
 		}
 
 		{
@@ -438,8 +435,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToTranslation(player.position.x, player.position.y, player.position.z);
 			model.mul(tmp);
 
-			transShader.begin();
-
 			modelViewProjection.idt();
 			modelViewProjection.set(cam.combined);
 			modelViewProjection = tmp.mul(model);
@@ -455,7 +450,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformf("alpha", 0.4f);
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			
-			transShader.end();
 		}
 		
 		{
@@ -475,8 +469,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			tmp.setToTranslation(portal.firstPosition.x, portal.firstPosition.y, portal.firstPosition.z);
 			model.mul(tmp);
-
-			transShader.begin();
 
 			modelViewProjection.idt();
 			modelViewProjection.set(cam.combined);
@@ -525,7 +517,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformf("alpha", 0.4f);
 			blockModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.end();
 			}
 		}
 
@@ -558,8 +549,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToTranslation(target.position.x, target.position.y, target.position.z);
 			model.mul(tmp);
 
-			transShader.begin();
-
 			modelViewProjection.idt();
 			modelViewProjection.set(cam.combined);
 			modelViewProjection = tmp.mul(model);
@@ -575,8 +564,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f);
 			transShader.setUniformf("alpha", 0.4f);
 			targetModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.end();
 		}
 
 		{
@@ -608,8 +595,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToTranslation(0, 0, 0);
 			model.mul(tmp);
 
-			transShader.begin();
-
 			modelViewProjection.idt();
 			modelViewProjection.set(cam.combined);
 			modelViewProjection = tmp.mul(model);
@@ -624,8 +609,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f);
 			transShader.setUniformf("alpha", 0.09f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
-
-			transShader.end();
 		}
 		
 		{
@@ -657,8 +640,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToTranslation(0, 0, 0);
 			model.mul(tmp);
 
-			transShader.begin();
-
 			modelViewProjection.idt();
 			modelViewProjection.set(cam.combined);
 			modelViewProjection = tmp.mul(model);
@@ -667,12 +648,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
 			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.1f);
-			transShader.setUniformf("alpha", 0.1f);
+			transShader.setUniformf("alpha", 0.08f);
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.end();
 		}
 
+		transShader.end();
 		frameBuffer.end();
 
 		//PostProcessing
