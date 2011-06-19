@@ -106,7 +106,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		initShader();
-		initLevel(3);
+		initLevel(0);
 		initRender();
 	}
 
@@ -173,7 +173,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		// more levels
 
 		default:
-			level = Resources.getInstance().level1;
+			level = Resources.getInstance().opening;
 			break;
 		}
 
@@ -366,7 +366,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		batch.draw(frameBufferHori.getColorBufferTexture(), 0, 0,800,480,0,0,frameBufferHori.getWidth(),frameBufferHori.getHeight(),false,true);
 		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);	
-		batch.draw(title, 40, 370);
+		//batch.draw(title, 40, 370);
 		batch.end();
 		
 		if (!finished && fade > 0) {
