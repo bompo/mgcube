@@ -165,9 +165,11 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
+		delta = Math.min(0.06f, delta);
+		
 		startTime += delta;
 
-		if(startTime>3) finished = true;
+		if(startTime>2.5f) finished = true;
 		
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);

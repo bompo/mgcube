@@ -236,6 +236,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
+		delta = Math.min(0.06f, delta);
+		
 		startTime += delta;
 		
 		angleXBack += MathUtils.sin(startTime);
