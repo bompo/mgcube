@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.Array;
 
 import de.swagner.gdx.obj.normalmap.helper.ObjLoaderTan;
 import de.swagner.gdx.obj.normalmap.shader.BloomShader;
+import de.swagner.gdx.obj.normalmap.shader.FastBloomShader;
 import de.swagner.gdx.obj.normalmap.shader.Quad2Shader;
 import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
@@ -69,9 +70,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	private ShaderProgram transShader;
 	private ShaderProgram bloomShader;
 	FrameBuffer frameBuffer;
-	FrameBuffer frameBuffer1;
-	Texture fbTexture;
-	Texture texture;
+	FrameBuffer frameBufferVert;
+	FrameBuffer frameBufferHori;
+	private int m_i32TexSize;
+	private float m_fTexelOffset;
 
 	public MainMenuScreen(Game game) {
 		super(game);
@@ -158,7 +160,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		initShader();
-		initLevel(1);
+		initLevel(3);
 		initRender();
 	}
 
@@ -169,7 +171,20 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			System.exit(0);
 		}
 
-		bloomShader = new ShaderProgram(BloomShader.mVertexShader, BloomShader.mFragmentShader);
+		//BLOOOOOOMMMM from powervr examples
+		// Blur render target size (power-of-two)
+		m_i32TexSize = 128;
+
+		// Texel offset for blur filter kernle
+		m_fTexelOffset = 1.0f / (float)m_i32TexSize;
+		
+		// Altered weights for the faster filter kernel 
+		float w1 = 0.0555555f;
+		float w2 = 0.2777777f;
+		float intraTexelOffset = (w2 / (w1 + w2)) * m_fTexelOffset;
+		m_fTexelOffset += intraTexelOffset;
+		
+		bloomShader = new ShaderProgram(FastBloomShader.mVertexShader, FastBloomShader.mFragmentShader);
 		if (bloomShader.isCompiled() == false) {
 			Gdx.app.log("ShaderTest", bloomShader.getLog());
 			System.exit(0);
@@ -184,7 +199,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		frameBuffer = new FrameBuffer(Format.RGB565, 800, 480, false);
-		frameBuffer1 = new FrameBuffer(Format.RGB565, 800, 480, false);
+		
+		frameBufferVert = new FrameBuffer(Format.RGB565, 128, 128, false);
+		frameBufferHori = new FrameBuffer(Format.RGB565, 128, 128, false);	
 	}
 
 	private void initLevel(int levelnumber) {
@@ -208,7 +225,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			break;
 		}
 
-		// finde player pos
+		// find player pos
 		int z = 0, y = 0, x = 0;
 		for (z = 0; z < 10; z++) {
 			for (y = 0; y < 10; y++) {
@@ -241,16 +258,12 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		angleX += MathUtils.sin(startTime);
 		angleY += MathUtils.cos(startTime);
-		
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		frameBuffer.begin();
-		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
 
 		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
 		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		cam.update();
@@ -358,36 +371,47 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			transShader.end();
 		}
 		
+		frameBuffer.end();
 
+		//PostProcessing
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+//		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
-	
-		frameBuffer.end();
-		
-		Gdx.graphics.getGL20().glDisable(GL20.GL_BLEND);
-
 		frameBuffer.getColorBufferTexture().bind(0);
 
-		frameBuffer1.begin();
-		Gdx.graphics.getGL20().glViewport(0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
-		
+		frameBufferVert.begin();
 		bloomShader.begin();
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
-		bloomShader.setUniformi("s_texture", 0);
-		bloomShader.setUniformf("bloomfactor", (MathUtils.sin(startTime * 5f) * 0.1f) + 1.0f);
+		bloomShader.setUniformi("sTexture", 0);
+		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f));
+		bloomShader.setUniformf("TexelOffsetX", m_fTexelOffset);
+		bloomShader.setUniformf("TexelOffsetY", 0.0f);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 		bloomShader.end(); 
-		frameBuffer1.end();
-
-		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		batch.begin();
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		batch.draw(frameBuffer1.getColorBufferTexture(), 0, 0);
-		batch.end();
+		frameBufferVert.end();
 		
-		batch.begin();
+		
+		frameBufferVert.getColorBufferTexture().bind(0);
+		
+		frameBufferHori.begin();		
+		bloomShader.begin();
+		bloomShader.setUniformi("sTexture", 0);
+		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.8f,0.9f));
+		bloomShader.setUniformf("TexelOffsetX", 0.0f);
+		bloomShader.setUniformf("TexelOffsetY", m_fTexelOffset);
+		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+		bloomShader.end(); 
+		frameBufferHori.end();
+		
+	
+		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		batch.begin();
+		Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		batch.draw(frameBufferHori.getColorBufferTexture(), 0, 0,800,480,0,0,frameBufferHori.getWidth(),frameBufferHori.getHeight(),false,true);
+		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);	
 		batch.draw(title, 40, 370);
 		batch.end();
 		
