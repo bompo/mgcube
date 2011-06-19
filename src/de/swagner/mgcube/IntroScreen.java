@@ -59,8 +59,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBufferVert;
 	FrameBuffer frameBufferHori;
-	private int m_i32TexSize;
-	private float m_fTexelOffset;
 
 	public IntroScreen(Game game) {
 		super(game);
@@ -100,7 +98,9 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
-		initShader();
+		transShader = Resources.getInstance().transShader;
+		bloomShader = Resources.getInstance().bloomShader;
+		
 		initRender();
 		
 		Preferences prefs = Gdx.app.getPreferences("cubism3000");
@@ -113,46 +113,14 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		}
 	}
 	
-	private void initShader() {
-		transShader = new ShaderProgram(TransShader.mVertexShader, TransShader.mFragmentShader);
-		if (transShader.isCompiled() == false) {
-			Gdx.app.log("ShaderTest", transShader.getLog());
-			System.exit(0);
-		}
-
-		//BLOOOOOOMMMM from powervr examples
-		// Blur render target size (power-of-two)
-		m_i32TexSize = 128;
-
-		// Texel offset for blur filter kernle
-		m_fTexelOffset = 1.0f / (float)m_i32TexSize;
-		
-		// Altered weights for the faster filter kernel 
-		float w1 = 0.0555555f;
-		float w2 = 0.2777777f;
-		float intraTexelOffset = (w2 / (w1 + w2)) * m_fTexelOffset;
-		m_fTexelOffset += intraTexelOffset;
-		
-		bloomShader = new ShaderProgram(FastBloomShader.mVertexShader, FastBloomShader.mFragmentShader);
-		if (bloomShader.isCompiled() == false) {
-			Gdx.app.log("ShaderTest", bloomShader.getLog());
-			System.exit(0);
-		}
-	}
-
-	private void initRender() {
+	public void initRender() {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		Gdx.graphics.getGL20().glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
-
-		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		frameBuffer = new FrameBuffer(Format.RGB565, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-		
-		frameBufferVert = new FrameBuffer(Format.RGB565, 128, 128, false);
-		frameBufferHori = new FrameBuffer(Format.RGB565, 128, 128, false);
+		frameBuffer = new FrameBuffer(Format.RGB565, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);		
+		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
+		frameBufferHori = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
-
+	
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
@@ -202,7 +170,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
 		bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 0.5f);
-		bloomShader.setUniformf("TexelOffsetX", m_fTexelOffset);
+		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
 		bloomShader.setUniformf("TexelOffsetY", 0.0f);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 		bloomShader.end(); 
@@ -216,7 +184,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		bloomShader.setUniformi("sTexture", 0);
 		bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 0.5f);
 		bloomShader.setUniformf("TexelOffsetX", 0.0f);
-		bloomShader.setUniformf("TexelOffsetY", m_fTexelOffset);
+		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 		bloomShader.end(); 
 		frameBufferHori.end();
@@ -254,7 +222,13 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void hide() {
+	}
+	
+	@Override
+	public void dispose() {
 		frameBuffer.dispose();
+		frameBufferHori.dispose();
+		frameBufferVert.dispose();
 	}
 
 	@Override

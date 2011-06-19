@@ -6,12 +6,18 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+
+import de.swagner.gdx.obj.normalmap.shader.FastBloomShader;
+import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
 public class Resources {
 	
@@ -54,6 +60,11 @@ public class Resources {
 	
 	public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 	public Sound move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
+	
+	public ShaderProgram transShader;
+	public ShaderProgram bloomShader;
+	public int m_i32TexSize;
+	public float m_fTexelOffset;
 	
 	public static Resources instance;
 
@@ -130,6 +141,35 @@ public class Resources {
 		
 		music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 		move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
+		
+		initShader();
+	}
+	
+	private void initShader() {
+		transShader = new ShaderProgram(TransShader.mVertexShader, TransShader.mFragmentShader);
+		if (transShader.isCompiled() == false) {
+			Gdx.app.log("ShaderTest", transShader.getLog());
+			System.exit(0);
+		}
+
+		//BLOOOOOOMMMM from powervr examples
+		// Blur render target size (power-of-two)
+		m_i32TexSize = 128;
+
+		// Texel offset for blur filter kernle
+		m_fTexelOffset = 1.0f / (float)m_i32TexSize;
+		
+		// Altered weights for the faster filter kernel 
+		float w1 = 0.0555555f;
+		float w2 = 0.2777777f;
+		float intraTexelOffset = (w2 / (w1 + w2)) * m_fTexelOffset;
+		m_fTexelOffset += intraTexelOffset;
+		
+		bloomShader = new ShaderProgram(FastBloomShader.mVertexShader, FastBloomShader.mFragmentShader);
+		if (bloomShader.isCompiled() == false) {
+			Gdx.app.log("ShaderTest", bloomShader.getLog());
+			System.exit(0);
+		}
 	}
 	
 	public void dispose() {
