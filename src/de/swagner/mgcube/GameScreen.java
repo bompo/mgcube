@@ -78,15 +78,19 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Matrix4 tmp = new Matrix4().idt();
 	private ShaderProgram transShader;
 	private ShaderProgram bloomShader;
-	private Vector3 light = new Vector3(-2f, 1f, 10f);
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBufferVert;
 	FrameBuffer frameBufferHori;
 	private int m_i32TexSize;
 	private float m_fTexelOffset;
 	
+	protected int lastTouchX;
+	protected int lastTouchY;
+	private float changeLevelEffect;
+	
 	float touchStartX = 0;
 	float touchStartY = 0;
+	private boolean changeLevel;
 
 	public GameScreen(Game game) {
 		super(game);
@@ -230,13 +234,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public void show() {
 	}
 
-	protected int lastTouchX;
-	protected int lastTouchY;
-
 	@Override
 	public void render(float delta) {
+		delta = Math.min(0.06f, delta);
+		
 		startTime += delta;
-
+		
 		angleXBack += MathUtils.sin(startTime);
 		angleYBack += MathUtils.cos(startTime);
 		
@@ -290,8 +293,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			if (win) {
 				animatePlayer = false;
-				nextLevel();
-				reset();
+				changeLevel = true;
 			}
 
 		}
@@ -597,7 +599,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		frameBufferVert.begin();
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f));
+		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f)+changeLevelEffect);
 		bloomShader.setUniformf("TexelOffsetX", m_fTexelOffset);
 		bloomShader.setUniformf("TexelOffsetY", 0.0f);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
@@ -611,7 +613,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
 		bloomShader.setUniformf("TexelOffsetX", 0.0f);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f));
+		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f)+changeLevelEffect);
 		bloomShader.setUniformf("TexelOffsetY", m_fTexelOffset);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 		bloomShader.end(); 
@@ -662,6 +664,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				game.setScreen(new MainMenuScreen(game));
 			}
 		}
+		
+		if (!changeLevel && changeLevelEffect > 0) {
+			changeLevelEffect = Math.max(changeLevelEffect - (Gdx.graphics.getDeltaTime() * 15.f), 0);
+		}
+
+		if (changeLevel) {
+			changeLevelEffect = Math.min(changeLevelEffect + (Gdx.graphics.getDeltaTime() * 15.f), 5);
+			if (changeLevelEffect >= 5) {				
+				nextLevel();
+			}
+		}
 
 	}
 
@@ -688,7 +701,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (keycode == Input.Keys.RIGHT) {
-			nextLevel();
+			changeLevel = true;
 		}
 
 		if (keycode == Input.Keys.LEFT) {
@@ -701,11 +714,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Resources.getInstance().currentlevel++;
 		Resources.getInstance().time = 0;
 		initLevel(Resources.getInstance().currentlevel);
+		changeLevel = false;
 	}
 
 	private void prevLevel() {
 		Resources.getInstance().currentlevel--;
+		Resources.getInstance().time = 0;
 		initLevel(Resources.getInstance().currentlevel);
+		changeLevel = false;
 	}
 
 	@Override
