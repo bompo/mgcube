@@ -58,6 +58,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Array<Block> blocks = new Array<Block>();
 	boolean animateWorld = false;
 	boolean animatePlayer = false;
+	boolean warplock = false;
 	
 	//fade
 	SpriteBatch fadeBatch;
@@ -142,6 +143,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 	private void initLevel(int levelnumber) {
 		blocks.clear();
+		portal = new Portal();
 		int[][][] level;
 		switch (levelnumber) {
 		case 1:
@@ -152,6 +154,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			break;
 		case 3:
 			level = Resources.getInstance().level3;
+			break;
+		case 4:
+			level = Resources.getInstance().level4;
 			break;
 
 		// more levels
@@ -180,14 +185,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						target.position.z = -10f + (z * 2);
 					}
 					if (level[z][y][x] == 4) {
-						if(portal.enterPosition.x == -1) {
-							portal.enterPosition.x = -10f + (x * 2);
-							portal.enterPosition.y = -10f + (y * 2);
-							portal.enterPosition.z = -10f + (z * 2);
+						if(portal.firstPosition.x == -1) {
+							portal.firstPosition.x = -10f + (x * 2);
+							portal.firstPosition.y = -10f + (y * 2);
+							portal.firstPosition.z = -10f + (z * 2);
 						} else {
-							portal.exitPosition.x = -10f + (x * 2);
-							portal.exitPosition.y = -10f + (y * 2);
-							portal.exitPosition.z = -10f + (z * 2);
+							portal.secondPosition.x = -10f + (x * 2);
+							portal.secondPosition.y = -10f + (y * 2);
+							portal.secondPosition.z = -10f + (z * 2);
 						}
 					}					
 				}
@@ -198,6 +203,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	private void reset() {
 		animateWorld = false;
 		animatePlayer = false;
+		warplock = false;
 		initLevel(Resources.getInstance().currentlevel);
 		if(Resources.getInstance().lives < 1)
 		{
@@ -257,6 +263,23 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if (targetdst < 1.2f) {
 			win = true;
 		}
+		
+		boolean Portalintersect1 = false;
+		boolean Portalintersect2 = false;
+		boolean warp = false;
+		if(!warplock) {
+			Vector3 Portalintersection1 = new Vector3();
+			Vector3 Portalintersection2 = new Vector3();
+			Portalintersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, Portalintersection1);
+			Portalintersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, Portalintersection2);
+			float portaldst1 = Portalintersection1.dst(player.position);
+			float portaldst2 = Portalintersection2.dst(player.position);
+			
+			if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
+				warp = true;
+				warplock = false;
+			}
+		}
 
 		// player out of bound?
 		BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
@@ -274,8 +297,21 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				animatePlayer = false;
 				changeLevel = true;
 			}
+			
+			if(warp) {
+				if(Portalintersect1) {
+					player.position = portal.secondPosition.cpy();
+					warplock = true;
+				}
+				else if(Portalintersect2) {
+					player.position = portal.firstPosition.cpy();
+					warplock = true;
+				}
+			}
 
 		}
+		else
+			warplock = false;
 
 		if (!Gdx.input.isTouched()) {
 			if (Math.abs(player.direction.x) > Math.abs(player.direction.y) && Math.abs(player.direction.x) > Math.abs(player.direction.z)) {
@@ -423,7 +459,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		{
-			if(portal.enterPosition.x != -1 && portal.exitPosition.x != -1) {
+			if(portal.firstPosition.x != -1 && portal.secondPosition.x != -1) {
 			// render Portal entry
 			tmp.idt();
 			model.idt();
@@ -437,7 +473,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			tmp.setToTranslation(portal.enterPosition.x, portal.enterPosition.y, portal.enterPosition.z);
+			tmp.setToTranslation(portal.firstPosition.x, portal.firstPosition.y, portal.firstPosition.z);
 			model.mul(tmp);
 
 			transShader.begin();
@@ -471,7 +507,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			tmp.setToTranslation(portal.exitPosition.x, portal.exitPosition.y, portal.exitPosition.z);
+			tmp.setToTranslation(portal.secondPosition.x, portal.secondPosition.y, portal.secondPosition.z);
 			model.mul(tmp);
 
 			modelViewProjection.idt();

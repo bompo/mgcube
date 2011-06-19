@@ -1,0 +1,39 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00000000000196f6, pid=15089, tid=139892981716736
+#
+# JRE version: 6.0_24-b07
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (19.1-b02 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# C  0x00000000000196f6
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000000408a0800):  JavaThread "AWT-EventQueue-0" [_thread_in_native, id=15110, stack(0x00007f3b5f6b5000,0x00007f3b5f7b6000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x00000000000196f6
+
+Registers:
+RAX=0x00000000efab42f0, RBX=0x00000000408a09c8, RCX=0x0000000040584950, RDX=0x0000000000000360
+RSP=0x00007f3b5f795328, RBP=0x00007f3b5f795408, RSI=0x00000000efab42f0, RDI=0x00007f3b2a0a1000
+R8 =0x00007f3b6bc771a8, R9 =0x00007f3b6bc7af78, R10=0x0000000040584d38, R11=0x0000000040584998
+R12=0x00000000efab42f0, R13=0x0000000000000360, R14=0x00007f3b2a0a1000, R15=0x0000000000000000
+RIP=0x00000000000196f6, EFL=0x0000000000010206, CSGSFS=0x0000000000000033, ERR=0x0000000000000014
+  TRAPNO=0x000000000000000e
+
+Register to memory mapping:
+
+RAX=0x00000000efab42f0
+
+[error occurred during error reporting (printing registers, top of stack, instructions near pc), id 0xe0000000]
+
+Stack: [0x00007f3b5f6b5000,0x00007f3b5f7b6000],  sp=0x00007f3b5f795328,  free space=896k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C

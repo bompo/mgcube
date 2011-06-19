@@ -9,8 +9,8 @@ public class Portal {
 
 	public int id= 0;
 	
-	public Vector3 enterPosition = new Vector3(-1,-1,-1);
-	public Vector3 exitPosition = new Vector3(-1,-1,-1);
+	public Vector3 firstPosition = new Vector3(-1,-1,-1);
+	public Vector3 secondPosition = new Vector3(-1,-1,-1);
 	
 	public Portal() {
 		id = idCnt;
