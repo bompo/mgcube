@@ -43,7 +43,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Mesh blockModel;
 	Mesh playerModel;
 	Mesh targetModel;
-	Mesh worldModel;
 	Mesh quadModel;
 	Mesh wireCubeModel;
 	float angleX = 0;
@@ -93,64 +92,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 
-		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
-		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
-		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
-		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
-		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
-		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
-		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
-		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
-				0.0f, 0.0f, // TexCoord 0
-				-1.0f, -1.0f, 0.0f, 1.0f, // Position 1
-				0.0f, 1.0f, // TexCoord 1
-				1.0f, -1.0f, 0.0f, 1.0f, // Position 2
-				1.0f, 1.0f, // TexCoord 2
-				1.0f, 1.0f, 0.0f, 1.0f, // Position 3
-				1.0f, 0.0f // TexCoord 3
-		};
-		short[] indices = { 0, 1, 2, 0, 2, 3 };
-		quadModel.setVertices(vertices);
-		quadModel.setIndices(indices);
-
-		wireCubeModel = new Mesh(true, 20, 20, new VertexAttribute(Usage.Position, 4, "a_vertex"));
-		float[] vertices2 = {
-				// front face
-				-1.0f, 1.0f, 1.0f, 1.0f, // 0
-				1.0f, 1.0f, 1.0f, 1.0f, // 1
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
-
-				// left face
-				-1.0f, 1.0f, 1.0f, 1.0f, // 0
-				-1.0f, 1.0f, -1.0f, 1.0f, // 4
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
-
-				// bottom face
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-
-				// back face
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-				-1.0f, 1.0f, -1.0f, 1.0f, // 4
-				1.0f, 1.0f, -1.0f, 1.0f, // 5
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-
-				// right face
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				1.0f, 1.0f, 1.0f, 1.0f, // 1
-				1.0f, 1.0f, -1.0f, 1.0f, // 5
-		};
-		short[] indices2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-		wireCubeModel.setVertices(vertices2);
-		wireCubeModel.setIndices(indices2);
+		blockModel = Resources.getInstance().blockModel;
+		playerModel = Resources.getInstance().playerModel;
+		targetModel = Resources.getInstance().targetModel;
+		quadModel = Resources.getInstance().quadModel;
+		wireCubeModel = Resources.getInstance().wireCubeModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 16f);
@@ -202,7 +148,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			System.exit(0);
 		}
 	}
-
+	
 	private void initLevel(int levelnumber) {
 		blocks.clear();
 		int[][][] level;
@@ -272,6 +218,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBufferVert = new FrameBuffer(Format.RGB565, 128, 128, false);
 		frameBufferHori = new FrameBuffer(Format.RGB565, 128, 128, false);	
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		initRender();
 	}
 
 	@Override
@@ -588,50 +540,50 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.end();
 		}
 		
-		{
-			// render Background Wire
-			tmp.idt();
-			model.idt();
-			modelView.idt();
-
-			tmp.setToScaling(20.5f, 20.5f, 20.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX + angleXBack);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY + angleYBack);
-			model.mul(tmp);
-
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
-			tmp.setToTranslation(0, 0, 0);
-			model.mul(tmp);
-
-			transShader.begin();
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
-
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.1f);
-			transShader.setUniformf("alpha", 0.1f);
-			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.end();
-		}
+//		{
+//			// render Background Wire
+//			tmp.idt();
+//			model.idt();
+//			modelView.idt();
+//
+//			tmp.setToScaling(20.5f, 20.5f, 20.5f);
+//			model.mul(tmp);
+//
+//			tmp.setToRotation(xAxis, angleX + angleXBack);
+//			model.mul(tmp);
+//			tmp.setToRotation(yAxis, angleY + angleYBack);
+//			model.mul(tmp);
+//
+//			// modelView.set(cam.view);
+//			// modelView.mul(model);
+//			// tmp.setToRotation(angleY, modelView.getValues()[1],
+//			// modelView.getValues()[5], modelView.getValues()[9]);
+//			// model.mul(tmp);
+//			//
+//			// modelView.set(cam.view);
+//			// modelView.mul(model);
+//			// tmp.setToRotation(angleX, modelView.getValues()[0],
+//			// modelView.getValues()[4], modelView.getValues()[8]);
+//			// model.mul(tmp);
+//			//
+//			tmp.setToTranslation(0, 0, 0);
+//			model.mul(tmp);
+//
+//			transShader.begin();
+//
+//			modelViewProjection.idt();
+//			modelViewProjection.set(cam.combined);
+//			modelViewProjection = tmp.mul(model);
+//
+//			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+//			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
+//
+//			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.1f);
+//			transShader.setUniformf("alpha", 0.1f);
+//			playerModel.render(transShader, GL20.GL_LINE_STRIP);
+//
+//			transShader.end();
+//		}
 
 		frameBuffer.end();
 
@@ -726,6 +678,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (keycode == Input.Keys.SPACE) {
+			Resources.getInstance().move.play();
 			animatePlayer = true;
 		}
 
@@ -784,9 +737,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		if (Math.abs(touchDistance) < 0.5f)
+		if (Math.abs(touchDistance) < 0.5f) {
+			Resources.getInstance().move.play();
 			animatePlayer = true;
-
+		}
+		
 		return false;
 	}
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -101,6 +102,15 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 
 		initShader();
 		initRender();
+		
+		Preferences prefs = Gdx.app.getPreferences("cubism3000");
+		if(prefs.getBoolean("music") != true) { 
+			if(Resources.getInstance().music == null) Resources.getInstance().reInit();
+			Resources.getInstance().music.play();
+			Resources.getInstance().music.setLooping(true);
+		} else {
+			Resources.getInstance().music.stop();	
+		}
 	}
 	
 	private void initShader() {
@@ -144,6 +154,12 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		initRender();
+	}
+	
+	@Override
 	public void show() {
 	}
 
@@ -151,7 +167,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	public void render(float delta) {
 		startTime += delta;
 
-		if(startTime>4) finished = true;
+		if(startTime>3) finished = true;
 		
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
