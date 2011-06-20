@@ -1,25 +1,17 @@
 package de.swagner.mgcube;
 
-
-import java.awt.geom.CubicCurve2D;
-import java.util.logging.FileHandler;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
@@ -29,12 +21,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
-
-import de.swagner.gdx.obj.normalmap.helper.ObjLoaderTan;
-import de.swagner.gdx.obj.normalmap.shader.BloomShader;
-import de.swagner.gdx.obj.normalmap.shader.FastBloomShader;
-import de.swagner.gdx.obj.normalmap.shader.Quad2Shader;
-import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
 
@@ -276,7 +262,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 		}
 		
-
 		// render Blocks
 		for (Block block : blocks) {
 			tmp.idt();
@@ -525,28 +510,28 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBuffer.getColorBufferTexture().bind(0);
 
-		frameBufferVert.begin();
 		bloomShader.begin();
+		
+		frameBufferVert.begin();
 		bloomShader.setUniformi("sTexture", 0);
 		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f)+changeLevelEffect);
 		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
 		bloomShader.setUniformf("TexelOffsetY", 0.0f);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		bloomShader.end(); 
 		frameBufferVert.end();
 		
 		
 		frameBufferVert.getColorBufferTexture().bind(0);
 		
 		frameBufferHori.begin();		
-		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("TexelOffsetX", 0.0f);
 		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f)+changeLevelEffect);
+		bloomShader.setUniformf("TexelOffsetX", 0.0f);
 		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		bloomShader.end(); 
 		frameBufferHori.end();
+
+		bloomShader.end(); 
 		
 		batch.enableBlending();
 		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
