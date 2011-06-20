@@ -408,7 +408,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 				
-				colormod++;
+				colormod +=2;
 				}
 			}
 		}
@@ -628,6 +628,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				for (Portal portal : portals) {
 					portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
 					portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
+					Gdx.app.log("", portalIntersection2.toString());
 					float portaldst1 = portalIntersection1.dst(player.position);
 					float portaldst2 = portalIntersection2.dst(player.position);
 					if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
@@ -639,7 +640,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 			} else {
 				for (Portal portal : portals) {
-					if (portal != port) {
+					if (portal.id != port.id) {
 						portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
 						portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
 						float portaldst1 = portalIntersection1.dst(player.position);
@@ -668,16 +669,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				warplock = false;
 				if (portalIntersect1) {
 					player.position = port.secondPosition.cpy();
-					exit = port.secondPosition.cpy();
 					warplock = true;
 				} else if (portalIntersect2) {
 					player.position = port.firstPosition.cpy();
-					exit = port.firstPosition.cpy();
 					warplock = true;
 				}
 			}
 			// end warplock
 		}
+		else
+			warplock = false;
 
 	}
 
