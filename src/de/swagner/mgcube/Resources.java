@@ -100,7 +100,7 @@ public class Resources {
 		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
 		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 
-		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
+		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_vertex"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
 		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
 				0.0f, 0.0f, // TexCoord 0
 				-1.0f, -1.0f, 0.0f, 1.0f, // Position 1

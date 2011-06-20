@@ -3,7 +3,7 @@ package de.swagner.gdx.obj.normalmap.shader;
 public class FastBloomShader {
 
     public static final String mVertexShader =                    
-        "attribute vec4 a_position;   \n" +
+        "attribute vec4 a_vertex;   \n" +
         "attribute vec2 a_texCoord;   \n" +
         "uniform float  TexelOffsetX;   \n" +
         "uniform float  TexelOffsetY;   \n" +
@@ -13,7 +13,7 @@ public class FastBloomShader {
         "void main()   \n" +
         "{   \n" +
         "	// Pass through vertex   \n" +
-        "	gl_Position = a_position;   \n" +
+        "	gl_Position = a_vertex;   \n" +
         "	   \n" +
         "	// Calculate texture offsets and pass through	   \n" +
         "	vec2 offset = vec2(TexelOffsetX, TexelOffsetY);   \n" +
