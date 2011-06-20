@@ -9,11 +9,15 @@ public class Portal {
 
 	public int id= 0;
 	
-	public Vector3 firstPosition = new Vector3(-1,-1,-1);
-	public Vector3 secondPosition = new Vector3(-1,-1,-1);
+	public Vector3 firstPosition = new Vector3(-11,-11,-11);
+	public Vector3 secondPosition = new Vector3(-11,-11,-11);
+	
+	public Portal(int id) {
+		this.id = id;
+		idCnt++;
+	}
 	
 	public Portal() {
-		id = idCnt;
-		idCnt++;
+		//just a temp portal
 	}
 }

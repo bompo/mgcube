@@ -54,8 +54,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	BitmapFont font;
 	Player player = new Player();
 	Target target = new Target();
-	Portal portal = new Portal();
+
 	Array<Block> blocks = new Array<Block>();
+	Array<Portal> portals = new Array<Portal>();
 	boolean animateWorld = false;
 	boolean animatePlayer = false;
 	boolean warplock = false;
@@ -152,7 +153,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 	private void initLevel(int levelnumber) {
 		blocks.clear();
-		portal = new Portal();
+		portals.clear();
 		int[][][] level;
 		switch (levelnumber) {
 		case 1:
@@ -166,6 +167,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			break;
 		case 4:
 			level = Resources.getInstance().level4;
+			break;
+		case 5:
+			level = Resources.getInstance().level5;
 			break;
 
 		// more levels
@@ -193,16 +197,28 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
 					}
-					if (level[z][y][x] == 4) {
-						if(portal.firstPosition.x == -1) {
-							portal.firstPosition.x = -10f + (x * 2);
-							portal.firstPosition.y = -10f + (y * 2);
-							portal.firstPosition.z = -10f + (z * 2);
-						} else {
-							portal.secondPosition.x = -10f + (x * 2);
-							portal.secondPosition.y = -10f + (y * 2);
-							portal.secondPosition.z = -10f + (z * 2);
+					if (level[z][y][x] >=4 && level[z][y][x] <=13) {
+						Portal temp = new Portal(level[z][y][x]);
+						boolean found = false;
+						for(Portal p : portals) {
+							if(p.id == level[z][y][x]) {
+								found = true;		
+								temp = p;
+								break;
+							}
 						}
+						if(!found) {
+							temp.firstPosition.x = -10f + (x * 2);
+							temp.firstPosition.y = -10f + (y * 2);
+							temp.firstPosition.z = -10f + (z * 2);
+							portals.add(temp);
+						}
+						else {
+							temp.secondPosition.x = -10f + (x * 2);
+							temp.secondPosition.y = -10f + (y * 2);
+							temp.secondPosition.z = -10f + (z * 2);
+						}
+						
 					}					
 				}
 			}
@@ -213,6 +229,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		animateWorld = false;
 		animatePlayer = false;
 		warplock = false;
+		
 		initLevel(Resources.getInstance().currentlevel);
 		if(Resources.getInstance().lives < 1)
 		{
@@ -274,16 +291,37 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		boolean Portalintersect1 = false;
 		boolean Portalintersect2 = false;
+		Portalintersection1.set(0,0,0);
+		Portalintersection2.set(0,0,0);
 		boolean warp = false;
+		Portal port = new Portal();
+
 		if(!warplock) {
-			Portalintersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, Portalintersection1);
-			Portalintersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, Portalintersection2);
-			float portaldst1 = Portalintersection1.dst(player.position);
-			float portaldst2 = Portalintersection2.dst(player.position);
-			
-			if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
-				warp = true;
-				warplock = false;
+			for (Portal portal : portals) {
+				Portalintersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, Portalintersection1);
+				Portalintersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, Portalintersection2);
+				float portaldst1 = Portalintersection1.dst(player.position);
+				float portaldst2 = Portalintersection2.dst(player.position);
+				if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
+					warp = true;
+					warplock = false;
+					port = portal;
+					break;
+				}
+			}
+		}
+		else {
+			for (Portal portal : portals) {
+				if(portal != port) {
+					Portalintersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, Portalintersection1);
+					Portalintersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, Portalintersection2);
+					float portaldst1 = Portalintersection1.dst(player.position);
+					float portaldst2 = Portalintersection2.dst(player.position);
+					if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
+						warplock = false;
+						break;
+					}
+				}
 			}
 		}
 
@@ -293,7 +331,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Resources.getInstance().lives--;
 			reset();
 		}
-
+		Vector3 exit = new Vector3();
 		if (animatePlayer) {
 
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
@@ -302,21 +340,27 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				animatePlayer = false;
 				changeLevel = true;
 			}
+
 			
 			if(warp) {
+				
 				if(Portalintersect1) {
-					player.position = portal.secondPosition.cpy();
+					player.position = port.secondPosition.cpy();
+					exit = port.secondPosition.cpy();
 					warplock = true;
 				}
 				else if(Portalintersect2) {
-					player.position = portal.firstPosition.cpy();
+					player.position = port.firstPosition.cpy();
+					exit = port.firstPosition.cpy();
 					warplock = true;
 				}
 			}
-
 		}
 		else
 			warplock = false;
+		
+		//end warplock
+		
 
 		if (!Gdx.input.isTouched()) {
 			if (Math.abs(player.direction.x) > Math.abs(player.direction.y) && Math.abs(player.direction.x) > Math.abs(player.direction.z)) {
@@ -470,66 +514,70 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		{
-			if(portal.firstPosition.x != -1 && portal.secondPosition.x != -1) {
-			// render Portal entry
-			tmp.idt();
-			model.idt();
-			modelView.idt();
+			for (Portal portal : portals) {
 
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
+				if(portal.firstPosition.x != -11 && portal.secondPosition.x != -11) {
+				// render Portal entry
+				
+				tmp.idt();
+				model.idt();
+				modelView.idt();
+	
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
+	
+				tmp.setToRotation(xAxis, angleX);
+				model.mul(tmp);
+				tmp.setToRotation(yAxis, angleY);
+				model.mul(tmp);
+	
+				tmp.setToTranslation(portal.firstPosition.x, portal.firstPosition.y, portal.firstPosition.z);
+				model.mul(tmp);
+	
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+	
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				
+				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				//render hull			
+				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
+				blockModel.render(transShader, GL20.GL_LINE_STRIP);
+				
+				
+				// render Portal exit
+				tmp.idt();
+				model.idt();
+				modelView.idt();
+	
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
+	
+				tmp.setToRotation(xAxis, angleX);
+				model.mul(tmp);
+				tmp.setToRotation(yAxis, angleY);
+				model.mul(tmp);
+	
+				tmp.setToTranslation(portal.secondPosition.x, portal.secondPosition.y, portal.secondPosition.z);
+				model.mul(tmp);
+	
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+	
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+	
+				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				//render hull			
+				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
+				blockModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			tmp.setToTranslation(portal.firstPosition.x, portal.firstPosition.y, portal.firstPosition.z);
-			model.mul(tmp);
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
-			blockModel.render(transShader, GL20.GL_TRIANGLES);
-			
-			//render hull			
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
-			blockModel.render(transShader, GL20.GL_LINE_STRIP);
-			
-			
-			// render Portal exit
-			tmp.idt();
-			model.idt();
-			modelView.idt();
-
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			tmp.setToTranslation(portal.secondPosition.x, portal.secondPosition.y, portal.secondPosition.z);
-			model.mul(tmp);
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
-			blockModel.render(transShader, GL20.GL_TRIANGLES);
-			
-			//render hull			
-			transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
-			blockModel.render(transShader, GL20.GL_LINE_STRIP);
-
+				}
 			}
 		}
 
