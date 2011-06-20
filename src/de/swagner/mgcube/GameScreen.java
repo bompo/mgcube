@@ -343,7 +343,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 		}
-		
+		int colormod = 1;
 		{
 			for (Portal portal : portals) {
 
@@ -371,11 +371,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 				
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f * colormod, 1.0f, 0.5f * colormod);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 				
 				//render hull			
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
 				blockModel.render(transShader, GL20.GL_LINE_STRIP);
 				
 				
@@ -401,13 +401,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 	
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.5f* colormod);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 				
 				//render hull			
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
+				
+				colormod++;
 				}
 			}
 		}
