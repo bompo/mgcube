@@ -3,7 +3,7 @@ package de.swagner.gdx.obj.normalmap.shader;
 public class QuadShader {
 
     public static final String mVertexShader =
-    	"attribute vec4 a_position;\n" //
+    	"attribute vec4 a_vertex;\n" //
         + "attribute vec4 a_color;\n" //
         + "attribute vec2 a_texCoords;\n" //
         + "uniform mat4 u_projectionViewMatrix;\n" //
@@ -14,7 +14,7 @@ public class QuadShader {
         + "{\n" //
         + "   v_color = a_color;\n" //
         + "   v_texCoords = a_texCoords;\n" //
-        + "   gl_Position =  u_projectionViewMatrix * a_position;\n" //
+        + "   gl_Position =  u_projectionViewMatrix * a_vertex;\n" //
         + "}\n";
 
     public static final String mFragmentShader =   

@@ -58,7 +58,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Array<Block> blocks = new Array<Block>();
 	Array<Portal> portals = new Array<Portal>();
 	boolean animateWorld = false;
-	boolean animatePlayer = false;
 	boolean warplock = false;
 	
 	//fade
@@ -90,9 +89,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	int minutes;
 	Ray pRay = new Ray(new Vector3(), new Vector3());
 	Vector3 intersection = new Vector3();
-	Vector3 Portalintersection1 = new Vector3();
-	Vector3 Portalintersection2 = new Vector3();
+	Vector3 portalIntersection1 = new Vector3();
+	Vector3 portalIntersection2 = new Vector3();
 	BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
+	Vector3 exit = new Vector3();
+	Portal port = new Portal();
 	
 	protected int lastTouchX;
 	protected int lastTouchY;
@@ -227,7 +228,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	private void reset() {
 		animateWorld = false;
-		animatePlayer = false;
+		player.stop();
 		warplock = false;
 		
 		initLevel(Resources.getInstance().currentlevel);
@@ -270,142 +271,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
-		// collision
-		pRay.set(player.position, player.direction);
-
-		for (Block block : blocks) {
-			boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
-			float dst = intersection.dst(player.position);
-			if (dst < 1.2f && intersect) {
-				animatePlayer = false;
-				break;
-			}
-		}
-		
-		boolean Targetintersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
-		float targetdst = intersection.dst(player.position);
-		boolean win = false;
-		if (targetdst < 1.2f) {
-			win = true;
-		}
-		
-		boolean Portalintersect1 = false;
-		boolean Portalintersect2 = false;
-		Portalintersection1.set(0,0,0);
-		Portalintersection2.set(0,0,0);
-		boolean warp = false;
-		Portal port = new Portal();
-
-		if(!warplock) {
-			for (Portal portal : portals) {
-				Portalintersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, Portalintersection1);
-				Portalintersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, Portalintersection2);
-				float portaldst1 = Portalintersection1.dst(player.position);
-				float portaldst2 = Portalintersection2.dst(player.position);
-				if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
-					warp = true;
-					warplock = false;
-					port = portal;
-					break;
-				}
-			}
-		}
-		else {
-			for (Portal portal : portals) {
-				if(portal != port) {
-					Portalintersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, Portalintersection1);
-					Portalintersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, Portalintersection2);
-					float portaldst1 = Portalintersection1.dst(player.position);
-					float portaldst2 = Portalintersection2.dst(player.position);
-					if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
-						warplock = false;
-						break;
-					}
-				}
-			}
-		}
-
-		// player out of bound?
-		if (!box.contains(player.position)) {
-			animatePlayer = false;
-			Resources.getInstance().lives--;
-			reset();
-		}
-		Vector3 exit = new Vector3();
-		if (animatePlayer) {
-
+		collisionTest();
+		if(player.isMoving) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
-
-			if (win) {
-				animatePlayer = false;
-				changeLevel = true;
-			}
-
-			
-			if(warp) {
-				
-				if(Portalintersect1) {
-					player.position = port.secondPosition.cpy();
-					exit = port.secondPosition.cpy();
-					warplock = true;
-				}
-				else if(Portalintersect2) {
-					player.position = port.firstPosition.cpy();
-					exit = port.firstPosition.cpy();
-					warplock = true;
-				}
-			}
 		}
-		else
-			warplock = false;
 		
-		//end warplock
-		
-
-		if (!Gdx.input.isTouched()) {
-			if (Math.abs(player.direction.x) > Math.abs(player.direction.y) && Math.abs(player.direction.x) > Math.abs(player.direction.z)) {
-				while (player.direction.x != -1 && player.direction.x != 1) {
-					if (player.direction.x < 0)
-						player.direction.x--;
-					else
-						player.direction.x++;
-					if (player.direction.x < -1)
-						player.direction.x = -1;
-					if (player.direction.x > 1)
-						player.direction.x = 1;
-					player.direction.y = 0;
-					player.direction.z = 0;
-				}
-			}
-			if (Math.abs(player.direction.y) > Math.abs(player.direction.x) && Math.abs(player.direction.y) > Math.abs(player.direction.z)) {
-				while (player.direction.y != -1 && player.direction.y != 1) {
-					if (player.direction.y < 0)
-						player.direction.y--;
-					else
-						player.direction.y++;
-					if (player.direction.y < -1)
-						player.direction.y = -1;
-					if (player.direction.y > 1)
-						player.direction.y = 1;
-					player.direction.x = 0;
-					player.direction.z = 0;
-				}
-			}
-			if (Math.abs(player.direction.z) > Math.abs(player.direction.y) && Math.abs(player.direction.z) > Math.abs(player.direction.y)) {
-				while (player.direction.z != -1 && player.direction.z != 1) {
-					if (player.direction.z < 0)
-						player.direction.z--;
-					else
-						player.direction.z++;
-					if (player.direction.z < -1)
-						player.direction.z = -1;
-					if (player.direction.z > 1)
-						player.direction.z = 1;
-					player.direction.y = 0;
-					player.direction.x = 0;
-				}
-			}
-		}
 
 		// render Blocks
 		for (Block block : blocks) {
@@ -421,18 +291,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
 			tmp.setToTranslation(block.position.x, block.position.y, block.position.z);
 			model.mul(tmp);
 
@@ -467,26 +325,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
+			
 			tmp.setToTranslation(player.position.x, player.position.y, player.position.z);
 			model.mul(tmp);
 			
 			tmp.setToRotation(xAxis, angleXBack);
 			model.mul(tmp);
 			tmp.setToRotation(yAxis, angleYBack);
-			model.mul(tmp);
-			
+			model.mul(tmp);			
 
 			tmp.setToScaling(0.5f, 0.5f, 0.5f);
 			model.mul(tmp);
@@ -575,7 +421,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				
 				//render hull			
 				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
-				blockModel.render(transShader, GL20.GL_LINE_STRIP);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
 				}
 			}
@@ -595,18 +441,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
 			tmp.setToTranslation(target.position.x, target.position.y, target.position.z);
 			model.mul(tmp);
 
@@ -777,6 +611,90 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	}
 
+	private void collisionTest() {
+		// collision
+		if (player.isMoving) {
+			pRay.set(player.position, player.direction);
+
+			for (Block block : blocks) {
+				boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
+				float dst = intersection.dst(player.position);
+				if (dst < 1.2f && intersect) {
+					player.stop();
+					break;
+				}
+			}
+
+			boolean targetIntersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
+			float targetdst = intersection.dst(player.position);
+			boolean win = false;
+			if (targetdst < 1.2f && targetIntersect) {
+				win = true;
+			}
+
+			boolean portalIntersect1 = false;
+			boolean portalIntersect2 = false;
+			portalIntersection1.set(0, 0, 0);
+			portalIntersection2.set(0, 0, 0);
+			boolean warp = false;
+
+			if (!warplock) {
+				for (Portal portal : portals) {
+					portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
+					portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
+					float portaldst1 = portalIntersection1.dst(player.position);
+					float portaldst2 = portalIntersection2.dst(player.position);
+					if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
+						warp = true;
+						warplock = false;
+						port = portal;
+						break;
+					}
+				}
+			} else {
+				for (Portal portal : portals) {
+					if (portal != port) {
+						portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
+						portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
+						float portaldst1 = portalIntersection1.dst(player.position);
+						float portaldst2 = portalIntersection2.dst(player.position);
+						if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
+							warplock = false;
+							break;
+						}
+					}
+				}
+			}
+
+			// player out of bound?
+			if (!box.contains(player.position)) {
+				player.stop();
+				Resources.getInstance().lives--;
+				reset();
+			}
+
+			if (win) {
+				player.stop();
+				changeLevel = true;
+			}
+
+			if (warp) {
+				warplock = false;
+				if (portalIntersect1) {
+					player.position = port.secondPosition.cpy();
+					exit = port.secondPosition.cpy();
+					warplock = true;
+				} else if (portalIntersect2) {
+					player.position = port.firstPosition.cpy();
+					exit = port.firstPosition.cpy();
+					warplock = true;
+				}
+			}
+			// end warplock
+		}
+
+	}
+
 	@Override
 	public void hide() {
 	}
@@ -797,8 +715,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (keycode == Input.Keys.SPACE) {
-			Resources.getInstance().move.play();
-			animatePlayer = true;
+			player.move();
 		}
 
 		if (keycode == Input.Keys.R) {
@@ -860,8 +777,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
 		if (Math.abs(touchDistance) < 0.5f) {
-			Resources.getInstance().move.play();
-			animatePlayer = true;
+			player.move();
 		}
 		
 		return false;
@@ -877,7 +793,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
 
-		if (!animatePlayer) {
+		if (!player.isMoving) {
 			player.direction.set(0, 0, -1);
 			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
