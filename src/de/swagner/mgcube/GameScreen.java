@@ -599,10 +599,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.09f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 		
@@ -629,7 +629,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.1f, 0.08f);
+			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.2f);
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 

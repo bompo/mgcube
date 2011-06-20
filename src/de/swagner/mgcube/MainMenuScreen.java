@@ -285,10 +285,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.09f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.08f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 
 			transShader.end();
