@@ -210,6 +210,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		renderObjects.add(player);
+		renderObjects.add(target);
 		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
 	}
