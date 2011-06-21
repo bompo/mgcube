@@ -81,6 +81,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
 	Vector3 exit = new Vector3();
 	Portal port = new Portal();
+	Vector3 position = new Vector3();
 	
 	protected int lastTouchX;
 	protected int lastTouchY;
@@ -159,6 +160,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		case 5:
 			level = Resources.getInstance().level5;
 			break;
+		case 6:
+			level = Resources.getInstance().level6;
+			break;
 
 		// more levels
 
@@ -185,7 +189,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
 					}
-					if (level[z][y][x] >=4 && level[z][y][x] <=13) {
+					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
 						Portal temp = new Portal(level[z][y][x]);
 						boolean found = false;
 						for(Portal p : portals) {
@@ -263,6 +267,31 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 		}
 		
+		//sort blocks because of transparency
+		for (Block block : blocks) {
+			tmp.idt();
+			model.idt();
+			
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+
+			tmp.setToTranslation(block.position.x, block.position.y, block.position.z);
+			model.mul(tmp);
+
+			tmp.setToScaling(0.95f, 0.95f, 0.95f);
+			model.mul(tmp);
+			
+			model.getTranslation(position);
+			
+			block.sortPosition = cam.position.dst(position);
+		}
+		blocks.sort();
+		
 		// render Blocks
 		for (Block block : blocks) {
 			tmp.idt();
@@ -294,7 +323,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
-
 		}
 
 		{
@@ -344,7 +372,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 		}
-		
+		int colormod = 1;
 		{
 			for (Portal portal : portals) {
 
@@ -372,11 +400,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 				
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f * colormod, 1.0f, 0.5f * colormod);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 				
 				//render hull			
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
 				blockModel.render(transShader, GL20.GL_LINE_STRIP);
 				
 				
@@ -402,13 +430,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 	
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.5f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.5f* colormod);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 				
 				//render hull			
-				transShader.setUniformf("a_color", 0.0f, 0.1f, 1.0f, 0.4f);
+				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
+				
+				colormod +=2;
 				}
 			}
 		}
@@ -639,7 +668,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 			} else {
 				for (Portal portal : portals) {
-					if (portal != port) {
+					if (portal.id != port.id) {
 						portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
 						portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
 						float portaldst1 = portalIntersection1.dst(player.position);
@@ -668,16 +697,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				warplock = false;
 				if (portalIntersect1) {
 					player.position = port.secondPosition.cpy();
-					exit = port.secondPosition.cpy();
 					warplock = true;
 				} else if (portalIntersect2) {
 					player.position = port.firstPosition.cpy();
-					exit = port.firstPosition.cpy();
 					warplock = true;
 				}
 			}
 			// end warplock
 		}
+		else
+			warplock = false;
 
 	}
 
