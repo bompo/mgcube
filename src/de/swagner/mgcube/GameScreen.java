@@ -158,6 +158,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		case 5:
 			level = Resources.getInstance().level5;
 			break;
+		case 6:
+			level = Resources.getInstance().level6;
+			break;
 
 		// more levels
 
@@ -184,7 +187,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
 					}
-					if (level[z][y][x] >=4 && level[z][y][x] <=13) {
+					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
 						Portal temp = new Portal(level[z][y][x]);
 						boolean found = false;
 						for(Portal p : portals) {
@@ -628,7 +631,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				for (Portal portal : portals) {
 					portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
 					portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
-					Gdx.app.log("", portalIntersection2.toString());
 					float portaldst1 = portalIntersection1.dst(player.position);
 					float portaldst2 = portalIntersection2.dst(player.position);
 					if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
