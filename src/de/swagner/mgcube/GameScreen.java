@@ -44,6 +44,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	Array<Block> blocks = new Array<Block>();
 	Array<Portal> portals = new Array<Portal>();
+	Array<Renderable> renderObjects = new Array<Renderable>();
+	
 	boolean animateWorld = false;
 	boolean warplock = false;
 	
@@ -140,6 +142,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 	
 	private void initLevel(int levelnumber) {
+		renderObjects.clear();
 		blocks.clear();
 		portals.clear();
 		int[][][] level;
@@ -205,6 +208,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 			}
 		}
+		
+		renderObjects.add(player);
+		renderObjects.addAll(blocks);		
+		renderObjects.addAll(portals);
 	}
 
 	private void reset() {
@@ -259,7 +266,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		//sort blocks because of transparency
-		for (Block block : blocks) {
+		for (Renderable renderable : renderObjects) {
 			tmp.idt();
 			model.idt();
 			
@@ -271,7 +278,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			tmp.setToTranslation(block.position.x, block.position.y, block.position.z);
+			tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
 			model.mul(tmp);
 
 			tmp.setToScaling(0.95f, 0.95f, 0.95f);
@@ -279,97 +286,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			model.getTranslation(position);
 			
-			block.sortPosition = cam.position.dst(position);
+			renderable.sortPosition = cam.position.dst(position);
 		}
-		blocks.sort();
+		renderObjects.sort();
 		
-		// render Blocks
-		for (Block block : blocks) {
-			tmp.idt();
-			model.idt();
-			modelView.idt();
-
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			tmp.setToTranslation(block.position.x, block.position.y, block.position.z);
-			model.mul(tmp);
-
-			tmp.setToScaling(0.95f, 0.95f, 0.95f);
-			model.mul(tmp);
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f);
-			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
-			blockModel.render(transShader, GL20.GL_TRIANGLES);
-		}
-
-		{
-			// render Player
-			tmp.idt();
-			model.idt();
-			modelView.idt();
-
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
+		// render all objects
+		for (Renderable renderable : renderObjects) {
 			
-			tmp.setToTranslation(player.position.x, player.position.y, player.position.z);
-			model.mul(tmp);
-			
-			tmp.setToRotation(xAxis, angleXBack);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleYBack);
-			model.mul(tmp);			
-
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-			
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
-			playerModel.render(transShader, GL20.GL_TRIANGLES);
-			
-			tmp.setToScaling(2.0f, 2.0f, 2.0f);
-			model.mul(tmp);
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-			
-			//render hull			
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
-			playerModel.render(transShader, GL20.GL_LINE_STRIP);
-			
-		}
-		int colormod = 1;
-		{
-			for (Portal portal : portals) {
-
-				if(portal.position.x != -11) {
-				// render Portal
-				
+			if(renderable instanceof Block) {
 				tmp.idt();
 				model.idt();
 				modelView.idt();
@@ -382,7 +306,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				tmp.setToRotation(yAxis, angleY);
 				model.mul(tmp);
 	
-				tmp.setToTranslation(portal.position.x, portal.position.y, portal.position.z);
+				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
+				model.mul(tmp);
+	
+				tmp.setToScaling(0.95f, 0.95f, 0.95f);
 				model.mul(tmp);
 	
 				modelViewProjection.idt();
@@ -390,49 +317,128 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				modelViewProjection = tmp.mul(model);
 	
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-				
-				transShader.setUniformf("a_color", 0.0f, 0.1f * colormod, 1.0f, 0.5f * colormod);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+			
+			// render Player
+			if(renderable instanceof Player) {
+				tmp.idt();
+				model.idt();
+				modelView.idt();
+
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
+
+				tmp.setToRotation(xAxis, angleX);
+				model.mul(tmp);
+				tmp.setToRotation(yAxis, angleY);
+				model.mul(tmp);
+
+				
+				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
+				model.mul(tmp);
+				
+				tmp.setToRotation(xAxis, angleXBack);
+				model.mul(tmp);
+				tmp.setToRotation(yAxis, angleYBack);
+				model.mul(tmp);			
+
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
+
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+				
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
+				playerModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				tmp.setToScaling(2.0f, 2.0f, 2.0f);
+				model.mul(tmp);
+
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
 				
 				//render hull			
-				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
-				blockModel.render(transShader, GL20.GL_LINE_STRIP);
-				
-				colormod +=2;
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
+				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+			}
+			
+			// render Portals
+			if(renderable instanceof Portal) {
+				if(renderable.position.x != -11) {
+					// render Portal
+					tmp.idt();
+					model.idt();
+					modelView.idt();
+		
+					tmp.setToScaling(0.5f, 0.5f, 0.5f);
+					model.mul(tmp);
+		
+					tmp.setToRotation(xAxis, angleX);
+					model.mul(tmp);
+					tmp.setToRotation(yAxis, angleY);
+					model.mul(tmp);
+		
+					tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
+					model.mul(tmp);
+		
+					modelViewProjection.idt();
+					modelViewProjection.set(cam.combined);
+					modelViewProjection = tmp.mul(model);
+		
+					transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+					
+					transShader.setUniformf("a_color", 0.0f, 0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.5f);
+					blockModel.render(transShader, GL20.GL_TRIANGLES);
+					
+					//render hull			
+					transShader.setUniformf("a_color", 0.0f,0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.4f);
+					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 				}
 			}
-		}
-
-		{
+				
 			// render Target
-			tmp.idt();
-			model.idt();
-			modelView.idt();
+			if(renderable instanceof Target) {
+				tmp.idt();
+				model.idt();
+				modelView.idt();
 
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
 
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
+				tmp.setToRotation(xAxis, angleX);
+				model.mul(tmp);
+				tmp.setToRotation(yAxis, angleY);
+				model.mul(tmp);
 
-			tmp.setToTranslation(target.position.x, target.position.y, target.position.z);
-			model.mul(tmp);
+				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
+				model.mul(tmp);
 
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
 
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
-			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f,0.5f);
-			targetModel.render(transShader, GL20.GL_TRIANGLES);
-			
-			//render hull			
-			transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f, 0.4f);
-			targetModel.render(transShader, GL20.GL_LINE_STRIP);
+				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f,0.5f);
+				targetModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				//render hull			
+				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f, 0.4f);
+				targetModel.render(transShader, GL20.GL_LINE_STRIP);
+			}
+				
 		}
+			
 
 		{
 			// render Wire
