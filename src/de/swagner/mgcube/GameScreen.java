@@ -76,11 +76,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	int minutes;
 	Ray pRay = new Ray(new Vector3(), new Vector3());
 	Vector3 intersection = new Vector3();
-	Vector3 portalIntersection1 = new Vector3();
-	Vector3 portalIntersection2 = new Vector3();
+	Vector3 portalIntersection = new Vector3();
 	BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
 	Vector3 exit = new Vector3();
-	Portal port = new Portal();
+	int port = 0;
 	Vector3 position = new Vector3();
 	
 	protected int lastTouchX;
@@ -191,27 +190,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					}
 					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
 						Portal temp = new Portal(level[z][y][x]);
-						boolean found = false;
-						for(Portal p : portals) {
-							if(p.id == level[z][y][x]) {
-								found = true;		
-								temp = p;
-								break;
-							}
+						temp.position.x = -10f + (x * 2);
+						temp.position.y = -10f + (y * 2);
+						temp.position.z = -10f + (z * 2);
+						portals.add(temp);
 						}
-						if(!found) {
-							temp.firstPosition.x = -10f + (x * 2);
-							temp.firstPosition.y = -10f + (y * 2);
-							temp.firstPosition.z = -10f + (z * 2);
-							portals.add(temp);
-						}
-						else {
-							temp.secondPosition.x = -10f + (x * 2);
-							temp.secondPosition.y = -10f + (y * 2);
-							temp.secondPosition.z = -10f + (z * 2);
-						}
-						
-					}					
+					if (level[z][y][x] >=-8 && level[z][y][x] <=-4){
+						Portal temp = new Portal(level[z][y][x]);
+						temp.position.x = -10f + (x * 2);
+						temp.position.y = -10f + (y * 2);
+						temp.position.z = -10f + (z * 2);
+						portals.add(temp);
+						}					
 				}
 			}
 		}
@@ -221,6 +211,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		animateWorld = false;
 		player.stop();
 		warplock = false;
+		port=0;
 		
 		initLevel(Resources.getInstance().currentlevel);
 		if(Resources.getInstance().lives < 1)
@@ -376,8 +367,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		{
 			for (Portal portal : portals) {
 
-				if(portal.firstPosition.x != -11 && portal.secondPosition.x != -11) {
-				// render Portal entry
+				if(portal.position.x != -11) {
+				// render Portal
 				
 				tmp.idt();
 				model.idt();
@@ -391,7 +382,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				tmp.setToRotation(yAxis, angleY);
 				model.mul(tmp);
 	
-				tmp.setToTranslation(portal.firstPosition.x, portal.firstPosition.y, portal.firstPosition.z);
+				tmp.setToTranslation(portal.position.x, portal.position.y, portal.position.z);
 				model.mul(tmp);
 	
 				modelViewProjection.idt();
@@ -406,36 +397,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				//render hull			
 				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
 				blockModel.render(transShader, GL20.GL_LINE_STRIP);
-				
-				
-				// render Portal exit
-				tmp.idt();
-				model.idt();
-				modelView.idt();
-	
-				tmp.setToScaling(0.5f, 0.5f, 0.5f);
-				model.mul(tmp);
-	
-				tmp.setToRotation(xAxis, angleX);
-				model.mul(tmp);
-				tmp.setToRotation(yAxis, angleY);
-				model.mul(tmp);
-	
-				tmp.setToTranslation(portal.secondPosition.x, portal.secondPosition.y, portal.secondPosition.z);
-				model.mul(tmp);
-	
-				modelViewProjection.idt();
-				modelViewProjection.set(cam.combined);
-				modelViewProjection = tmp.mul(model);
-	
-				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-	
-				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.5f* colormod);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-				
-				//render hull			
-				transShader.setUniformf("a_color", 0.0f, 0.1f* colormod, 1.0f, 0.4f* colormod);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 				
 				colormod +=2;
 				}
@@ -646,36 +607,30 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if (targetdst < 1.2f && targetIntersect) {
 				win = true;
 			}
-
-			boolean portalIntersect1 = false;
-			boolean portalIntersect2 = false;
-			portalIntersection1.set(0, 0, 0);
-			portalIntersection2.set(0, 0, 0);
+			
+			portalIntersection.set(0, 0, 0);
 			boolean warp = false;
 
 			if (!warplock) {
 				for (Portal portal : portals) {
-					portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
-					portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
-					float portaldst1 = portalIntersection1.dst(player.position);
-					float portaldst2 = portalIntersection2.dst(player.position);
-					if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
+					
+					boolean portalintersect = Intersector.intersectRaySphere(pRay, portal.position, 1f, portalIntersection);
+					float portaldst = portalIntersection.dst(player.position);
+					
+					if (portaldst < 0.2f && portalintersect) {
 						warp = true;
 						warplock = false;
-						port = portal;
+						port = portal.id;
 						break;
 					}
 				}
 			} else {
-				for (Portal portal : portals) {
-					if (portal.id != port.id) {
-						portalIntersect1 = Intersector.intersectRaySphere(pRay, portal.firstPosition, 1f, portalIntersection1);
-						portalIntersect2 = Intersector.intersectRaySphere(pRay, portal.secondPosition, 1f, portalIntersection2);
-						float portaldst1 = portalIntersection1.dst(player.position);
-						float portaldst2 = portalIntersection2.dst(player.position);
-						if (portaldst1 < 0.2f || portaldst2 < 0.2f) {
+				//end warplock
+				for(Portal p : portals) {
+					if (p.id == -port) {
+						boolean portalintersect = Intersector.intersectRaySphere(pRay, p.position, 1f, portalIntersection);
+						if (!portalintersect) {
 							warplock = false;
-							break;
 						}
 					}
 				}
@@ -694,16 +649,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 
 			if (warp) {
-				warplock = false;
-				if (portalIntersect1) {
-					player.position = port.secondPosition.cpy();
-					warplock = true;
-				} else if (portalIntersect2) {
-					player.position = port.firstPosition.cpy();
+				Portal tmp = getCorrespondingPortal(port);
+				if(tmp != null) {
+					player.position = tmp.position.cpy();
 					warplock = true;
 				}
 			}
-			// end warplock
 		}
 		else
 			warplock = false;
@@ -832,6 +783,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
 			cam.translate(0, 0, 1 * -amount);
 		return false;
+	}
+	
+	public Portal getCorrespondingPortal(int ids)
+	{
+		for(Portal p : portals)
+		{
+			if(p.id == -ids)
+				return p;
+		}
+		return null;
 	}
 
 }

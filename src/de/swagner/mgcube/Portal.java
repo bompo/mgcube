@@ -9,8 +9,7 @@ public class Portal {
 
 	public int id= 0;
 	
-	public Vector3 firstPosition = new Vector3(-11,-11,-11);
-	public Vector3 secondPosition = new Vector3(-11,-11,-11);
+	public Vector3 position = new Vector3(-11,-11,-11);
 	
 	public Portal(int id) {
 		this.id = id;
