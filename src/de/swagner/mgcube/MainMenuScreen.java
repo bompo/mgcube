@@ -413,9 +413,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-			cam.translate(0, 0, 1 * amount);
-		if((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
-			cam.translate(0, 0, 1 * -amount);
 		return false;
 	}
 
