@@ -849,7 +849,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (keycode == Input.Keys.SPACE) {
-			player.move();
+			movePlayer();
 		}
 
 		if (keycode == Input.Keys.R) {
@@ -865,6 +865,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			prevLevel();
 		}
 		return false;
+	}
+
+	private void movePlayer() {
+		if (!player.isMoving) {
+			player.direction.set(0, 0, -1);
+			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
+			player.move();
+		}
 	}
 
 	private void nextLevel() {
@@ -911,7 +920,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
 		if (Math.abs(touchDistance) < 0.5f) {
-			player.move();
+			movePlayer();
 		}
 		
 		return false;
@@ -925,14 +934,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleY += ((x - touchStartX) / 5.f);
 		angleX += ((y - touchStartY) / 5.f);
 
-		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
-
-		if (!player.isMoving) {
-			player.direction.set(0, 0, -1);
-			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
-			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
-		}
-		
+		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);	
 
 		touchStartX = x;
 		touchStartY = y;
