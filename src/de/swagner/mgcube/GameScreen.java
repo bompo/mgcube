@@ -59,6 +59,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	boolean finished = false;
 
 	float touchDistance = 0;
+	float touchTime = 0;
 
 	Vector3 xAxis = new Vector3(1, 0, 0);
 	Vector3 yAxis = new Vector3(0, 1, 0);
@@ -119,8 +120,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
-		font = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
-		font.setColor(1, 1, 1, 0.8f);
+		font = Resources.getInstance().font;
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
@@ -133,6 +133,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public void initRender() {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+		//antiAliasing for Desktop - no support in Android
+		Gdx.graphics.getGL20().glEnable (GL10.GL_LINE_SMOOTH);
+		Gdx.graphics.getGL20().glEnable (GL10.GL_BLEND);
+		Gdx.graphics.getGL20().glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.graphics.getGL20().glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
+		Gdx.graphics.getGL20().glLineWidth (1.5f);		
+		
 		frameBuffer = new FrameBuffer(Format.RGB565, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferHori = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
@@ -905,6 +912,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		touchDistance = 0;
+		touchTime = 0;
+		
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
@@ -919,7 +928,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		if (Math.abs(touchDistance) < 0.5f) {
+		if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f) {
 			movePlayer();
 		}
 		
@@ -934,7 +943,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleY += ((x - touchStartX) / 5.f);
 		angleX += ((y - touchStartY) / 5.f);
 
-		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);	
+		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
+		touchTime += Gdx.graphics.getDeltaTime();
 
 		touchStartX = x;
 		touchStartY = y;

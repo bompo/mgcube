@@ -18,7 +18,6 @@ public abstract class DefaultScreen implements Screen {
 
 	@Override
 	public void pause() {
-		dispose();
 	}
 
 	@Override
