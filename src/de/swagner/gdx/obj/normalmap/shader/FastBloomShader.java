@@ -5,8 +5,8 @@ public class FastBloomShader {
     public static final String mVertexShader =                    
         "attribute vec4 a_vertex;   \n" +
         "attribute vec2 a_texCoord;   \n" +
-        "uniform float  TexelOffsetX;   \n" +
-        "uniform float  TexelOffsetY;   \n" +
+        "uniform float TexelOffsetX;   \n" +
+        "uniform float TexelOffsetY;   \n" +
         "varying vec2  TexCoord0;   \n" +
         "varying vec2  TexCoord1;   \n" +
         "varying vec2  TexCoord2;   \n" +

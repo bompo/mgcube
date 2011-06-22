@@ -6,7 +6,6 @@ public class Renderable implements Comparable {
 	
 	public Vector3 position = new Vector3();
 	public float sortPosition;
-	public boolean collisionChecked = false;
 	
 	@Override
 	public int compareTo(Object o) {
