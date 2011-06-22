@@ -626,7 +626,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		//FadeInOut
 		if (!finished && fade > 0) {
-			fade = Math.max(fade - Gdx.graphics.getDeltaTime() / 2.f, 0);
+			fade = Math.max(fade - (delta / 2.f), 0);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -634,7 +634,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (finished) {
-			fade = Math.min(fade + Gdx.graphics.getDeltaTime() / 2.f, 1);
+			fade = Math.min(fade + (delta / 2.f), 1);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -646,11 +646,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		//LevelChangeEffect
 		if (!changeLevel && changeLevelEffect > 0) {
-			changeLevelEffect = Math.max(changeLevelEffect - (Gdx.graphics.getDeltaTime() * 15.f), 0);
+			changeLevelEffect = Math.max(changeLevelEffect - (delta * 15.f), 0);
 		}
 
 		if (changeLevel) {
-			changeLevelEffect = Math.min(changeLevelEffect + (Gdx.graphics.getDeltaTime() * 15.f), 5);
+			changeLevelEffect = Math.min(changeLevelEffect + (delta * 15.f), 5);
 			if (changeLevelEffect >= 5) {				
 				nextLevel();
 			}
