@@ -44,10 +44,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	Array<Block> blocks = new Array<Block>();
 	Array<Portal> portals = new Array<Portal>();
+	Array<MovableBlock> movableBlocks = new Array<MovableBlock>();
 	Array<Renderable> renderObjects = new Array<Renderable>();
 	
 	boolean animateWorld = false;
 	boolean warplock = false;
+	boolean movwarplock = false;
 	
 	//fade
 	SpriteBatch fadeBatch;
@@ -77,6 +79,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	int seconds;
 	int minutes;
 	Ray pRay = new Ray(new Vector3(), new Vector3());
+	Ray mRay = new Ray(new Vector3(), new Vector3());
 	Vector3 intersection = new Vector3();
 	Vector3 portalIntersection = new Vector3();
 	BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
@@ -145,10 +148,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		renderObjects.clear();
 		blocks.clear();
 		portals.clear();
+		movableBlocks.clear();
 		int[][][] level;
 		switch (levelnumber) {
 		case 1:
-			level = Resources.getInstance().level1;
+			level = Resources.getInstance().level7;
 			break;
 		case 2:
 			level = Resources.getInstance().level2;
@@ -164,6 +168,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			break;
 		case 6:
 			level = Resources.getInstance().level6;
+			break;
+		case 7:
+			level = Resources.getInstance().level7;
 			break;
 
 		// more levels
@@ -204,7 +211,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						temp.position.y = -10f + (y * 2);
 						temp.position.z = -10f + (z * 2);
 						portals.add(temp);
-						}					
+						}
+					if (level[z][y][x] == 9){
+						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						movableBlocks.add(temp);
+						}	
 				}
 			}
 		}
@@ -213,12 +224,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		renderObjects.add(target);
 		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
+		renderObjects.addAll(movableBlocks);
 	}
 
 	private void reset() {
 		animateWorld = false;
 		player.stop();
+		for(MovableBlock m : movableBlocks) {
+			m.stop();
+		}
 		warplock = false;
+		movwarplock = false;
 		port=0;
 		
 		initLevel(Resources.getInstance().currentlevel);
@@ -265,6 +281,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if(player.isMoving) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 		}
+		
+		for(MovableBlock m : movableBlocks) {
+			if(m.isMoving) {
+				m.position.add(m.direction.x * delta * 10f, m.direction.y * delta * 10f, m.direction.z * delta * 10f);
+			}
+		}		
+		
 		
 		//sort blocks because of transparency
 		for (Renderable renderable : renderObjects) {
@@ -323,6 +346,39 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 	
 				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+			
+			// render movableblocks
+			if(renderable instanceof MovableBlock) {
+				tmp.idt();
+				model.idt();
+				modelView.idt();
+	
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
+	
+				tmp.setToRotation(xAxis, angleX);
+				model.mul(tmp);
+				tmp.setToRotation(yAxis, angleY);
+				model.mul(tmp);
+	
+				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
+				model.mul(tmp);
+	
+				tmp.setToScaling(0.95f, 0.95f, 0.95f);
+				model.mul(tmp);
+	
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+	
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.8f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.2f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 			
@@ -607,6 +663,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					break;
 				}
 			}
+			
+			for (MovableBlock m : movableBlocks) {
+				boolean intersect = Intersector.intersectRaySphere(pRay, m.position, 1f, intersection);
+				float movdst = intersection.dst(player.position);
+				if (movdst < 1.2f && box.contains(m.position) && intersect) {
+					player.stop();
+					m.move(player.direction.cpy());
+				}
+				else if(movdst <1.2f && !box.contains(m.position) && intersect)
+					player.stop();
+			}
 
 			boolean targetIntersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
 			float targetdst = intersection.dst(player.position);
@@ -665,6 +732,85 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		else
 			warplock = false;
+		
+		// collisiontest for movable blocks
+		for(MovableBlock m : movableBlocks) {
+			mRay.set(m.position, m.direction);
+			if(m.isMoving) {
+				player.stop();
+				
+				for (Block block : blocks) {
+					boolean intersect = Intersector.intersectRaySphere(mRay, block.position, 1f, intersection);
+					float dst = intersection.dst(m.position);
+					if (dst < 1.2f && intersect) {
+						m.stop();
+						break;
+					}
+				}
+				
+				//this should not happen
+				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
+				float targetdst = intersection.dst(m.position);
+				if (targetdst < 1.2f && targetIntersect) {
+					m.stop();
+				}
+				
+				boolean warp = false;
+				portalIntersection.set(0, 0, 0);
+				if (!movwarplock) {
+					for (Portal portal : portals) {
+						
+						boolean portalintersect = Intersector.intersectRaySphere(mRay, portal.position, 1f, portalIntersection);
+						float portaldst = portalIntersection.dst(m.position);
+						
+						if (portaldst < 0.2f && portalintersect) {
+							warp = true;
+							movwarplock = false;
+							port = portal.id;
+							break;
+						}
+					}
+				} else {
+					//end warplock
+					for(Portal p : portals) {
+						if (p.id == -port) {
+							boolean portalintersect = Intersector.intersectRaySphere(mRay, p.position, 1f, portalIntersection);
+							if (!portalintersect) {
+								movwarplock = false;
+							}
+						}
+					}
+				}
+				
+				if (warp) {
+					Portal tmp = getCorrespondingPortal(port);
+					if(tmp != null) {
+						m.position = tmp.position.cpy();
+						movwarplock = true;
+					}
+				}
+				
+				for(MovableBlock mm : movableBlocks) {
+					
+					boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
+					float dst = intersection.dst(m.position);
+					if (dst < 1.2f && intersect) {
+						m.stop();
+						mm.move(m.direction);
+						break;
+					}
+					
+				}
+				
+			}
+			else
+				movwarplock = false;
+				
+			//movblock out of bound?
+			if (!box.contains(m.position)) {
+				m.stop();
+			}
+		}
 
 	}
 
@@ -771,6 +917,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
 		}
+		
 
 		touchStartX = x;
 		touchStartY = y;
