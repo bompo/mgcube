@@ -59,6 +59,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	boolean finished = false;
 
 	float touchDistance = 0;
+	float touchTime = 0;
 
 	Vector3 xAxis = new Vector3(1, 0, 0);
 	Vector3 yAxis = new Vector3(0, 1, 0);
@@ -119,8 +120,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
-		font = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
-		font.setColor(1, 1, 1, 0.8f);
+		font = Resources.getInstance().font;
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
@@ -133,6 +133,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public void initRender() {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+		//antiAliasing for Desktop - no support in Android
+		Gdx.graphics.getGL20().glEnable (GL10.GL_LINE_SMOOTH);
+		Gdx.graphics.getGL20().glEnable (GL10.GL_BLEND);
+		Gdx.graphics.getGL20().glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.graphics.getGL20().glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
+		Gdx.graphics.getGL20().glLineWidth (1.5f);		
+		
 		frameBuffer = new FrameBuffer(Format.RGB565, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferHori = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
@@ -254,7 +261,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		delta = Math.min(0.06f, delta);
+		delta = Math.min(0.03f, delta);
 		
 		startTime += delta;
 		
@@ -277,7 +284,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
-		collisionTest();
+		
 		if(player.isMoving) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 		}
@@ -287,6 +294,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				m.position.add(m.direction.x * delta * 10f, m.direction.y * delta * 10f, m.direction.z * delta * 10f);
 			}
 		}		
+		collisionTest();
 		
 		
 		//sort blocks because of transparency
@@ -658,7 +666,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			for (Block block : blocks) {
 				boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
 				float dst = intersection.dst(player.position);
-				if (dst < 1.2f && intersect) {
+				if (dst < 1.0f && intersect) {
 					player.stop();
 					break;
 				}
@@ -667,11 +675,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			for (MovableBlock m : movableBlocks) {
 				boolean intersect = Intersector.intersectRaySphere(pRay, m.position, 1f, intersection);
 				float movdst = intersection.dst(player.position);
-				if (movdst < 1.2f && box.contains(m.position) && intersect) {
+				if (movdst < 1.0f && box.contains(m.position) && intersect) {
 					player.stop();
 					m.move(player.direction.cpy());
 				}
-				else if(movdst <1.2f && !box.contains(m.position) && intersect)
+				else if(movdst <1.0f && !box.contains(m.position) && intersect)
 					player.stop();
 				
 				//recursiveCollisionCheck(m);
@@ -680,7 +688,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			boolean targetIntersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
 			float targetdst = intersection.dst(player.position);
 			boolean win = false;
-			if (targetdst < 1.2f && targetIntersect) {
+			if (targetdst < 1.0f && targetIntersect) {
 				win = true;
 			}
 			
@@ -744,25 +752,25 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				for (Block block : blocks) {
 					boolean intersect = Intersector.intersectRaySphere(mRay, block.position, 1f, intersection);
 					float dst = intersection.dst(m.position);
-					if (dst < 1.2f && intersect) {
+					if (dst < 1.0f && intersect) {
 						m.stop();
 						break;
 					}
 				}
 				
-				//NOTE: THIS SHOULD NOT HAPPEN
-				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
-				float targetdst = intersection.dst(m.position);
-				if (targetdst < 1.2f && targetIntersect) {
-					m.stop();
-				}
-				
-				//NOTE: THIS REALLY SHOULD NOT HAPPEN
-				boolean playerIntersect = Intersector.intersectRaySphere(mRay, player.position, 1f, intersection);
-				float playerdst = intersection.dst(m.position);
-				if (playerdst < 1.2f && playerIntersect) {
-					m.stop();
-				}
+//				//NOTE: THIS SHOULD NOT HAPPEN
+//				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
+//				float targetdst = intersection.dst(m.position);
+//				if (targetdst < 1.0f && targetIntersect) {
+//					m.stop();
+//				}
+//				
+//				//NOTE: THIS REALLY SHOULD NOT HAPPEN
+//				boolean playerIntersect = Intersector.intersectRaySphere(mRay, player.position, 1f, intersection);
+//				float playerdst = intersection.dst(m.position);
+//				if (playerdst < 1.0f && playerIntersect) {
+//					m.stop();
+//				}
 				
 				boolean warp = false;
 				portalIntersection.set(0, 0, 0);
@@ -803,7 +811,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					
 					boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
 					float dst = intersection.dst(m.position);
-					if (dst < 1.2f && intersect) {
+					if (dst < 1.0f && intersect) {
 						m.stop();
 						if(box.contains(mm.position))
 							mm.move(m.direction);
@@ -849,7 +857,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (keycode == Input.Keys.SPACE) {
-			player.move();
+			movePlayer();
 		}
 
 		if (keycode == Input.Keys.R) {
@@ -865,6 +873,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			prevLevel();
 		}
 		return false;
+	}
+
+	private void movePlayer() {
+		if (!player.isMoving) {
+			player.direction.set(0, 0, -1);
+			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
+			player.move();
+		}
 	}
 
 	private void nextLevel() {
@@ -896,6 +913,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		touchDistance = 0;
+		touchTime = 0;
+		
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
@@ -910,8 +929,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		if (Math.abs(touchDistance) < 0.5f) {
-			player.move();
+		if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f) {
+			movePlayer();
 		}
 		
 		return false;
@@ -926,13 +945,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleX += ((y - touchStartY) / 5.f);
 
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
-
-		if (!player.isMoving) {
-			player.direction.set(0, 0, -1);
-			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
-			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
-		}
-		
+		touchTime += Gdx.graphics.getDeltaTime();
 
 		touchStartX = x;
 		touchStartY = y;
