@@ -673,6 +673,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 				else if(movdst <1.2f && !box.contains(m.position) && intersect)
 					player.stop();
+				
+				//recursiveCollisionCheck(m);
 			}
 
 			boolean targetIntersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
@@ -748,10 +750,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					}
 				}
 				
-				//this should not happen
+				//NOTE: THIS SHOULD NOT HAPPEN
 				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
 				float targetdst = intersection.dst(m.position);
 				if (targetdst < 1.2f && targetIntersect) {
+					m.stop();
+				}
+				
+				//NOTE: THIS REALLY SHOULD NOT HAPPEN
+				boolean playerIntersect = Intersector.intersectRaySphere(mRay, player.position, 1f, intersection);
+				float playerdst = intersection.dst(m.position);
+				if (playerdst < 1.2f && playerIntersect) {
 					m.stop();
 				}
 				
@@ -796,19 +805,25 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					float dst = intersection.dst(m.position);
 					if (dst < 1.2f && intersect) {
 						m.stop();
-						mm.move(m.direction);
+						if(box.contains(mm.position))
+							mm.move(m.direction);
+						else
+							player.stop();
 						break;
 					}
-					
 				}
 				
+//				if(recursiveCollisionCheck(m)) {
+//					m.stop();
+//					//player.stop();
+//				}
+				
 			}
-			else
-				movwarplock = false;
 				
 			//movblock out of bound?
 			if (!box.contains(m.position)) {
 				m.stop();
+				movwarplock = false;
 			}
 		}
 
@@ -947,6 +962,30 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				return p;
 		}
 		return null;
+	}
+	
+	//for movable objects in a row
+	public boolean recursiveCollisionCheck(MovableBlock mov)
+	{
+		if(!box.contains(mov.position)) {
+			return true;
+		}
+		mRay.set(mov.position, mov.direction);
+		MovableBlock next = null;
+		for(MovableBlock m :movableBlocks) {
+			if(m.position != mov.position && !m.isMoving) {
+				boolean intersect = Intersector.intersectRaySphere(mRay, m.position, 1f, intersection);
+				float dst = intersection.dst(mov.position);
+				if(dst < 1.2f && intersect) {
+					next = m;
+					break;
+				}
+			}
+		}
+		if(next != null) {
+			recursiveCollisionCheck(next);
+		}
+		return false;
 	}
 
 }
