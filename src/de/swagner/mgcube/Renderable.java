@@ -1,11 +1,15 @@
 package de.swagner.mgcube;
 
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 public class Renderable implements Comparable {
 	
 	public Vector3 position = new Vector3();
 	public float sortPosition;
+	
+	public Matrix4 model = new Matrix4();
 	
 	@Override
 	public int compareTo(Object o) {

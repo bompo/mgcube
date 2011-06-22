@@ -44,9 +44,15 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	Player player = new Player();
 	Target target = new Target();
 	Array<Block> blocks = new Array<Block>();
+	Array<Portal> portals = new Array<Portal>();
+	Array<MovableBlock> movableBlocks = new Array<MovableBlock>();
+	Array<Renderable> renderObjects = new Array<Renderable>();
 	boolean animateWorld = false;
 	boolean animatePlayer = false;	
 
+	float angleXBack = 0;
+	float angleYBack = 0;
+	
 	Vector3 xAxis = new Vector3(1, 0, 0);
 	Vector3 yAxis = new Vector3(0, 1, 0);
 	Vector3 zAxis = new Vector3(0, 0, 1);	
@@ -61,9 +67,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBufferVert;
 	FrameBuffer frameBufferHori;
-	private int m_i32TexSize;
-	private float m_fTexelOffset;
 
+	Vector3 position = new Vector3();
+	
 	public MainMenuScreen(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
@@ -114,7 +120,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		Gdx.graphics.getGL20().glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
 		Gdx.graphics.getGL20().glLineWidth (1.5f);		
 		
-		frameBuffer = new FrameBuffer(Format.RGB565, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);		
+		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferHori = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
@@ -126,17 +132,32 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void initLevel(int levelnumber) {
+		renderObjects.clear();
 		blocks.clear();
+		portals.clear();
+		movableBlocks.clear();
 		int[][][] level;
 		switch (levelnumber) {
 		case 1:
-			level = Resources.getInstance().level1;
+			level = Resources.getInstance().level7;
 			break;
 		case 2:
 			level = Resources.getInstance().level2;
 			break;
 		case 3:
 			level = Resources.getInstance().level3;
+			break;
+		case 4:
+			level = Resources.getInstance().level4;
+			break;
+		case 5:
+			level = Resources.getInstance().level5;
+			break;
+		case 6:
+			level = Resources.getInstance().level6;
+			break;
+		case 7:
+			level = Resources.getInstance().level7;
 			break;
 
 		// more levels
@@ -146,7 +167,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			break;
 		}
 
-		// find player pos
+		// finde player pos
 		int z = 0, y = 0, x = 0;
 		for (z = 0; z < 10; z++) {
 			for (y = 0; y < 10; y++) {
@@ -164,9 +185,33 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
 					}
+					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
+						Portal temp = new Portal(level[z][y][x]);
+						temp.position.x = -10f + (x * 2);
+						temp.position.y = -10f + (y * 2);
+						temp.position.z = -10f + (z * 2);
+						portals.add(temp);
+						}
+					if (level[z][y][x] >=-8 && level[z][y][x] <=-4){
+						Portal temp = new Portal(level[z][y][x]);
+						temp.position.x = -10f + (x * 2);
+						temp.position.y = -10f + (y * 2);
+						temp.position.z = -10f + (z * 2);
+						portals.add(temp);
+						}
+					if (level[z][y][x] == 9){
+						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						movableBlocks.add(temp);
+						}	
 				}
 			}
 		}
+		
+//		renderObjects.add(player);
+//		renderObjects.add(target);
+		renderObjects.addAll(blocks);		
+		renderObjects.addAll(portals);
+		renderObjects.addAll(movableBlocks);
 	}
 	
 	@Override
@@ -175,31 +220,26 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		delta = Math.min(0.06f, delta);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
+		delta = Math.min(0.02f, delta);
 		
 		startTime += delta;
-
+		
+		angleXBack += MathUtils.sin(startTime)/10f;
+		angleYBack += MathUtils.cos(startTime)/5f;
+		
 		angleX += MathUtils.sin(startTime)/10f;
 		angleY += MathUtils.cos(startTime)/5f;
 
-		frameBuffer.begin();
-
-		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
 		cam.update();
-
-		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-	
-		// render Blocks
-		for (Block block : blocks) {
+		
+		//sort blocks because of transparency
+		for (Renderable renderable : renderObjects) {
 			tmp.idt();
 			model.idt();
-			modelView.idt();
-
+			
 			tmp.setToScaling(0.5f, 0.5f, 0.5f);
 			model.mul(tmp);
 
@@ -208,88 +248,22 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, angleY);
 			model.mul(tmp);
 
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
-			tmp.setToTranslation(block.position.x, block.position.y, block.position.z);
+			tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
 			model.mul(tmp);
 
 			tmp.setToScaling(0.95f, 0.95f, 0.95f);
 			model.mul(tmp);
-
-			transShader.begin();
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f);
-			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
-			blockModel.render(transShader, GL20.GL_TRIANGLES);
-
-			transShader.end();
+			
+			model.getTranslation(position);
+			
+			renderable.model.set(model);
+			
+			renderable.sortPosition = cam.position.dst(position);
 		}
-
-		{
-			// render Wire
-			tmp.idt();
-			model.idt();
-			modelView.idt();
-
-			tmp.setToScaling(5.5f, 5.5f, 5.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleY, modelView.getValues()[1],
-			// modelView.getValues()[5], modelView.getValues()[9]);
-			// model.mul(tmp);
-			//
-			// modelView.set(cam.view);
-			// modelView.mul(model);
-			// tmp.setToRotation(angleX, modelView.getValues()[0],
-			// modelView.getValues()[4], modelView.getValues()[8]);
-			// model.mul(tmp);
-			//
-			tmp.setToTranslation(0, 0, 0);
-			model.mul(tmp);
-
-			transShader.begin();
-
-			modelViewProjection.idt();
-			modelViewProjection.set(cam.combined);
-			modelViewProjection = tmp.mul(model);
-
-			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
-			// shader.setUniformf("LightDirection", light.x, light.y, light.z);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
-			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.08f);
-			blockModel.render(transShader, GL20.GL_TRIANGLES);
-
-			transShader.end();
-		}
+		renderObjects.sort();
 		
+		frameBuffer.begin();
+		renderScene();
 		frameBuffer.end();
 
 		//PostProcessing
@@ -299,42 +273,42 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBuffer.getColorBufferTexture().bind(0);
 
-		frameBufferVert.begin();
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
 		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f));
+		
+		frameBufferVert.begin();
 		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
 		bloomShader.setUniformf("TexelOffsetY", 0.0f);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		bloomShader.end(); 
 		frameBufferVert.end();
 		
 		
 		frameBufferVert.getColorBufferTexture().bind(0);
 		
 		frameBufferHori.begin();		
-		bloomShader.begin();
-		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f));
 		bloomShader.setUniformf("TexelOffsetX", 0.0f);
 		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		bloomShader.end(); 
 		frameBufferHori.end();
+
+		bloomShader.end(); 
 		
-	
-		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		//render scene again
+		renderScene();
+			
+		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+				
+		batch.enableBlending();
 		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.begin();
-		Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		batch.draw(frameBufferHori.getColorBufferTexture(), 0, 0,800,480,0,0,frameBufferHori.getWidth(),frameBufferHori.getHeight(),false,true);
-		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);	
-		//batch.draw(title, 40, 370);
 		batch.end();
 		
 		if (!finished && fade > 0) {
-			fade = Math.max(fade - Gdx.graphics.getDeltaTime() / 2.f, 0);
+			fade = Math.max(fade - (delta / 2.f), 0);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -342,7 +316,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (finished) {
-			fade = Math.min(fade + Gdx.graphics.getDeltaTime() / 2.f, 1);
+			fade = Math.min(fade + (delta / 2.f), 1);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -352,6 +326,197 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 
+	}
+	
+	private void renderScene() {
+
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+				
+		transShader.begin();
+		
+		// render all objects
+		for (Renderable renderable : renderObjects) {
+			
+			if(renderable instanceof Block) {
+				tmp.idt();
+				model.idt();
+
+				model.set(renderable.model);
+	
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+	
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+			
+			// render movableblocks
+			if(renderable instanceof MovableBlock) {
+				tmp.idt();
+				model.idt();
+
+				model.set(renderable.model);
+	
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+	
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.8f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+			
+			// render Player
+			if(renderable instanceof Player) {
+				tmp.idt();
+				model.idt();
+
+				model.set(renderable.model);		
+
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
+
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+				
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
+				playerModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				tmp.setToScaling(2.0f, 2.0f, 2.0f);
+				model.mul(tmp);
+
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+				
+				//render hull			
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				transShader.setUniformf("a_color", 1.0f, 1.0f, 0.0f, 0.4f);
+				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+			}
+			
+			// render Portals
+			if(renderable instanceof Portal) {
+				if(renderable.position.x != -11) {
+					// render Portal
+					tmp.idt();
+					model.idt();
+
+					model.set(renderable.model);
+		
+					modelViewProjection.idt();
+					modelViewProjection.set(cam.combined);
+					modelViewProjection = tmp.mul(model);
+		
+					transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+					
+					transShader.setUniformf("a_color", 0.0f, 0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.5f);
+					blockModel.render(transShader, GL20.GL_TRIANGLES);
+					
+					//render hull			
+					transShader.setUniformf("a_color", 0.0f,0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.4f);
+					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+				}
+			}
+				
+			// render Target
+			if(renderable instanceof Target) {
+				tmp.idt();
+				model.idt();
+
+				model.set(renderable.model);
+
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+
+				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f,0.5f);
+				targetModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				//render hull			
+				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f, 0.4f);
+				targetModel.render(transShader, GL20.GL_LINE_STRIP);
+			}
+				
+		}
+			
+
+		{
+			// render Wire
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(5.5f, 5.5f, 5.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+
+			tmp.setToTranslation(0, 0, 0);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
+		
+		{
+			// render Background Wire
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(20.5f, 20.5f, 20.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX + angleXBack);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY + angleYBack);
+			model.mul(tmp);
+
+			tmp.setToTranslation(0, 0, 0);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+
+			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.2f);
+			playerModel.render(transShader, GL20.GL_LINE_STRIP);
+		}
+
+		transShader.end();
 	}
 
 	@Override

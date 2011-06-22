@@ -67,7 +67,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	// GLES20
 	Matrix4 model = new Matrix4().idt();
-	Matrix4 modelView = new Matrix4().idt();
 	Matrix4 modelViewProjection = new Matrix4().idt();
 	Matrix4 tmp = new Matrix4().idt();
 	private ShaderProgram transShader;
@@ -131,16 +130,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 	
 	public void initRender() {
-		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		//antiAliasing for Desktop - no support in Android
-		Gdx.graphics.getGL20().glEnable (GL10.GL_LINE_SMOOTH);
-		Gdx.graphics.getGL20().glEnable (GL10.GL_BLEND);
-		Gdx.graphics.getGL20().glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.graphics.getGL20().glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
-		Gdx.graphics.getGL20().glLineWidth (1.5f);		
+		Gdx.gl20.glEnable (GL10.GL_LINE_SMOOTH);
+		Gdx.gl20.glEnable (GL10.GL_BLEND);
+		Gdx.gl20.glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl20.glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
+		Gdx.gl20.glLineWidth (1.5f);		
 		
-		frameBuffer = new FrameBuffer(Format.RGB565, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);		
+		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferHori = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
@@ -261,29 +260,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		delta = Math.min(0.03f, delta);
+
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
+		delta = Math.min(0.02f, delta);
 		
 		startTime += delta;
 		
 		angleXBack += MathUtils.sin(startTime)/10f;;
 		angleYBack += MathUtils.cos(startTime)/5f;;
 		
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-		frameBuffer.begin();
-		transShader.begin();
-
-		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-		Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
 		cam.update();
-
-		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-
 		
 		if(player.isMoving) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
@@ -318,9 +306,123 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			model.getTranslation(position);
 			
+			renderable.model.set(model);
+			
 			renderable.sortPosition = cam.position.dst(position);
 		}
 		renderObjects.sort();
+		
+		frameBuffer.begin();
+		renderScene();
+		frameBuffer.end();
+
+		//PostProcessing
+		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+		
+		frameBuffer.getColorBufferTexture().bind(0);
+
+		bloomShader.begin();
+		bloomShader.setUniformi("sTexture", 0);
+		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f)+changeLevelEffect);
+		
+		frameBufferVert.begin();
+		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
+		bloomShader.setUniformf("TexelOffsetY", 0.0f);
+		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+		frameBufferVert.end();
+		
+		
+		frameBufferVert.getColorBufferTexture().bind(0);
+		
+		frameBufferHori.begin();		
+		bloomShader.setUniformf("TexelOffsetX", 0.0f);
+		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
+		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+		frameBufferHori.end();
+
+		bloomShader.end(); 
+		
+		//render scene again
+		renderScene();
+			
+		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+				
+		batch.enableBlending();
+		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
+		batch.begin();
+		batch.draw(frameBufferHori.getColorBufferTexture(), 0, 0,800,480,0,0,frameBufferHori.getWidth(),frameBufferHori.getHeight(),false,true);
+		batch.end();
+
+		
+		//GUI
+		batch.disableBlending();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		batch.begin();
+		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
+		font.draw(batch, "lives: " + Resources.getInstance().lives, 620, 80);
+		Resources.getInstance().time += delta;
+		seconds = (int) Resources.getInstance().time % 60;
+		minutes = (int)Resources.getInstance().time / 60;
+		if(seconds > 9 && minutes > 9)
+			font.draw(batch, "time: " + minutes + ":" + seconds, 620, 60);
+		else if(seconds > 9 && minutes < 10)
+			font.draw(batch, "time: 0" + minutes + ":" + seconds, 620, 60);
+		else if(seconds < 10 && minutes > 9)
+			font.draw(batch, "time: " + minutes + ":0" + seconds, 620, 60);
+		else
+			font.draw(batch, "time: 0" + minutes + ":0" + seconds, 620, 60);
+		batch.end();
+		
+		
+		//FadeInOut
+		if (!finished && fade > 0) {
+			fade = Math.max(fade - (delta / 2.f), 0);
+			fadeBatch.begin();
+			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
+			blackFade.draw(fadeBatch);
+			fadeBatch.end();
+		}
+
+		if (finished) {
+			fade = Math.min(fade + (delta / 2.f), 1);
+			fadeBatch.begin();
+			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
+			blackFade.draw(fadeBatch);
+			fadeBatch.end();
+			if (fade >= 1) {
+				game.setScreen(new MainMenuScreen(game));
+			}
+		}
+		
+		//LevelChangeEffect
+		if (!changeLevel && changeLevelEffect > 0) {
+			changeLevelEffect = Math.max(changeLevelEffect - (delta * 15.f), 0);
+		}
+
+		if (changeLevel) {
+			changeLevelEffect = Math.min(changeLevelEffect + (delta * 15.f), 5);
+			if (changeLevelEffect >= 5) {				
+				nextLevel();
+			}
+		}
+
+	}
+
+	private void renderScene() {
+
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+				
+		transShader.begin();
 		
 		// render all objects
 		for (Renderable renderable : renderObjects) {
@@ -328,21 +430,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Block) {
 				tmp.idt();
 				model.idt();
-				modelView.idt();
-	
-				tmp.setToScaling(0.5f, 0.5f, 0.5f);
-				model.mul(tmp);
-	
-				tmp.setToRotation(xAxis, angleX);
-				model.mul(tmp);
-				tmp.setToRotation(yAxis, angleY);
-				model.mul(tmp);
-	
-				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
-				model.mul(tmp);
-	
-				tmp.setToScaling(0.95f, 0.95f, 0.95f);
-				model.mul(tmp);
+
+				model.set(renderable.model);
 	
 				modelViewProjection.idt();
 				modelViewProjection.set(cam.combined);
@@ -361,21 +450,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof MovableBlock) {
 				tmp.idt();
 				model.idt();
-				modelView.idt();
-	
-				tmp.setToScaling(0.5f, 0.5f, 0.5f);
-				model.mul(tmp);
-	
-				tmp.setToRotation(xAxis, angleX);
-				model.mul(tmp);
-				tmp.setToRotation(yAxis, angleY);
-				model.mul(tmp);
-	
-				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
-				model.mul(tmp);
-	
-				tmp.setToScaling(0.95f, 0.95f, 0.95f);
-				model.mul(tmp);
+
+				model.set(renderable.model);
 	
 				modelViewProjection.idt();
 				modelViewProjection.set(cam.combined);
@@ -394,24 +470,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Player) {
 				tmp.idt();
 				model.idt();
-				modelView.idt();
 
-				tmp.setToScaling(0.5f, 0.5f, 0.5f);
-				model.mul(tmp);
-
-				tmp.setToRotation(xAxis, angleX);
-				model.mul(tmp);
-				tmp.setToRotation(yAxis, angleY);
-				model.mul(tmp);
-
-				
-				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
-				model.mul(tmp);
-				
-				tmp.setToRotation(xAxis, angleXBack);
-				model.mul(tmp);
-				tmp.setToRotation(yAxis, angleYBack);
-				model.mul(tmp);			
+				model.set(renderable.model);		
 
 				tmp.setToScaling(0.5f, 0.5f, 0.5f);
 				model.mul(tmp);
@@ -443,18 +503,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					// render Portal
 					tmp.idt();
 					model.idt();
-					modelView.idt();
-		
-					tmp.setToScaling(0.5f, 0.5f, 0.5f);
-					model.mul(tmp);
-		
-					tmp.setToRotation(xAxis, angleX);
-					model.mul(tmp);
-					tmp.setToRotation(yAxis, angleY);
-					model.mul(tmp);
-		
-					tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
-					model.mul(tmp);
+
+					model.set(renderable.model);
 		
 					modelViewProjection.idt();
 					modelViewProjection.set(cam.combined);
@@ -475,18 +525,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Target) {
 				tmp.idt();
 				model.idt();
-				modelView.idt();
 
-				tmp.setToScaling(0.5f, 0.5f, 0.5f);
-				model.mul(tmp);
-
-				tmp.setToRotation(xAxis, angleX);
-				model.mul(tmp);
-				tmp.setToRotation(yAxis, angleY);
-				model.mul(tmp);
-
-				tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
-				model.mul(tmp);
+				model.set(renderable.model);
 
 				modelViewProjection.idt();
 				modelViewProjection.set(cam.combined);
@@ -509,7 +549,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// render Wire
 			tmp.idt();
 			model.idt();
-			modelView.idt();
 
 			tmp.setToScaling(5.5f, 5.5f, 5.5f);
 			model.mul(tmp);
@@ -539,7 +578,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// render Background Wire
 			tmp.idt();
 			model.idt();
-			modelView.idt();
 
 			tmp.setToScaling(20.5f, 20.5f, 20.5f);
 			model.mul(tmp);
@@ -563,99 +601,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		transShader.end();
-		frameBuffer.end();
-
-		//PostProcessing
-		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-		Gdx.gl.glDisable(GL20.GL_BLEND);
-		
-		frameBuffer.getColorBufferTexture().bind(0);
-
-		bloomShader.begin();
-		
-		frameBufferVert.begin();
-		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f)+changeLevelEffect);
-		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-		bloomShader.setUniformf("TexelOffsetY", 0.0f);
-		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		frameBufferVert.end();
-		
-		
-		frameBufferVert.getColorBufferTexture().bind(0);
-		
-		frameBufferHori.begin();		
-		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.6f,0.9f)+changeLevelEffect);
-		bloomShader.setUniformf("TexelOffsetX", 0.0f);
-		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
-		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		frameBufferHori.end();
-
-		bloomShader.end(); 
-		
-		batch.enableBlending();
-		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		batch.begin();
-		batch.draw(frameBufferHori.getColorBufferTexture(), 0, 0,800,480,0,0,frameBufferHori.getWidth(),frameBufferHori.getHeight(),false,true);
-		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
-		batch.end();
-
-		
-		//GUI
-		batch.disableBlending();
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		batch.begin();
-		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
-		font.draw(batch, "lives: " + Resources.getInstance().lives, 620, 80);
-		Resources.getInstance().time += delta;
-		seconds = (int) Resources.getInstance().time % 60;
-		minutes = (int)Resources.getInstance().time / 60;
-		if(seconds > 9 && minutes > 9)
-			font.draw(batch, "time: " + minutes + ":" + seconds, 620, 60);
-		else if(seconds > 9 && minutes < 10)
-			font.draw(batch, "time: 0" + minutes + ":" + seconds, 620, 60);
-		else if(seconds < 10 && minutes > 9)
-			font.draw(batch, "time: " + minutes + ":0" + seconds, 620, 60);
-		else
-			font.draw(batch, "time: 0" + minutes + ":0" + seconds, 620, 60);
-		batch.end();
-		
-		
-		//FadeInOut
-		if (!finished && fade > 0) {
-			fade = Math.max(fade - Gdx.graphics.getDeltaTime() / 2.f, 0);
-			fadeBatch.begin();
-			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
-			blackFade.draw(fadeBatch);
-			fadeBatch.end();
-		}
-
-		if (finished) {
-			fade = Math.min(fade + Gdx.graphics.getDeltaTime() / 2.f, 1);
-			fadeBatch.begin();
-			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
-			blackFade.draw(fadeBatch);
-			fadeBatch.end();
-			if (fade >= 1) {
-				game.setScreen(new MainMenuScreen(game));
-			}
-		}
-		
-		//LevelChangeEffect
-		if (!changeLevel && changeLevelEffect > 0) {
-			changeLevelEffect = Math.max(changeLevelEffect - (Gdx.graphics.getDeltaTime() * 15.f), 0);
-		}
-
-		if (changeLevel) {
-			changeLevelEffect = Math.min(changeLevelEffect + (Gdx.graphics.getDeltaTime() * 15.f), 5);
-			if (changeLevelEffect >= 5) {				
-				nextLevel();
-			}
-		}
-
 	}
 
 	private void collisionTest() {

@@ -402,7 +402,7 @@ public class Resources {
 		m_i32TexSize = 128;
 
 		// Texel offset for blur filter kernle
-		m_fTexelOffset = 1.0f / (float) m_i32TexSize;
+		m_fTexelOffset = 1.0f / (float) m_i32TexSize/4.f;
 
 		// Altered weights for the faster filter kernel
 		float w1 = 0.0555555f;
