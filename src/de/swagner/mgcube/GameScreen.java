@@ -261,7 +261,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		delta = Math.min(0.06f, delta);
+		delta = Math.min(0.03f, delta);
 		
 		startTime += delta;
 		
@@ -284,7 +284,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
-		collisionTest();
+		
 		if(player.isMoving) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 		}
@@ -294,6 +294,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				m.position.add(m.direction.x * delta * 10f, m.direction.y * delta * 10f, m.direction.z * delta * 10f);
 			}
 		}		
+		collisionTest();
 		
 		
 		//sort blocks because of transparency
@@ -665,7 +666,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			for (Block block : blocks) {
 				boolean intersect = Intersector.intersectRaySphere(pRay, block.position, 1f, intersection);
 				float dst = intersection.dst(player.position);
-				if (dst < 1.2f && intersect) {
+				if (dst < 1.0f && intersect) {
 					player.stop();
 					break;
 				}
@@ -674,11 +675,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			for (MovableBlock m : movableBlocks) {
 				boolean intersect = Intersector.intersectRaySphere(pRay, m.position, 1f, intersection);
 				float movdst = intersection.dst(player.position);
-				if (movdst < 1.2f && box.contains(m.position) && intersect) {
+				if (movdst < 1.0f && box.contains(m.position) && intersect) {
 					player.stop();
 					m.move(player.direction.cpy());
 				}
-				else if(movdst <1.2f && !box.contains(m.position) && intersect)
+				else if(movdst <1.0f && !box.contains(m.position) && intersect)
 					player.stop();
 				
 				//recursiveCollisionCheck(m);
@@ -687,7 +688,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			boolean targetIntersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
 			float targetdst = intersection.dst(player.position);
 			boolean win = false;
-			if (targetdst < 1.2f && targetIntersect) {
+			if (targetdst < 1.0f && targetIntersect) {
 				win = true;
 			}
 			
@@ -751,25 +752,25 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				for (Block block : blocks) {
 					boolean intersect = Intersector.intersectRaySphere(mRay, block.position, 1f, intersection);
 					float dst = intersection.dst(m.position);
-					if (dst < 1.2f && intersect) {
+					if (dst < 1.0f && intersect) {
 						m.stop();
 						break;
 					}
 				}
 				
-				//NOTE: THIS SHOULD NOT HAPPEN
-				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
-				float targetdst = intersection.dst(m.position);
-				if (targetdst < 1.2f && targetIntersect) {
-					m.stop();
-				}
-				
-				//NOTE: THIS REALLY SHOULD NOT HAPPEN
-				boolean playerIntersect = Intersector.intersectRaySphere(mRay, player.position, 1f, intersection);
-				float playerdst = intersection.dst(m.position);
-				if (playerdst < 1.2f && playerIntersect) {
-					m.stop();
-				}
+//				//NOTE: THIS SHOULD NOT HAPPEN
+//				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
+//				float targetdst = intersection.dst(m.position);
+//				if (targetdst < 1.0f && targetIntersect) {
+//					m.stop();
+//				}
+//				
+//				//NOTE: THIS REALLY SHOULD NOT HAPPEN
+//				boolean playerIntersect = Intersector.intersectRaySphere(mRay, player.position, 1f, intersection);
+//				float playerdst = intersection.dst(m.position);
+//				if (playerdst < 1.0f && playerIntersect) {
+//					m.stop();
+//				}
 				
 				boolean warp = false;
 				portalIntersection.set(0, 0, 0);
@@ -810,7 +811,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					
 					boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
 					float dst = intersection.dst(m.position);
-					if (dst < 1.2f && intersect) {
+					if (dst < 1.0f && intersect) {
 						m.stop();
 						if(box.contains(mm.position))
 							mm.move(m.direction);

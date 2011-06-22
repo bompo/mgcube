@@ -1,5 +1,6 @@
 package de.swagner.mgcube;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 
 public class MovableBlock extends Renderable{
@@ -8,8 +9,7 @@ public class MovableBlock extends Renderable{
 	
 	public boolean isMoving = false;
 	
-	public MovableBlock(Vector3 position)
-	{
+	public MovableBlock(Vector3 position) {
 		this.position = position;
 	}
 	
@@ -66,6 +66,12 @@ public class MovableBlock extends Renderable{
 	}
 	
 	public void stop() {
+		this.position.x = MathUtils.ceil(this.position.x-0.5f);
+		this.position.y = MathUtils.ceil(this.position.y-0.5f);
+		this.position.z = MathUtils.ceil(this.position.z-0.5f);
+		if(this.position.x%2 !=0) this.position.x -=1;
+		if(this.position.y%2 !=0) this.position.y -=1;
+		if(this.position.z%2 !=0) this.position.z -=1;
 		this.isMoving = false;
 	}
 	
