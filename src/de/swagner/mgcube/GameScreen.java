@@ -626,6 +626,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				float dst = intersection.dst(player.position);
 				if (dst < 1.0f && intersect) {
 					player.stop();
+					block.isCollidedAnimation = true;
 					break;
 				}
 			}
@@ -636,9 +637,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				if (movdst < 1.0f && box.contains(m.position) && intersect) {
 					player.stop();
 					m.move(player.direction.cpy());
+					m.isCollidedAnimation = true;
 				}
-				else if(movdst <1.0f && !box.contains(m.position) && intersect)
+				else if(movdst <1.0f && !box.contains(m.position) && intersect) {
 					player.stop();
+					m.isCollidedAnimation = true;
+				}
 				
 				//recursiveCollisionCheck(m);
 			}
@@ -648,6 +652,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			boolean win = false;
 			if (targetdst < 1.0f && targetIntersect) {
 				win = true;
+				target.isCollidedAnimation = true;
 			}
 			
 			portalIntersection.set(0, 0, 0);
@@ -663,6 +668,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						warp = true;
 						warplock = false;
 						port = portal.id;
+						portal.isCollidedAnimation = true;
 						break;
 					}
 				}
@@ -695,6 +701,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				if(tmp != null) {
 					player.position = tmp.position.cpy();
 					warplock = true;
+					tmp.isCollidedAnimation = true;
 				}
 			}
 		}
@@ -712,6 +719,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					float dst = intersection.dst(m.position);
 					if (dst < 1.0f && intersect) {
 						m.stop();
+						block.isCollidedAnimation = true;
 						break;
 					}
 				}
@@ -742,6 +750,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 							warp = true;
 							movwarplock = false;
 							port = portal.id;
+							portal.isCollidedAnimation = true;
 							break;
 						}
 					}
@@ -762,6 +771,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					if(tmp != null) {
 						m.position = tmp.position.cpy();
 						movwarplock = true;
+						tmp.isCollidedAnimation = true;
 					}
 				}
 				
@@ -771,10 +781,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					float dst = intersection.dst(m.position);
 					if (dst < 1.0f && intersect) {
 						m.stop();
-						if(box.contains(mm.position))
+						if(box.contains(mm.position)) 
 							mm.move(m.direction);
 						else
 							player.stop();
+						mm.isCollidedAnimation = true;
 						break;
 					}
 				}
@@ -949,6 +960,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				float dst = intersection.dst(mov.position);
 				if(dst < 1.2f && intersect) {
 					next = m;
+					next.isCollidedAnimation = true;
 					break;
 				}
 			}

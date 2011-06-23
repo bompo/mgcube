@@ -9,6 +9,8 @@ public class Renderable implements Comparable {
 	public Vector3 position = new Vector3();
 	public float sortPosition;
 	
+	public boolean isCollidedAnimation = false;
+	
 	public Matrix4 model = new Matrix4();
 	
 	@Override
