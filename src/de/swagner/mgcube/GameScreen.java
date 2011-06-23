@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.scenes.scene2d.actions.Delay;
 import com.badlogic.gdx.utils.Array;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
@@ -59,6 +60,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	float fade = 1.0f;
 	boolean finished = false;
 
+	float delta;
+	
 	float touchDistance = 0;
 	float touchTime = 0;
 
@@ -264,12 +267,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float deltaTime) {
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
-		delta = Math.min(0.02f, delta);
+		delta = Math.min(0.02f, deltaTime);
 		
 		startTime += delta;
 		
@@ -418,7 +421,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void renderScene() {
-
+		
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		
@@ -432,6 +435,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		// render all objects
 		for (Renderable renderable : renderObjects) {
 			
+			//render impact
+			if(renderable.isCollidedAnimation == true && renderable.collideAnimation == 0) {
+				renderable.collideAnimation = 1.0f;
+			}
+			if(renderable.collideAnimation>0.0f) {
+				renderable.collideAnimation -= delta*1.f;
+				renderable.collideAnimation = Math.max(0.0f, renderable.collideAnimation);
+				if(renderable.collideAnimation == 0.0f) renderable.isCollidedAnimation = false;
+			}
+			
+			
 			if(renderable instanceof Block) {
 				tmp.idt();
 				model.idt();
@@ -444,10 +458,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 	
-				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f);
+
+				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.8f + renderable.collideAnimation);
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 	
-				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f);
+				transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.2f + renderable.collideAnimation);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 			
@@ -464,10 +479,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 	
-				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.8f);
+				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.8f + renderable.collideAnimation);
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 	
-				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.2f);
+				transShader.setUniformf("a_color", 1.0f, 0.8f, 0.1f, 0.2f + renderable.collideAnimation);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 			
@@ -522,11 +537,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 					transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 					
-					transShader.setUniformf("a_color", 0.0f, 0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.5f);
+					transShader.setUniformf("a_color", 0.0f, 0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.5f + renderable.collideAnimation);
 					blockModel.render(transShader, GL20.GL_TRIANGLES);
 					
 					//render hull			
-					transShader.setUniformf("a_color", 0.0f,0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.4f);
+					transShader.setUniformf("a_color", 0.0f,0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.4f + renderable.collideAnimation);
 					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 				}
 			}
@@ -547,11 +562,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
-				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f,0.5f);
+				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f,0.5f + renderable.collideAnimation);
 				targetModel.render(transShader, GL20.GL_TRIANGLES);
 				
 				//render hull			
-				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f, 0.4f);
+				transShader.setUniformf("a_color", 0.0f, 1.1f, 0.1f, 0.4f + renderable.collideAnimation);
 				targetModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 				

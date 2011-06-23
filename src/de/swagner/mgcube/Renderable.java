@@ -10,6 +10,7 @@ public class Renderable implements Comparable {
 	public float sortPosition;
 	
 	public boolean isCollidedAnimation = false;
+	public float collideAnimation = 0.0f;
 	
 	public Matrix4 model = new Matrix4();
 	
