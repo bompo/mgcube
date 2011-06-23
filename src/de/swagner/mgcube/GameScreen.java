@@ -361,6 +361,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		batch.disableBlending();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		batch.begin();
+		font.draw(batch, "level: " + Resources.getInstance().currentlevel, 620, 100);
 		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
 		font.draw(batch, "lives: " + Resources.getInstance().lives, 620, 80);
 		Resources.getInstance().time += delta;
