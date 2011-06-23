@@ -90,7 +90,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		sphereModel = Resources.getInstance().sphereModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(4.5f, 0, 16f);
+		cam.position.set(5.0f, 0, 16f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -278,6 +278,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBuffer.begin();
 		renderScene();
+		renderMenu();
 		frameBuffer.end();
 
 		//PostProcessing
@@ -310,6 +311,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		
 		//render scene again
 		renderScene();
+		renderMenu();
 			
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
@@ -351,6 +353,136 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 
+	}
+	
+	private void renderMenu() {
+
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+				
+		transShader.begin();
+			
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		{
+			// render Button 1
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(3.5f, 0.6f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, (angleXBack/40.f));
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, (angleYBack/100.f)-2.f);
+			model.mul(tmp);
+
+			tmp.setToTranslation(3.3f,4.5f, 12);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
+		
+		{
+			// render Button 2
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(3.5f, 0.6f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, (angleXBack/40.f));
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, (angleYBack/100.f)-2.f);
+			model.mul(tmp);
+
+			tmp.setToTranslation(3.3f,1.3f, 12);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
+		
+		{
+			// render Button 3
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(3.5f, 0.6f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, (angleXBack/40.f));
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, (angleYBack/100.f)-2.f);
+			model.mul(tmp);
+
+			tmp.setToTranslation(3.3f,-2.0f, 12);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
+		
+		{
+			// render Button 4
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(3.5f, 0.6f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, (angleXBack/40.f));
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, (angleYBack/100.f)-2.f);
+			model.mul(tmp);
+
+			tmp.setToTranslation(3.3f,-5.0f, 12);
+			model.mul(tmp);
+
+			modelViewProjection.idt();
+			modelViewProjection.set(cam.combined);
+			modelViewProjection = tmp.mul(model);
+
+			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
+		
+		transShader.end();
 	}
 	
 	private void renderScene() {
