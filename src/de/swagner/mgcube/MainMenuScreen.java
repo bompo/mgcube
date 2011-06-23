@@ -90,7 +90,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		sphereModel = Resources.getInstance().sphereModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(0, 0, 16f);
+		cam.position.set(4.5f, 0, 16f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -121,7 +121,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		initRender();
 		
 		initLevel(0);
-		angleY = -90;
+		angleY = -70;
 		angleX = -10;
 	}
 	
