@@ -90,7 +90,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
-		frameBufferHori = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
 	
 	@Override
@@ -151,7 +150,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBufferVert.getColorBufferTexture().bind(0);
 		
-		frameBufferHori.begin();		
+		frameBuffer.begin();		
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
 		bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 1f);
@@ -159,7 +158,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 		bloomShader.end(); 
-		frameBufferHori.end();
+		frameBuffer.end();
 		
 
 		
@@ -169,7 +168,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		batch.draw(title, 0, 0);	
-		batch.draw(frameBufferHori.getColorBufferTexture(), 0, 0,800,480,0,0,frameBufferHori.getWidth(),frameBufferHori.getHeight(),false,true);
+		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
 		batch.end();
 		
 		if (!finished && fade > 0) {

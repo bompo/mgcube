@@ -141,7 +141,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
-		frameBufferHori = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
 	
 	@Override
@@ -336,11 +335,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBufferVert.getColorBufferTexture().bind(0);
 		
-		frameBufferHori.begin();		
+		frameBuffer.begin();		
 		bloomShader.setUniformf("TexelOffsetX", 0.0f);
 		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		frameBufferHori.end();
+		frameBuffer.end();
 
 		bloomShader.end(); 
 		
@@ -354,7 +353,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		batch.enableBlending();
 		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
 		batch.begin();
-		batch.draw(frameBufferHori.getColorBufferTexture(), 0, 0,800,480,0,0,frameBufferHori.getWidth(),frameBufferHori.getHeight(),false,true);
+		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
 		batch.end();
 
 		
