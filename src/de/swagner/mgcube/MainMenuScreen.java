@@ -108,7 +108,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		font = Resources.getInstance().font;
 		font.scale(0.5f);
 		selectedFont = Resources.getInstance().selectedFont;
-		selectedFont.scale(0.1f);
+		selectedFont.scale(0.5f);
 
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
