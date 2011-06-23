@@ -533,6 +533,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				model.idt();
 
 				model.set(renderable.model);
+				
+				tmp.setToRotation(yAxis, angleY + angleYBack);
+				model.mul(tmp);
 
 				modelViewProjection.idt();
 				modelViewProjection.set(cam.combined);
