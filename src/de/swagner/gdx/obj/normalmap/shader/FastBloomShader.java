@@ -35,8 +35,8 @@ public class FastBloomShader {
         "void main()\n" +
         "{\n" +
         "    vec3 color = texture2D(sTexture, TexCoord0).rgb * 0.333333;\n" +
-        "    color = color + texture2D(sTexture, TexCoord1).rgb * 0.333333;\n" +
-        "    color = color + texture2D(sTexture, TexCoord2).rgb * 0.333333;\n" + 
+        "    color = (texture2D(sTexture, TexCoord1).rgb * 0.333333) + color;\n" +
+        "    color = (texture2D(sTexture, TexCoord2).rgb * 0.333333) + color;\n" + 
         "    gl_FragColor.rgb = color*bloomFactor;\n" +
         "}\n";
 }

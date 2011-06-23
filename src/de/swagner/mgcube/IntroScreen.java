@@ -42,7 +42,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	private ShaderProgram bloomShader;
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBufferVert;
-	FrameBuffer frameBufferHori;
 
 	public IntroScreen(Game game) {
 		super(game);
@@ -199,7 +198,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	@Override
 	public void dispose() {
 		frameBuffer.dispose();
-		frameBufferHori.dispose();
 		frameBufferVert.dispose();
 	}
 
