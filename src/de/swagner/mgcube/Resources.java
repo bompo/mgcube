@@ -297,6 +297,7 @@ public class Resources {
 	public Mesh targetModel;
 	public Mesh quadModel;
 	public Mesh wireCubeModel;
+	public Mesh sphereModel;
 
 	public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 	public Sound move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
@@ -326,9 +327,12 @@ public class Resources {
 		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
 		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 
-		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
+		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere_small.obj").read());
 		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
+		
+		sphereModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
+		sphereModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+		
 		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
 		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 

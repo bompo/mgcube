@@ -32,6 +32,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Mesh targetModel;
 	Mesh quadModel;
 	Mesh wireCubeModel;
+	Mesh sphereModel;
 	float angleX = 0;
 	float angleY = 0;
 
@@ -104,6 +105,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		targetModel = Resources.getInstance().targetModel;
 		quadModel = Resources.getInstance().quadModel;
 		wireCubeModel = Resources.getInstance().wireCubeModel;
+		sphereModel = Resources.getInstance().sphereModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 16f);
@@ -132,12 +134,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public void initRender() {
 		Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		//antiAliasing for Desktop - no support in Android
-		Gdx.gl20.glEnable (GL10.GL_LINE_SMOOTH);
-		Gdx.gl20.glEnable (GL10.GL_BLEND);
-		Gdx.gl20.glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl20.glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
-		Gdx.gl20.glLineWidth (1.5f);		
+//		//antiAliasing for Desktop - no support in Android
+//		Gdx.gl20.glEnable (GL10.GL_LINE_SMOOTH);
+//		Gdx.gl20.glEnable (GL10.GL_BLEND);
+//		Gdx.gl20.glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
+//		Gdx.gl20.glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
+//		Gdx.gl20.glLineWidth (1.5f);		
 		
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
@@ -415,7 +417,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	private void renderScene() {
 
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -471,7 +473,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				tmp.idt();
 				model.idt();
 
-				model.set(renderable.model);		
+				model.set(renderable.model);	
+				
+				tmp.setToRotation(xAxis, angleXBack);
+				model.mul(tmp);
+				tmp.setToRotation(yAxis, angleYBack);
+				model.mul(tmp);
 
 				tmp.setToScaling(0.5f, 0.5f, 0.5f);
 				model.mul(tmp);
@@ -527,6 +534,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				model.idt();
 
 				model.set(renderable.model);
+				
+				tmp.setToRotation(yAxis, angleY + angleYBack);
+				model.mul(tmp);
 
 				modelViewProjection.idt();
 				modelViewProjection.set(cam.combined);
@@ -544,7 +554,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				
 		}
 			
-
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		{
 			// render Wire
 			tmp.idt();
@@ -597,7 +607,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
 			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.2f);
-			playerModel.render(transShader, GL20.GL_LINE_STRIP);
+			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 
 		transShader.end();
