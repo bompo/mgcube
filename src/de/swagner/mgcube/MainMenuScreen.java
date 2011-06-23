@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -34,7 +35,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	float angleX = 0;
 	float angleY = 0;
 	SpriteBatch batch;
+	SpriteBatch bat;
 	BitmapFont font;
+	BitmapFont selectedFont;
+	Array<String> menuItems = new Array<String>();
+	int selectedMenuItem = -1;
 	SpriteBatch fadeBatch;
 	Sprite blackFade;
 	Sprite title;
@@ -94,14 +99,23 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		// Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
+		bat = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		font = new BitmapFont();		
+		font = Resources.getInstance().font;	
+		font.scale(0.5f);
+		selectedFont = Resources.getInstance().selectedFont;
+		selectedFont.scale(0.1f);
 
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
+		
+		menuItems.add("start game");
+		menuItems.add("select level");
+		menuItems.add("time attack");
+		menuItems.add("options");
 		
 		initRender();
 		
@@ -305,6 +319,17 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
 		batch.end();
+		
+		bat.begin();
+		float y = 365;
+		for(String s : menuItems) {
+			if(selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
+				selectedFont.draw(bat, s, 500, y);
+			else
+				font.draw(bat, s, 500, y);
+			y -= 80;
+		}
+		bat.end();
 		
 		if (!finished && fade > 0) {
 			fade = Math.max(fade - (delta / 2.f), 0);
@@ -537,6 +562,22 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		if (keycode == Input.Keys.SPACE) {
 			finished = true;
 		}
+		
+		if (keycode == Input.Keys.ENTER) {
+			finished = true;
+		}
+		
+		if (keycode == Input.Keys.DOWN) {
+			selectedMenuItem++;
+			selectedMenuItem %= 4;
+		}
+		
+		if (keycode == Input.Keys.UP) {
+			if(selectedMenuItem > 0)
+				selectedMenuItem--;
+			else
+				selectedMenuItem = 3;
+		}
 		return false;
 	}
 
@@ -554,11 +595,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
-		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
+//		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
+//		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
 		finished = true;
-
+		
 		return false;
 	}
 
@@ -566,7 +607,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-
+		
 		return false;
 	}
 
@@ -574,7 +615,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchDragged(int x, int y, int pointer) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-
+		
 		return false;
 	}
 

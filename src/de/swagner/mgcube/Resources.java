@@ -307,6 +307,7 @@ public class Resources {
 	public float m_fTexelOffset;
 
 	public BitmapFont font;
+	public BitmapFont selectedFont;
 
 	public static Resources instance;
 
@@ -387,7 +388,8 @@ public class Resources {
 		initShader();
 
 		font = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
-		font.setColor(1, 1, 1, 0.8f);
+		//font.setColor(1, 1, 1, 0.8f);
+		selectedFont = new BitmapFont(Gdx.files.internal("data/selected.fnt"), false);
 	}
 
 	private void initShader() {
