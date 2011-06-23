@@ -39,6 +39,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	float angleXBack = 0;
 	float angleYBack = 0;
 	SpriteBatch batch;
+	SpriteBatch fontbatch;
 	BitmapFont font;
 	Player player = new Player();
 	Target target = new Target();
@@ -116,6 +117,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		fontbatch = new SpriteBatch();
 
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 		fadeBatch = new SpriteBatch();
@@ -363,24 +365,23 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		
 		//GUI
-		batch.disableBlending();
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		batch.begin();
-		font.draw(batch, "level: " + Resources.getInstance().currentlevel, 620, 100);
-		font.draw(batch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
-		font.draw(batch, "lives: " + Resources.getInstance().lives, 620, 80);
+		//fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		fontbatch.begin();
+		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 100);
+		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
+		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 80);
 		Resources.getInstance().time += delta;
 		seconds = (int) Resources.getInstance().time % 60;
 		minutes = (int)Resources.getInstance().time / 60;
 		if(seconds > 9 && minutes > 9)
-			font.draw(batch, "time: " + minutes + ":" + seconds, 620, 60);
+			font.draw(fontbatch, "time: " + minutes + ":" + seconds, 620, 60);
 		else if(seconds > 9 && minutes < 10)
-			font.draw(batch, "time: 0" + minutes + ":" + seconds, 620, 60);
+			font.draw(fontbatch, "time: 0" + minutes + ":" + seconds, 620, 60);
 		else if(seconds < 10 && minutes > 9)
-			font.draw(batch, "time: " + minutes + ":0" + seconds, 620, 60);
+			font.draw(fontbatch, "time: " + minutes + ":0" + seconds, 620, 60);
 		else
-			font.draw(batch, "time: 0" + minutes + ":0" + seconds, 620, 60);
-		batch.end();
+			font.draw(fontbatch, "time: 0" + minutes + ":0" + seconds, 620, 60);
+		fontbatch.end();
 		
 		
 		//FadeInOut
