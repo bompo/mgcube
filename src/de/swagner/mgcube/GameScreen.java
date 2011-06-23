@@ -157,7 +157,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		int[][][] level;
 		switch (levelnumber) {
 		case 1:
-			level = Resources.getInstance().level7;
+			level = Resources.getInstance().level1;
 			break;
 		case 2:
 			level = Resources.getInstance().level2;
