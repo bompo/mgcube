@@ -154,7 +154,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		frameBufferHori.begin();		
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 0.5f);
+		bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 1f);
 		bloomShader.setUniformf("TexelOffsetX", 0.0f);
 		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
