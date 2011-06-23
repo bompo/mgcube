@@ -808,7 +808,18 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		// TODO Auto-generated method stub
+		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
+		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
+		
+		if (button1.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 0;
+		} else if (button2.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 1;
+		} else if (button3.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 2;
+		} else if (button4.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 3;
+		}
 		return false;
 	}
 
