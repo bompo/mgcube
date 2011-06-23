@@ -32,6 +32,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Mesh targetModel;
 	Mesh quadModel;
 	Mesh wireCubeModel;
+	Mesh sphereModel;
 	float angleX = 0;
 	float angleY = 0;
 
@@ -104,6 +105,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		targetModel = Resources.getInstance().targetModel;
 		quadModel = Resources.getInstance().quadModel;
 		wireCubeModel = Resources.getInstance().wireCubeModel;
+		sphereModel = Resources.getInstance().sphereModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 16f);
@@ -601,7 +603,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
 
 			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.2f);
-			playerModel.render(transShader, GL20.GL_LINE_STRIP);
+			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 
 		transShader.end();
