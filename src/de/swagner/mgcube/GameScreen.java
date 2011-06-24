@@ -48,6 +48,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Array<Portal> portals = new Array<Portal>();
 	Array<MovableBlock> movableBlocks = new Array<MovableBlock>();
 	Array<Renderable> renderObjects = new Array<Renderable>();
+	Array<Switch> switches = new Array<Switch>();
+	Array<SwitchableBlock> switchblocks = new Array<SwitchableBlock>();
 	
 	boolean animateWorld = false;
 	boolean warplock = false;
@@ -160,10 +162,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		blocks.clear();
 		portals.clear();
 		movableBlocks.clear();
+		switchblocks.clear();
+		switches.clear();
 		int[][][] level;
 		switch (levelnumber) {
 		case 1:
-			level = Resources.getInstance().level1;
+			level = Resources.getInstance().level9;
 			break;
 		case 2:
 			level = Resources.getInstance().level2;
@@ -185,6 +189,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			break;
 		case 8:
 			level = Resources.getInstance().level8;
+			break;
+		case 9:
+			level = Resources.getInstance().level9;
 			break;
 
 		// more levels
@@ -229,7 +236,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					if (level[z][y][x] == 9){
 						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
 						movableBlocks.add(temp);
-						}	
+						}
+					if (level[z][y][x] <= -10){
+						Switch temp = new Switch(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						temp.id = level[z][y][x];
+						switches.add(temp);
+						}
+					if (level[z][y][x] >= 10){
+						SwitchableBlock temp = new SwitchableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						temp.id = level[z][y][x];
+						switchblocks.add(temp);
+						}
 				}
 			}
 		}
@@ -239,6 +256,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
 		renderObjects.addAll(movableBlocks);
+		renderObjects.addAll(switches);
+		renderObjects.addAll(switchblocks);
+		
+		for(Switch s : switches) {
+			Array<SwitchableBlock> tmp = getCorrespondingSwitchableBlock(s.id);
+			if(tmp != null) {
+				s.sBlocks = tmp;
+			}
+		}
+		
 	}
 
 	private void reset() {
@@ -246,6 +273,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		player.stop();
 		for(MovableBlock m : movableBlocks) {
 			m.stop();
+		}
+		
+		for(Switch s : switches) {
+			s.isSwitched = false;
+		}
+		for(SwitchableBlock s : switchblocks) {
+			s.isSwitched = false;
 		}
 		warplock = false;
 		movwarplock = false;
@@ -486,6 +520,59 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 			
+			// render switchableblocks
+			if(renderable instanceof SwitchableBlock) {
+				if(!((SwitchableBlock) renderable).isSwitched) {
+					tmp.idt();
+					model.idt();
+	
+					model.set(renderable.model);
+		
+					modelViewProjection.idt();
+					modelViewProjection.set(cam.combined);
+					modelViewProjection = tmp.mul(model);
+		
+					transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+		
+					transShader.setUniformf("a_color", 1.0f, 1f, 1f, 0.8f + renderable.collideAnimation);
+					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+		
+					transShader.setUniformf("a_color", 1.0f, 1f, 1f, 0.2f + renderable.collideAnimation);
+					blockModel.render(transShader, GL20.GL_TRIANGLES);
+				}
+			}
+			
+			// render switches
+			if(renderable instanceof Switch) {
+				tmp.idt();
+				model.idt();
+
+				model.set(renderable.model);	
+
+				tmp.setToScaling(0.3f, 0.3f, 0.3f);
+				model.mul(tmp);
+
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+				
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				transShader.setUniformf("a_color", 1.0f, 1.0f, 1.0f, 0.8f);
+				playerModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				tmp.setToScaling(2.0f, 2.0f, 2.0f);
+				model.mul(tmp);
+
+				modelViewProjection.idt();
+				modelViewProjection.set(cam.combined);
+				modelViewProjection = tmp.mul(model);
+				
+				//render hull			
+				transShader.setUniformMatrix("MVPMatrix", modelViewProjection);
+				transShader.setUniformf("a_color", 1.0f, 1.0f, 1.0f, 0.2f);
+				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+			}
+			
 			// render Player
 			if(renderable instanceof Player) {
 				tmp.idt();
@@ -661,13 +748,31 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				
 				//recursiveCollisionCheck(m);
 			}
+			
+			for (SwitchableBlock s : switchblocks) {
+				boolean swintersect = Intersector.intersectRaySphere(pRay, s.position, 1f, intersection);
+				float swdst = intersection.dst(player.position);
+				if (swdst < 1.0f && swintersect && !s.isSwitched) {
+					player.stop();
+					s.isCollidedAnimation = true;
+					break;
+				}
+			}
 
 			boolean targetIntersect = Intersector.intersectRaySphere(pRay, target.position, 1f, intersection);
 			float targetdst = intersection.dst(player.position);
 			boolean win = false;
-			if (targetdst < 1.0f && targetIntersect) {
+			if (targetdst < 0.2f && targetIntersect) {
 				win = true;
 				target.isCollidedAnimation = true;
+			}
+			
+			for(Switch s : switches) {
+				if (s.position.equals(player.position)) {
+					s.isSwitched = !s.isSwitched;
+					s.isCollidedAnimation = true;
+					setCorrespondingSwitchBlocks(s);
+				}				
 			}
 			
 			portalIntersection.set(0, 0, 0);
@@ -739,19 +844,37 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					}
 				}
 				
-//				//NOTE: THIS SHOULD NOT HAPPEN
-//				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
-//				float targetdst = intersection.dst(m.position);
-//				if (targetdst < 1.0f && targetIntersect) {
-//					m.stop();
-//				}
-//				
-//				//NOTE: THIS REALLY SHOULD NOT HAPPEN
-//				boolean playerIntersect = Intersector.intersectRaySphere(mRay, player.position, 1f, intersection);
-//				float playerdst = intersection.dst(m.position);
-//				if (playerdst < 1.0f && playerIntersect) {
-//					m.stop();
-//				}
+				//NOTE: THIS SHOULD NOT HAPPEN
+				boolean targetIntersect = Intersector.intersectRaySphere(mRay, target.position, 1f, intersection);
+				float targetdst = intersection.dst(m.position);
+				if (targetdst < 1.0f && targetIntersect) {
+					m.stop();
+				}
+				
+				//NOTE: THIS REALLY SHOULD NOT HAPPEN
+				boolean playerIntersect = Intersector.intersectRaySphere(mRay, player.position, 1f, intersection);
+				float playerdst = intersection.dst(m.position);
+				if (playerdst < 1.0f && playerIntersect) {
+					m.stop();
+				}
+				
+				for(Switch s : switches) {
+					if (s.position.equals(m.position)) {
+						s.isSwitched = !s.isSwitched;
+						s.isCollidedAnimation = true;
+						setCorrespondingSwitchBlocks(s);
+					}		
+				}
+				
+				for (SwitchableBlock s : switchblocks) {
+					boolean intersect = Intersector.intersectRaySphere(mRay, s.position, 1f, intersection);
+					float dst = intersection.dst(player.position);
+					if (dst < 1.0f && intersect && !s.isSwitched) {
+						m.stop();
+						s.isCollidedAnimation = true;
+						break;
+					}
+				}
 				
 				boolean warp = false;
 				portalIntersection.set(0, 0, 0);
@@ -959,6 +1082,22 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				return p;
 		}
 		return null;
+	}
+	
+	public void setCorrespondingSwitchBlocks(Switch s) {
+		for(SwitchableBlock sw : s.sBlocks) {
+			sw.isSwitched = s.isSwitched;
+		}
+	}
+	
+	public Array<SwitchableBlock> getCorrespondingSwitchableBlock(int ids) {
+		Array<SwitchableBlock> temp = new Array<SwitchableBlock>();
+		for(SwitchableBlock sw : switchblocks) {
+			if(sw.id == -ids) {
+				temp.add(sw);
+			}
+		}
+		return temp;
 	}
 	
 	//for movable objects in a row
