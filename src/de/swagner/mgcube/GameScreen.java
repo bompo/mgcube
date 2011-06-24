@@ -167,7 +167,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		int[][][] level;
 		switch (levelnumber) {
 		case 1:
-			level = Resources.getInstance().level9;
+			level = Resources.getInstance().level1;
 			break;
 		case 2:
 			level = Resources.getInstance().level2;
@@ -192,6 +192,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			break;
 		case 9:
 			level = Resources.getInstance().level9;
+			break;
+		case 10:
+			level = Resources.getInstance().level10;
 			break;
 
 		// more levels
@@ -721,6 +724,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	private void collisionTest() {
 		// collision
 		if (player.isMoving) {
+			
 			pRay.set(player.position, player.direction);
 
 			for (Block block : blocks) {
@@ -768,11 +772,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 			
 			for(Switch s : switches) {
-				if (s.position.equals(player.position)) {
-					s.isSwitched = !s.isSwitched;
-					s.isCollidedAnimation = true;
-					setCorrespondingSwitchBlocks(s);
-				}				
+//				if (s.position.equals(player.position) && !s.isSwitched) {
+//					s.isSwitched = true;
+//					s.isLocked = true;
+//					s.isCollidedAnimation = true;
+//					setCorrespondingSwitchBlocks(s);
+//				}
+//				if(!s.position.equals(player.position) && s.isSwitched) {
+//					s.isSwitched = false;
+//					s.isLocked = false;
+//				}
+				s.isSwitched = false;
+				setCorrespondingSwitchBlocks(s);
 			}
 			
 			portalIntersection.set(0, 0, 0);
@@ -858,22 +869,26 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					m.stop();
 				}
 				
-				for(Switch s : switches) {
-					if (s.position.equals(m.position)) {
-						s.isSwitched = !s.isSwitched;
-						s.isCollidedAnimation = true;
-						setCorrespondingSwitchBlocks(s);
-					}		
-				}
-				
 				for (SwitchableBlock s : switchblocks) {
-					boolean intersect = Intersector.intersectRaySphere(mRay, s.position, 1f, intersection);
-					float dst = intersection.dst(player.position);
-					if (dst < 1.0f && intersect && !s.isSwitched) {
+					boolean swintersect = Intersector.intersectRaySphere(mRay, s.position, 1f, intersection);
+					float swdst = intersection.dst(m.position);
+					if (swdst < 1.0f && swintersect && !s.isSwitched) {
 						m.stop();
 						s.isCollidedAnimation = true;
-						break;
 					}
+				}
+				
+				for(Switch s : switches) {
+//					if (s.position.equals(m.position) && !s.isSwitched) {
+//						s.isSwitched = !s.isSwitched;
+//						s.isCollidedAnimation = true;
+//						setCorrespondingSwitchBlocks(s);
+//					}
+//					if(!m.position.equals(s.position) && s.isSwitched)
+//						s.isLocked = false;
+//						s.isSwitched  = false;
+					s.isSwitched = false;
+					setCorrespondingSwitchBlocks(s);
 				}
 				
 				boolean warp = false;
@@ -941,6 +956,19 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				movwarplock = false;
 			}
 		}
+		
+		for(Switch s : switches) {
+			s.isSwitched = false;
+			for(MovableBlock m : movableBlocks) {
+				if(m.position.equals(s.position)) {
+					s.isSwitched = true;
+				}
+			}
+			if(s.position.equals(player.position)) {
+				s.isSwitched = true;
+			}
+			setCorrespondingSwitchBlocks(s);
+		}
 
 	}
 
@@ -988,6 +1016,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
 			player.move();
+			
 		}
 	}
 
