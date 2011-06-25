@@ -73,13 +73,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	// GLES20
 	Matrix4 model = new Matrix4().idt();
-	Matrix4 modelViewProjection = new Matrix4().idt();
 	Matrix4 tmp = new Matrix4().idt();
 	private ShaderProgram transShader;
 	private ShaderProgram bloomShader;
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBufferVert;
-	FrameBuffer frameBufferHori;
 	
 	//garbage collector
 	int seconds;
@@ -325,33 +323,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}		
 		collisionTest();
 		
-		
-		//sort blocks because of transparency
-		for (Renderable renderable : renderObjects) {
-			tmp.idt();
-			model.idt();
-			
-			tmp.setToScaling(0.5f, 0.5f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
-			model.mul(tmp);
-
-			tmp.setToScaling(0.95f, 0.95f, 0.95f);
-			model.mul(tmp);
-			
-			model.getTranslation(position);
-			
-			renderable.model.set(model);
-			
-			renderable.sortPosition = cam.position.dst(position);
-		}
-		renderObjects.sort();
+		sortScene();
 		
 		frameBuffer.begin();
 		renderScene();
@@ -453,6 +425,35 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	}
 
+	private void sortScene() {
+		//sort blocks because of transparency
+		for (Renderable renderable : renderObjects) {
+			tmp.idt();
+			model.idt();
+			
+			tmp.setToScaling(0.5f, 0.5f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+
+			tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
+			model.mul(tmp);
+
+			tmp.setToScaling(0.95f, 0.95f, 0.95f);
+			model.mul(tmp);
+			
+			model.getTranslation(position);
+			
+			renderable.model.set(model);
+			
+			renderable.sortPosition = cam.position.dst(position);
+		}
+		renderObjects.sort();
+	}
+
 	private void renderScene() {
 		
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
@@ -481,9 +482,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			
 			if(renderable instanceof Block) {
-				tmp.idt();
-				model.idt();
-
 				model.set(renderable.model);
 	
 				transShader.setUniformMatrix("MMatrix", model);
@@ -497,9 +495,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			// render movableblocks
 			if(renderable instanceof MovableBlock) {
-				tmp.idt();
-				model.idt();
-
 				model.set(renderable.model);
 	
 				transShader.setUniformMatrix("MMatrix", model);
@@ -513,10 +508,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			// render switchableblocks
 			if(renderable instanceof SwitchableBlock) {
-				if(!((SwitchableBlock) renderable).isSwitched) {
-					tmp.idt();
-					model.idt();
-	
+				if(!((SwitchableBlock) renderable).isSwitched) {	
 					model.set(renderable.model);
 		
 					transShader.setUniformMatrix("MMatrix", model);
@@ -531,9 +523,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			// render switches
 			if(renderable instanceof Switch) {
-				tmp.idt();
-				model.idt();
-
 				model.set(renderable.model);	
 
 				tmp.setToScaling(0.3f, 0.3f, 0.3f);
@@ -554,9 +543,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			// render Player
 			if(renderable instanceof Player) {
-				tmp.idt();
-				model.idt();
-
 				model.set(renderable.model);	
 				
 				tmp.setToRotation(xAxis, angleXBack);
@@ -584,9 +570,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Portal) {
 				if(renderable.position.x != -11) {
 					// render Portal
-					tmp.idt();
-					model.idt();
-
 					model.set(renderable.model);
 		
 					transShader.setUniformMatrix("MMatrix", model);
@@ -602,9 +585,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				
 			// render Target
 			if(renderable instanceof Target) {
-				tmp.idt();
-				model.idt();
-
 				model.set(renderable.model);
 				
 				tmp.setToRotation(yAxis, angleY + angleYBack);
@@ -931,7 +911,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	@Override
 	public void dispose() {
 		frameBuffer.dispose();
-		frameBufferHori.dispose();
 		frameBufferVert.dispose();
 	}
 
