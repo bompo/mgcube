@@ -4,9 +4,10 @@ public class TransShader {
 
     public static final String mVertexShader =
     	"attribute vec4 a_vertex;\n" +
-    	"uniform mat4 MVPMatrix;\n"+
+    	"uniform mat4 VPMatrix;\n"+
+    	"uniform mat4 MMatrix;\n"+
     	"void main() {\n"+
-    	"	gl_Position = MVPMatrix * a_vertex;\n"+
+    	"	gl_Position = VPMatrix * MMatrix * a_vertex;\n"+
     	"}\n";
 
     public static final String mFragmentShader =   
