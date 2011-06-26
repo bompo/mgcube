@@ -132,6 +132,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		bloomShader = Resources.getInstance().bloomShader;
 		
 		initRender();
+		angleY = 160;
+		angleX = 0;
 		
 		initLevel(1);
 	}
