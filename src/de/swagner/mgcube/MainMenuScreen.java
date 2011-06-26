@@ -102,7 +102,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		// Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
-		bat = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = Resources.getInstance().font;
 		font.scale(0.5f);
@@ -306,16 +305,16 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
 		batch.end();
 
-		bat.begin();
+		batch.begin();
 		float y = 365;
 		for (String s : menuItems) {
 			if (selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
-				selectedFont.draw(bat, s, 500, y);
+				selectedFont.draw(batch, s, 500, y);
 			else
-				font.draw(bat, s, 500, y);
+				font.draw(batch, s, 500, y);
 			y -= 80;
 		}
-		bat.end();
+		batch.end();
 
 		if (!finished && fade > 0) {
 			fade = Math.max(fade - (delta / 2.f), 0);
@@ -566,6 +565,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
+			
+			transShader.setUniformf("a_color", 0,0,0,1);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
 
 			transShader.setUniformf("a_color", Resources.getInstance().wireCubeColor[0],Resources.getInstance().wireCubeColor[1],Resources.getInstance().wireCubeColor[2],Resources.getInstance().wireCubeColor[3]);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
