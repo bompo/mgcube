@@ -565,10 +565,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 					transShader.setUniformMatrix("MMatrix", model);
 		
-					transShader.setUniformf("a_color", 1.0f, 1f, 1f, 0.8f + renderable.collideAnimation);
+					transShader.setUniformf("a_color", 0.2f * (Math.abs(((SwitchableBlock)renderable).id)),0.2f * (Math.abs(((SwitchableBlock)renderable).id)), 0.2f * (Math.abs(((SwitchableBlock)renderable).id)), 0.8f + renderable.collideAnimation);
 					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 		
-					transShader.setUniformf("a_color", 1.0f, 1f, 1f, 0.2f + renderable.collideAnimation);
+					transShader.setUniformf("a_color", 0.2f * (Math.abs(((SwitchableBlock)renderable).id)), 0.2f * (Math.abs(((SwitchableBlock)renderable).id)), 0.2f * (Math.abs(((SwitchableBlock)renderable).id)), 0.2f + renderable.collideAnimation);
 					blockModel.render(transShader, GL20.GL_TRIANGLES);
 				}
 			}
@@ -626,11 +626,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 					transShader.setUniformMatrix("MMatrix", model);
 					
-					transShader.setUniformf("a_color", 0.0f, 0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.5f + renderable.collideAnimation);
+					transShader.setUniformf("a_color", 0.0f, 0.05f * (Math.abs(((Portal)renderable).id*2)), 1.0f, 0.05f * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
 					blockModel.render(transShader, GL20.GL_TRIANGLES);
 					
 					//render hull			
-					transShader.setUniformf("a_color", 0.0f,0.03f * ( Math.abs(((Portal)renderable).id)*5.0f), 1.0f, 0.4f + renderable.collideAnimation);
+					transShader.setUniformf("a_color", 0.0f,0.05f * (Math.abs(((Portal)renderable).id*2)), 1.0f, 0.05f * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
 					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 				}
 			}
