@@ -126,6 +126,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		font = Resources.getInstance().font;
+		font.setScale(1);
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
@@ -195,6 +196,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			break;
 		case 10:
 			level = Resources.getInstance().level10;
+			break;
+		case 11:
+			level = Resources.getInstance().level11;
 			break;
 
 		// more levels
