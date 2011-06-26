@@ -274,7 +274,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f, 0, 1, 0.5f, 0.62f));
+		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f));
 
 		frameBufferVert.begin();
 		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
@@ -681,10 +681,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MMatrix", model);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.5f);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.04f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 		
@@ -706,7 +706,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MMatrix", model);
 
-			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.2f);
+			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.1f);
 			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 

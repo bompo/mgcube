@@ -24,5 +24,8 @@ com.badlogic.gdx.scenes.scene2d
 com.badlogic.gdx.scenes.scene2d.actions
 com.badlogic.gdx.scenes.scene2d.actors
 com.badlogic.gdx.scenes.scene2d.interpolators
+com.badlogic.gdx.scenes.scene2d.ui
+com.badlogic.gdx.scenes.scene2d.ui.tablelayout
+com.badlogic.gdx.scenes.scene2d.ui.utils
 com.badlogic.gdx.twl
 com.badlogic.gdx.utils
