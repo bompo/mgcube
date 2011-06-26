@@ -7,13 +7,11 @@ public abstract class DefaultScreen implements Screen {
 	protected Game game;
 
 	public DefaultScreen(Game game) {
-		Resources.getInstance().reInit();
 		this.game = game;
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		Resources.getInstance().reInit();
 	}
 
 	@Override

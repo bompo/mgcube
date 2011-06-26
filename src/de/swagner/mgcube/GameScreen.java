@@ -147,6 +147,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
+		
+		Gdx.gl20.glDepthMask(false);
 	}
 	
 	@Override
@@ -335,17 +337,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 		
 		frameBuffer.getColorBufferTexture().bind(0);
-
+		
 		bloomShader.begin();
 		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 5f) * 0.5f) + 0.5f,0,1,0.5f,0.62f)+changeLevelEffect);
+		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f)+changeLevelEffect);
 		
 		frameBufferVert.begin();
 		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
 		bloomShader.setUniformf("TexelOffsetY", 0.0f);
 		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 		frameBufferVert.end();
-		
 		
 		frameBufferVert.getColorBufferTexture().bind(0);
 		
@@ -461,12 +462,59 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 				
 		transShader.begin();
 		transShader.setUniformMatrix("VPMatrix", cam.combined);
+				
+		{
+			// render Background Wire
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(20.5f, 20.5f, 20.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX + angleXBack);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY + angleYBack);
+			model.mul(tmp);
+
+			tmp.setToTranslation(0, 0, 0);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.07f);
+			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
+		}
 		
+		{
+			// render Wire
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(5.5f, 5.5f, 5.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, angleX);
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+
+			tmp.setToTranslation(0, 0, 0);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.5f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.04f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
+				
 		// render all objects
 		for (Renderable renderable : renderObjects) {
 			
@@ -601,55 +649,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 				
 		}
-			
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		{
-			// render Wire
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(5.5f, 5.5f, 5.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			tmp.setToTranslation(0, 0, 0);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f, 0.4f);
-			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
-			transShader.setUniformf("a_color", 1.0f, 0.1f, 0.1f,  0.08f);
-			blockModel.render(transShader, GL20.GL_TRIANGLES);
-		}
 		
-		{
-			// render Background Wire
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(20.5f, 20.5f, 20.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX + angleXBack);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY + angleYBack);
-			model.mul(tmp);
-
-			tmp.setToTranslation(0, 0, 0);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			transShader.setUniformf("a_color", 1.0f, 0.8f, 0.8f, 0.2f);
-			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
-		}
-
 		transShader.end();
 	}
 
