@@ -581,7 +581,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				model.mul(tmp);
 
 				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((SwitchableBlock)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+				transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((Switch)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
 				playerModel.render(transShader, GL20.GL_TRIANGLES);
 				
 				tmp.setToScaling(2.0f, 2.0f, 2.0f);
@@ -589,7 +589,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 				//render hull			
 				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation);
+				transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation);
 				playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 			
