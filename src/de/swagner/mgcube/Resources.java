@@ -407,7 +407,24 @@ public class Resources {
 
 	public BitmapFont font;
 	public BitmapFont selectedFont;
-
+	
+	public float[] clearColor = {0.0f,0.0f,0.0f,1.0f};
+	public float[] backgroundWireColor = {1.0f, 0.8f, 0.8f, 0.07f};
+	public float[] wireCubeColor = {1.0f, 0.1f, 0.1f, 0.5f};
+	public float[] wireCubeEdgeColor = {1.0f, 0.1f, 0.1f,  0.04f};
+	public float[] blockColor = {1.0f, 0.1f, 0.1f, 0.2f };
+	public float[] blockEdgeColor = {1.0f, 0.1f, 0.1f, 0.8f};
+	public float[] movableBlockColor = {1.0f, 0.8f, 0.1f, 0.8f};
+	public float[] movableBlockEdgeColor = {1.0f, 0.8f, 0.1f, 0.2f};
+	public float[] switchBlockColor = {0.2f, 0.2f, 0.2f, 0.8f};
+	public float[] switchBlockEdgeColor = {0.2f, 0.2f, 0.2f, 0.2f};
+	public float[] playerColor = {1.0f, 1.0f, 0.0f, 0.4f};
+	public float[] playerEdgeColor = {1.0f, 1.0f, 0.0f, 0.4f};
+	public float[] portalColor = {0.0f, 0.05f, 1.0f, 0.05f};
+	public float[] portalEdgeColor = {0.0f, 0.05f, 1.0f, 0.02f};
+	public float[] targetColor = {0.0f, 1.0f, 0.1f,0.5f};
+	public float[] targetEdgeColor = {0.0f, 1.0f, 0.1f, 0.4f };
+	
 	public static Resources instance;
 
 	public static Resources getInstance() {
