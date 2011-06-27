@@ -461,8 +461,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		renderObjects.sort();
 	}
 
-	private void renderScene() {
-		
+	private void renderScene() {		
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		
@@ -512,13 +511,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformMatrix("MMatrix", model);
 
-			transShader.setUniformf("a_color", 0,0,0,1);
+			transShader.setUniformf("a_color", Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 			
-			transShader.setUniformf("a_color", Resources.getInstance().wireCubeColor[0],Resources.getInstance().wireCubeColor[1],Resources.getInstance().wireCubeColor[2],Resources.getInstance().wireCubeColor[3]);
+			transShader.setUniformf("a_color", Resources.getInstance().wireCubeEdgeColor[0],Resources.getInstance().wireCubeEdgeColor[1],Resources.getInstance().wireCubeEdgeColor[2],Resources.getInstance().wireCubeEdgeColor[3]);
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 			
-			transShader.setUniformf("a_color", Resources.getInstance().wireCubeEdgeColor[0],Resources.getInstance().wireCubeEdgeColor[1],Resources.getInstance().wireCubeEdgeColor[2],Resources.getInstance().wireCubeEdgeColor[3]);
+			transShader.setUniformf("a_color", Resources.getInstance().wireCubeColor[0],Resources.getInstance().wireCubeColor[1],Resources.getInstance().wireCubeColor[2],Resources.getInstance().wireCubeColor[3]);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 				
@@ -945,6 +944,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if (keycode == Input.Keys.LEFT) {
 			prevLevel();
 		}
+		
+		if (keycode == Input.Keys.UP) {
+			Resources.getInstance().colorTheme++;
+			Resources.getInstance().switchColorTheme();
+		}
+		
+		if (keycode == Input.Keys.DOWN) {
+			Resources.getInstance().colorTheme--;
+			Resources.getInstance().switchColorTheme();
+		}
+		
+		
 		return false;
 	}
 
