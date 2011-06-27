@@ -513,8 +513,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		transShader.end();
 	}
 
-	private void renderScene() {
-		
+	private void renderScene() {		
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		
@@ -525,7 +524,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				
 		transShader.begin();
 		transShader.setUniformMatrix("VPMatrix", cam.combined);
-				
 		{
 			// render Background Wire
 			tmp.idt();
@@ -547,7 +545,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformf("a_color", Resources.getInstance().backgroundWireColor[0],Resources.getInstance().backgroundWireColor[1],Resources.getInstance().backgroundWireColor[2],Resources.getInstance().backgroundWireColor[3]);
 			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
-		
 		{
 			// render Wire
 			tmp.idt();
@@ -565,14 +562,14 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
-			
-			transShader.setUniformf("a_color", 0,0,0,1);
+
+			transShader.setUniformf("a_color", Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
-
-			transShader.setUniformf("a_color", Resources.getInstance().wireCubeColor[0],Resources.getInstance().wireCubeColor[1],Resources.getInstance().wireCubeColor[2],Resources.getInstance().wireCubeColor[3]);
-			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-
+			
 			transShader.setUniformf("a_color", Resources.getInstance().wireCubeEdgeColor[0],Resources.getInstance().wireCubeEdgeColor[1],Resources.getInstance().wireCubeEdgeColor[2],Resources.getInstance().wireCubeEdgeColor[3]);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+			
+			transShader.setUniformf("a_color", Resources.getInstance().wireCubeColor[0],Resources.getInstance().wireCubeColor[1],Resources.getInstance().wireCubeColor[2],Resources.getInstance().wireCubeColor[3]);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 				
@@ -638,7 +635,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				model.mul(tmp);
 
 				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((SwitchableBlock)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+				transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((Switch)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
 				playerModel.render(transShader, GL20.GL_TRIANGLES);
 				
 				tmp.setToScaling(2.0f, 2.0f, 2.0f);
@@ -646,7 +643,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 				//render hull			
 				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation);
+				transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation);
 				playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 			
@@ -683,11 +680,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		
 					transShader.setUniformMatrix("MMatrix", model);
 					
-					transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1] * (Math.abs(((Portal)renderable).id*2)), Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3] * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1] * ((Math.abs(((Portal)renderable).id)*4f)), Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3] * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
 					blockModel.render(transShader, GL20.GL_TRIANGLES);
 					
 					//render hull			
-					transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] * (Math.abs(((Portal)renderable).id*2)), Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3] * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] * ((Math.abs(((Portal)renderable).id)*4f)), Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3] * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
 					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 				}
 			}
