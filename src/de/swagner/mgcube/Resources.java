@@ -485,8 +485,12 @@ public class Resources {
 	public float[] switchBlockEdgeColor = { 0.2f, 0.2f, 0.2f, 0.2f };
 	public float[] playerColor = { 1.0f, 1.0f, 0.0f, 0.4f };
 	public float[] playerEdgeColor = { 1.0f, 1.0f, 0.0f, 0.4f };
-	public float[] portalColor = { 0.0f, 0.05f, 1.0f, 0.05f };
-	public float[] portalEdgeColor = { 0.0f, 0.05f, 1.0f, 0.02f };
+	public float[] portalColor = { 0f, 0.4f, 0.65f, 1f };
+	public float[] portalColor2 = { 0f, 0.66f, 0.83f, 0.8f };
+	public float[] portalColor3 = { 0f, 0.267f, 0.51f, 0.8f };
+	public float[] portalColor4 = { 0.39f, 0.6f, 0.82f, 0.8f };
+	public float[] portalColor5 = { 0.4f, 0.78f, 0.81f, 0.8f };
+	public float[] portalEdgeColor = { 1.0f, 1.0f, 1.0f, 0.5f };
 	public float[] targetColor = { 0.0f, 1.0f, 0.1f, 0.5f };
 	public float[] targetEdgeColor = { 0.0f, 1.0f, 0.1f, 0.4f };
 
@@ -624,22 +628,26 @@ public class Resources {
 
 	public void switchColorTheme() {
 		if (colorTheme == 0) {
-			clearColor = new float[] { 0.0f, 0.0f, 0.0f, 1.0f };
-			backgroundWireColor = new float[] { 1.0f, 0.8f, 0.8f, 0.07f };
-			wireCubeColor = new float[]  { 1.0f, 0.1f, 0.1f, 0.04f };
-			wireCubeEdgeColor = new float[]{ 1.0f, 0.1f, 0.1f, 0.5f };
-			blockColor = new float[] { 1.0f, 0.1f, 0.1f, 0.2f };
-			blockEdgeColor = new float[] { 1.0f, 0.1f, 0.1f, 0.8f };
-			movableBlockColor = new float[] { 1.0f, 0.8f, 0.1f, 0.8f };
-			movableBlockEdgeColor = new float[] { 1.0f, 0.8f, 0.1f, 0.2f };
-			switchBlockColor = new float[] { 0.2f, 0.2f, 0.2f, 0.8f };
-			switchBlockEdgeColor = new float[] { 0.2f, 0.2f, 0.2f, 0.2f };
-			playerColor = new float[] { 1.0f, 1.0f, 0.0f, 0.4f };
-			playerEdgeColor = new float[] { 1.0f, 1.0f, 0.0f, 0.4f };
-			portalColor = new float[] { 0.0f, 0.05f, 1.0f, 0.05f };
-			portalEdgeColor = new float[] { 0.0f, 0.05f, 1.0f, 0.02f };
-			targetColor = new float[] { 0.0f, 1.0f, 0.1f, 0.5f };
-			targetEdgeColor = new float[] { 0.0f, 1.0f, 0.1f, 0.4f };
+			public float[] clearColor = new float[]{ 0.0f, 0.0f, 0.0f, 1.0f };
+			public float[] backgroundWireColor = new float[]{ 1.0f, 0.8f, 0.8f, 0.07f };
+			public float[] wireCubeColor = { 1.0f, 0.1f, 0.1f, 0.04f };
+			public float[] wireCubeEdgeColor = { 1.0f, 0.1f, 0.1f, 0.5f };
+			public float[] blockColor = { 1.0f, 0.1f, 0.1f, 0.2f };
+			public float[] blockEdgeColor = { 1.0f, 0.1f, 0.1f, 0.8f };
+			public float[] movableBlockColor = { 1.0f, 0.8f, 0.1f, 0.8f };
+			public float[] movableBlockEdgeColor = { 1.0f, 0.8f, 0.1f, 0.2f };
+			public float[] switchBlockColor = { 0.2f, 0.2f, 0.2f, 0.8f };
+			public float[] switchBlockEdgeColor = { 0.2f, 0.2f, 0.2f, 0.2f };
+			public float[] playerColor = { 1.0f, 1.0f, 0.0f, 0.4f };
+			public float[] playerEdgeColor = { 1.0f, 1.0f, 0.0f, 0.4f };
+			public float[] portalColor = { 0f, 0.4f, 0.65f, 1f };
+			public float[] portalColor2 = { 0f, 0.66f, 0.83f, 0.8f };
+			public float[] portalColor3 = { 0f, 0.267f, 0.51f, 0.8f };
+			public float[] portalColor4 = { 0.39f, 0.6f, 0.82f, 0.8f };
+			public float[] portalColor5 = { 0.4f, 0.78f, 0.81f, 0.8f };
+			public float[] portalEdgeColor = { 1.0f, 1.0f, 1.0f, 0.5f };
+			public float[] targetColor = { 0.0f, 1.0f, 0.1f, 0.5f };
+			public float[] targetEdgeColor = { 0.0f, 1.0f, 0.1f, 0.4f };
 		} else if (colorTheme == 1) {
 			clearColor = new float[] { 0.7f, 0.7f, 0.7f, 1.0f };
 			backgroundWireColor = new float[] { 0.5f, 0.5f, 0.5f, 0.8f };

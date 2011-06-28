@@ -627,16 +627,86 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Portal) {
 				if(renderable.position.x != -11) {
 					// render Portal
-					model.set(renderable.model);
-		
-					transShader.setUniformMatrix("MMatrix", model);
+					Portal tmp = (Portal) renderable;
 					
-					transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1] * ((Math.abs(((Portal)renderable).id)*4f)), Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3] * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
-					blockModel.render(transShader, GL20.GL_TRIANGLES);
-					
-					//render hull			
-					transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] * ((Math.abs(((Portal)renderable).id)*4f)), Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3] * (Math.abs(((Portal)renderable).id)) + renderable.collideAnimation);
-					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+					switch (Math.abs(tmp.id)) {
+					case 4:
+						model.set(renderable.model);
+						
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]  + renderable.collideAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						break;
+						
+					case 5:
+						model.set(renderable.model);
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor2[0], Resources.getInstance().portalColor2[1], Resources.getInstance().portalColor2[2], Resources.getInstance().portalColor2[3]  + renderable.collideAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						break;
+						
+					case 6:
+						model.set(renderable.model);
+						
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor3[0], Resources.getInstance().portalColor3[1], Resources.getInstance().portalColor3[2], Resources.getInstance().portalColor3[3]  + renderable.collideAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						break;
+						
+					case 7:
+						model.set(renderable.model);
+						
+						transShader.setUniformMatrix("MMatrix", model);
+
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor4[0], Resources.getInstance().portalColor4[1], Resources.getInstance().portalColor4[2], Resources.getInstance().portalColor4[3]  + renderable.collideAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						break;
+						
+					case 8:
+						model.set(renderable.model);
+						
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor5[0], Resources.getInstance().portalColor5[1], Resources.getInstance().portalColor5[2], Resources.getInstance().portalColor5[3]  + renderable.collideAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						break;
+
+					default:
+						model.set(renderable.model);
+						
+						transShader.setUniformMatrix("MMatrix", model);
+						Gdx.app.log("", "dd");
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]  + renderable.collideAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						break;
+					}
 				}
 			}
 				
