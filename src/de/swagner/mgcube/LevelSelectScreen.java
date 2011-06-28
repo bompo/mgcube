@@ -2,13 +2,12 @@ package de.swagner.mgcube;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,10 +18,24 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
+import com.sun.opengl.impl.packrect.Level;
 
-public class MainMenuScreen extends DefaultScreen implements InputProcessor {
+import de.swagner.mgcube.Block;
+import de.swagner.mgcube.DefaultScreen;
+import de.swagner.mgcube.Helper;
+import de.swagner.mgcube.LevelButton;
+import de.swagner.mgcube.MovableBlock;
+import de.swagner.mgcube.Player;
+import de.swagner.mgcube.Portal;
+import de.swagner.mgcube.Renderable;
+import de.swagner.mgcube.Resources;
+import de.swagner.mgcube.Switch;
+import de.swagner.mgcube.SwitchableBlock;
+import de.swagner.mgcube.Target;
 
-	float startTime = 0;
+
+public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
+
 	PerspectiveCamera cam;
 	Mesh quadModel;
 	Mesh blockModel;
@@ -37,32 +50,12 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	SpriteBatch bat;
 	BitmapFont font;
 	BitmapFont selectedFont;
-	Array<String> menuItems = new Array<String>();
-	int selectedMenuItem = -1;
 	SpriteBatch fadeBatch;
 	Sprite blackFade;
 	Sprite title;
 	float fade = 1.0f;
 	boolean finished = false;
-
-	BoundingBox button1 = new BoundingBox();
-	BoundingBox button2 = new BoundingBox();
-	BoundingBox button3 = new BoundingBox();
-	BoundingBox button4 = new BoundingBox();
-
-	Array<Block> blocks = new Array<Block>();
-	Array<Renderable> renderObjects = new Array<Renderable>();
-	boolean animateWorld = false;
-	boolean animatePlayer = false;
-
-	float angleXBack = 0;
-	float angleYBack = 0;
-	float delta = 0;
-
-	Vector3 xAxis = new Vector3(1, 0, 0);
-	Vector3 yAxis = new Vector3(0, 1, 0);
-	Vector3 zAxis = new Vector3(0, 0, 1);
-
+	
 	// GLES20
 	Matrix4 model = new Matrix4().idt();
 	Matrix4 tmp = new Matrix4().idt();
@@ -70,13 +63,34 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	private ShaderProgram bloomShader;
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBufferVert;
+	
+	float delta = 0;
+	float angleXBack = 0;
+	float angleYBack = 0;
+	float startTime =0;
+	
+	Vector3 xAxis = new Vector3(1, 0, 0);
+	Vector3 yAxis = new Vector3(0, 1, 0);
+	Vector3 zAxis = new Vector3(0, 0, 1);
+	
+	Array<LevelButton> buttons = new Array<LevelButton>();
+	
+	Player player = new Player();
+	Target target = new Target();
+	
+	Array<Block> blocks = new Array<Block>();
+	Array<Portal> portals = new Array<Portal>();
+	Array<MovableBlock> movableBlocks = new Array<MovableBlock>();
+	Array<Renderable> renderObjects = new Array<Renderable>();
+	Array<Switch> switches = new Array<Switch>();
+	Array<SwitchableBlock> switchblocks = new Array<SwitchableBlock>();
 
 	Vector3 position = new Vector3();
-
-	public MainMenuScreen(Game game) {
+	
+	public LevelSelectScreen(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
-
+		
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 
 		blockModel = Resources.getInstance().blockModel;
@@ -85,47 +99,41 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		quadModel = Resources.getInstance().quadModel;
 		wireCubeModel = Resources.getInstance().wireCubeModel;
 		sphereModel = Resources.getInstance().sphereModel;
-
+		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(5.0f, 0, 16f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
 		cam.far = 1000;
-
-		// controller = new PerspectiveCamController(cam);
-		// Gdx.input.setInputProcessor(controller);
-
+		
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = Resources.getInstance().font;
-		font.scale(0.5f);
+		//font.scale(0.5f);
 		selectedFont = Resources.getInstance().selectedFont;
-		selectedFont.scale(0.5f);
-
+		//selectedFont.scale(0.5f);
+		
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
-
-		menuItems.add("start game");
-		menuItems.add("select level");
-		menuItems.add("time attack");
-		menuItems.add("options");
-
-		initRender();
-
-		initLevel(0);
-		angleY = -70;
-		angleX = -10;
 		
-		button1.set(new Vector3(470, 150, 0), new Vector3(770, 100, 0));
-		button2.set(new Vector3(470, 230, 0), new Vector3(770, 180, 0));
-		button3.set(new Vector3(470, 320, 0), new Vector3(770, 260, 0));
-		button4.set(new Vector3(470, 400, 0), new Vector3(770, 350, 0));
+		int distX = 150;
+		int distY = 150;
+		
+		for (int i = 1; i <= Resources.getInstance().levelcount; i++) {
+			LevelButton temp = new LevelButton(Resources.getInstance().levels[i] , i);
+			buttons.add(temp);
+			BoundingBox box = new BoundingBox(new Vector3(350 + distX*i, 50 + distY *i,0), new Vector3(450 + distX*i, 150 + distY *i,0));
+			temp.box = box;
+		}
+		
+		initRender();
+		initLevel(0);
 	}
-
+	
 	public void initRender() {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -141,68 +149,67 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
-
-	@Override
+	
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		initRender();
 	}
-
+	
 	private void initLevel(int levelnumber) {
 		renderObjects.clear();
 		blocks.clear();
+		portals.clear();
+		movableBlocks.clear();
+		switchblocks.clear();
+		switches.clear();
 
 		int[][][] level = Resources.getInstance().levels[levelnumber];
-
+		
 		// finde player pos
 		int z = 0, y = 0, x = 0;
 		for (z = 0; z < 10; z++) {
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
 					if (level[z][y][x] == 1) {
-						blocks.add(new Block(new Vector3(-10f + (x * 2), -10f + (y * 2), -10f + (z * 2))));
+						blocks.add(new Block(new Vector3(-10f + (x), -10f + (y), -10f + (z))));
 					}
-//					if (level[z][y][x] == 2) {
-//						player.position.x = -10f + (x * 2);
-//						player.position.y = -10f + (y * 2);
-//						player.position.z = -10f + (z * 2);
-//					}
-//					if (level[z][y][x] == 3) {
-//						target.position.x = -10f + (x * 2);
-//						target.position.y = -10f + (y * 2);
-//						target.position.z = -10f + (z * 2);
-//					}
-//					if (level[z][y][x] >= 4 && level[z][y][x] <= 8) {
-//						Portal temp = new Portal(level[z][y][x]);
-//						temp.position.x = -10f + (x * 2);
-//						temp.position.y = -10f + (y * 2);
-//						temp.position.z = -10f + (z * 2);
-//						portals.add(temp);
-//					}
-//					if (level[z][y][x] >= -8 && level[z][y][x] <= -4) {
-//						Portal temp = new Portal(level[z][y][x]);
-//						temp.position.x = -10f + (x * 2);
-//						temp.position.y = -10f + (y * 2);
-//						temp.position.z = -10f + (z * 2);
-//						portals.add(temp);
-//					}
-//					if (level[z][y][x] == 9) {
-//						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x * 2), -10f + (y * 2), -10f + (z * 2)));
-//						movableBlocks.add(temp);
-//					}
+					if (level[z][y][x] == 2) {
+						player.position.x = -10f + (x);
+						player.position.y = -10f + (y);
+						player.position.z = -10f + (z);
+					}
+					if (level[z][y][x] == 3) {
+						target.position.x = -10f + (x);
+						target.position.y = -10f + (y);
+						target.position.z = -10f + (z);
+					}
+					if (level[z][y][x] >= 4 && level[z][y][x] <= 8) {
+						Portal temp = new Portal(level[z][y][x]);
+						temp.position.x = -10f + (x);
+						temp.position.y = -10f + (y);
+						temp.position.z = -10f + (z);
+						portals.add(temp);
+					}
+					if (level[z][y][x] >= -8 && level[z][y][x] <= -4) {
+						Portal temp = new Portal(level[z][y][x]);
+						temp.position.x = -10f + (x);
+						temp.position.y = -10f + (y);
+						temp.position.z = -10f + (z);
+						portals.add(temp);
+					}
+					if (level[z][y][x] == 9) {
+						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x), -10f + (y), -10f + (z)));
+						movableBlocks.add(temp);
+					}
 				}
 			}
 		}
 
-		// renderObjects.add(player);
-		// renderObjects.add(target);
+		renderObjects.add(player);
+		renderObjects.add(target);
 		renderObjects.addAll(blocks);
-//		renderObjects.addAll(portals);
-//		renderObjects.addAll(movableBlocks);
-	}
-
-	@Override
-	public void show() {
+		renderObjects.addAll(portals);
+		renderObjects.addAll(movableBlocks);
 	}
 
 	@Override
@@ -269,18 +276,8 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
 		batch.end();
-
-		batch.begin();
-		float y = 365;
-		for (String s : menuItems) {
-			if (selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
-				selectedFont.draw(batch, s, 500, y);
-			else
-				font.draw(batch, s, 500, y);
-			y -= 80;
-		}
-		batch.end();
-
+		
+		
 		if (!finished && fade > 0) {
 			fade = Math.max(fade - (delta / 2.f), 0);
 			fadeBatch.begin();
@@ -296,24 +293,12 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			blackFade.draw(fadeBatch);
 			fadeBatch.end();
 			if (fade >= 1) {
-				switch (selectedMenuItem) {
-				case 0:
-					game.setScreen(new GameScreen(game));
-					break;
-				case 1:
-					game.setScreen(new LevelSelectScreen(game));
-					break;
-
-				default:
-					Gdx.app.log("", selectedMenuItem + "");
-					break;
-				}
-				
+				game.setScreen(new GameScreen(game));
 			}
 		}
-
+		
 	}
-
+	
 	private void sortScene() {
 		// sort blocks because of transparency
 		for (Renderable renderable : renderObjects) {
@@ -342,7 +327,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		}
 		renderObjects.sort();
 	}
-
+	
 	private void renderMenu() {
 
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
@@ -489,7 +474,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		transShader.end();
 	}
-
+	
 	private void renderScene() {		
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
@@ -689,10 +674,17 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	@Override
-	public void hide() {
+	public void show() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public void dispose() {
 		frameBuffer.dispose();
 		frameBufferVert.dispose();
@@ -700,36 +692,19 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (Gdx.input.isTouched())
-			return false;
-
-		if (keycode == Input.Keys.ENTER && selectedMenuItem != -1) {
-			finished = true;
-		}
-
-		if (keycode == Input.Keys.DOWN) {
-			selectedMenuItem++;
-			selectedMenuItem %= 4;
-		}
-
-		if (keycode == Input.Keys.UP) {
-			if (selectedMenuItem > 0)
-				selectedMenuItem--;
-			else
-				selectedMenuItem = 3;
-		}
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 
@@ -738,34 +713,22 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 		
-		if (button1.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 0;
-			finished = true;
-		} else if (button2.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 1;
-		} else if (button3.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 2;
-		} else if (button4.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 3;
-		} else {
-			selectedMenuItem = -1;
+		for(LevelButton b : buttons) {
+			if(b.box.contains(new Vector3(x,y,0))) {
+				break;
+			}
 		}
-
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
-		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
-		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
 		return false;
 	}
@@ -775,15 +738,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 		
-		if(!finished) {
-			if (button1.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 0;
-			} else if (button2.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 1;
-			} else if (button3.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 2;
-			} else if (button4.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 3;
+		for(LevelButton b : buttons) {
+			if(b.box.contains(new Vector3(x,y,0))) {
+				break;
 			}
 		}
 		return false;
@@ -791,6 +748,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
+
 		return false;
 	}
 

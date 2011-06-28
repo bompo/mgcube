@@ -167,51 +167,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		movableBlocks.clear();
 		switchblocks.clear();
 		switches.clear();
-		int[][][] level;
-		switch (levelnumber) {
-		case 1:
-			level = Resources.getInstance().level1;
-			break;
-		case 2:
-			level = Resources.getInstance().level2;
-			break;
-		case 3:
-			level = Resources.getInstance().level3;
-			break;
-		case 4:
-			level = Resources.getInstance().level4;
-			break;
-		case 5:
-			level = Resources.getInstance().level5;
-			break;
-		case 6:
-			level = Resources.getInstance().level6;
-			break;
-		case 7:
-			level = Resources.getInstance().level7;
-			break;
-		case 8:
-			level = Resources.getInstance().level8;
-			break;
-		case 9:
-			level = Resources.getInstance().level9;
-			break;
-		case 10:
-			level = Resources.getInstance().level10;
-			break;
-		case 11:
-			level = Resources.getInstance().level11;
-			break;
-		case 12:
-			level = Resources.getInstance().level12;
-			break;
-
-		// more levels
-
-		default:
-			level = Resources.getInstance().level1;
-			break;
-		}
+		int[][][] level = Resources.getInstance().levels[levelnumber];
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;
