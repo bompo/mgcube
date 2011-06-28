@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -37,6 +38,7 @@ import de.swagner.mgcube.Target;
 public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 	PerspectiveCamera cam;
+	OrthographicCamera camMenu;
 	Mesh quadModel;
 	Mesh blockModel;
 	Mesh playerModel;
@@ -101,11 +103,13 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		sphereModel = Resources.getInstance().sphereModel;
 		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(5.0f, 0, 16f);
+		cam.position.set(12.0f, 0, 25f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
 		cam.far = 1000;
+		
+		camMenu = new OrthographicCamera(800,480);
 		
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
@@ -120,18 +124,26 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
 		
-		int distX = 150;
-		int distY = 150;
-		
-		for (int i = 0; i < Resources.getInstance().levelcount; i++) {
-			LevelButton temp = new LevelButton(Resources.getInstance().levels[i] , i+1);
+		int distX = 100;
+		int distY = 100;
+		buttons.clear();
+		int y = 0;
+		int x = 0;
+		for (int i = 0; i < Resources.getInstance().levelcount-1; i++) {
+			LevelButton temp = new LevelButton(i+1);
 			buttons.add(temp);
-			BoundingBox box = new BoundingBox(new Vector3(350 + distX*i, 50 + distY *i,0), new Vector3(450 + distX*i, 150 + distY *i,0));
-			temp.box = box;
+			temp.box = new BoundingBox(new Vector3(350+ (distX * x), 350 - (distY * y) ,0), new Vector3(450 + (distX * x),450  - (distY * y) ,0));
+			++x;
+			if(x%4 == 0) {
+				++y;
+				x=0;
+			}			
 		}
 		
 		initRender();
 		initLevel(0);
+		angleY = -70;
+		angleX = -10;
 	}
 	
 	public void initRender() {
@@ -221,19 +233,19 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		startTime += delta;
 
-//		angleXBack += MathUtils.sin(startTime) / 10f;
-//		angleYBack += MathUtils.cos(startTime) / 5f;
-//
-//		angleX += MathUtils.sin(startTime) / 10f;
-//		angleY += MathUtils.cos(startTime) / 5f;
-//
-		cam.update();
+		angleXBack += MathUtils.sin(startTime) / 10f;
+		angleYBack += MathUtils.cos(startTime) / 5f;
 
+		angleX += MathUtils.sin(startTime) / 10f;
+		angleY += MathUtils.cos(startTime) / 5f;
+
+		cam.update();		
+		
 		sortScene();
 
 		frameBuffer.begin();
 		renderScene();
-		renderMenu();
+		renderLevelSelect();
 		frameBuffer.end();
 
 		// PostProcessing
@@ -265,7 +277,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 		// render scene again
 		renderScene();
-		renderMenu();
+		renderLevelSelect();
 
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
@@ -307,11 +319,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 			tmp.setToScaling(0.5f, 0.5f, 0.5f);
 			model.mul(tmp);
-
+			
 			tmp.setToRotation(xAxis, angleX);
 			model.mul(tmp);
 			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
+			model.mul(tmp);	
 
 			tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
 			model.mul(tmp);
@@ -328,13 +340,52 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		renderObjects.sort();
 	}
 	
-	private void renderMenu() {
+	private void renderLevelSelect() {
 
 
-			for(LevelButton b : buttons) {
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		transShader.begin();
+		transShader.setUniformMatrix("VPMatrix", camMenu.combined);
+
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		{
 			
-				//renderscenepreview oder so
+			for(LevelButton button : buttons) {
+
+				tmp.idt();
+				model.idt();
+
+				tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+				model.mul(tmp);
+				
+				tmp.setToTranslation(button.box.getCenter().x , button.box.getCenter().y, 0);
+				model.mul(tmp);
+				Gdx.app.log("", button.box.getCenter().x + "   " + button.box.getCenter().y);
+				
+				
+				tmp.setToScaling(30.0f, 30.0f, 10.0f);
+				model.mul(tmp);
+
+				transShader.setUniformMatrix("MMatrix", model);
+
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+					
 			}
+			
+		}
+
+		transShader.end();
+
+		
 	}
 	
 	private void renderScene() {		
@@ -353,7 +404,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			tmp.idt();
 			model.idt();
 
-			tmp.setToScaling(12.5f, 12.5f, 12.5f);
+			tmp.setToScaling(40.5f, 40.5f, 40.5f);
 			model.mul(tmp);
 
 			tmp.setToRotation(xAxis, angleX + angleXBack);
@@ -374,12 +425,12 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			tmp.idt();
 			model.idt();
 
-			tmp.setToScaling(5.5f, 5.5f, 5.5f);
-			model.mul(tmp);
-
 			tmp.setToRotation(xAxis, angleX);
 			model.mul(tmp);
 			tmp.setToRotation(yAxis, angleY);
+			model.mul(tmp);
+			
+			tmp.setToScaling(5.5f, 5.5f, 5.5f);
 			model.mul(tmp);
 
 			tmp.setToTranslation(0, 0, 0);
@@ -575,9 +626,10 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 		
+		y = 480 -y;
 		for(LevelButton b : buttons) {
 			if(b.box.contains(new Vector3(x,y,0))) {
-				break;
+				initLevel(b.levelnumber);
 			}
 		}
 		return false;
@@ -600,11 +652,6 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 		
-		for(LevelButton b : buttons) {
-			if(b.box.contains(new Vector3(x,y,0))) {
-				break;
-			}
-		}
 		return false;
 	}
 
