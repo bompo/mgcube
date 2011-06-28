@@ -123,8 +123,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		int distX = 150;
 		int distY = 150;
 		
-		for (int i = 1; i <= Resources.getInstance().levelcount; i++) {
-			LevelButton temp = new LevelButton(Resources.getInstance().levels[i] , i);
+		for (int i = 0; i < Resources.getInstance().levelcount; i++) {
+			LevelButton temp = new LevelButton(Resources.getInstance().levels[i] , i+1);
 			buttons.add(temp);
 			BoundingBox box = new BoundingBox(new Vector3(350 + distX*i, 50 + distY *i,0), new Vector3(450 + distX*i, 150 + distY *i,0));
 			temp.box = box;
@@ -221,12 +221,12 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		startTime += delta;
 
-		angleXBack += MathUtils.sin(startTime) / 10f;
-		angleYBack += MathUtils.cos(startTime) / 5f;
-
-		angleX += MathUtils.sin(startTime) / 10f;
-		angleY += MathUtils.cos(startTime) / 5f;
-
+//		angleXBack += MathUtils.sin(startTime) / 10f;
+//		angleYBack += MathUtils.cos(startTime) / 5f;
+//
+//		angleX += MathUtils.sin(startTime) / 10f;
+//		angleY += MathUtils.cos(startTime) / 5f;
+//
 		cam.update();
 
 		sortScene();
@@ -330,149 +330,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 	private void renderMenu() {
 
-		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
-		Gdx.gl20.glEnable(GL20.GL_BLEND);
-		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-		transShader.begin();
-		transShader.setUniformMatrix("VPMatrix", cam.combined);
-
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		{
-			// render Button 1
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(3.5f, 0.6f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, (angleXBack / 40.f));
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
-			model.mul(tmp);
-
-			tmp.setToTranslation(3.3f, 4.5f, 12);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			if(selectedMenuItem==0) {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			} else {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.1f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.1f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			for(LevelButton b : buttons) {
+			
+				//renderscenepreview oder so
 			}
-		}
-
-		{
-			// render Button 2
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(3.5f, 0.6f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, (angleXBack / 40.f));
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
-			model.mul(tmp);
-
-			tmp.setToTranslation(3.3f, 1.3f, 12);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			if(selectedMenuItem==1) {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			} else {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.1f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.1f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			}
-		}
-
-		{
-			// render Button 3
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(3.5f, 0.6f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, (angleXBack / 40.f));
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
-			model.mul(tmp);
-
-			tmp.setToTranslation(3.3f, -2.0f, 12);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			if(selectedMenuItem==2) {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			} else {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.1f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.1f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			}
-		}
-
-		{
-			// render Button 4
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(3.5f, 0.6f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, (angleXBack / 40.f));
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
-			model.mul(tmp);
-
-			tmp.setToTranslation(3.3f, -5.0f, 12);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			if(selectedMenuItem==3) {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			} else {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.1f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.1f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			}
-		}
-
-		transShader.end();
 	}
 	
 	private void renderScene() {		
@@ -491,7 +353,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			tmp.idt();
 			model.idt();
 
-			tmp.setToScaling(20.5f, 20.5f, 20.5f);
+			tmp.setToScaling(12.5f, 12.5f, 12.5f);
 			model.mul(tmp);
 
 			tmp.setToRotation(xAxis, angleX + angleXBack);

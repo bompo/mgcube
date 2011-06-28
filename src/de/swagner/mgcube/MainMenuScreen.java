@@ -152,7 +152,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		renderObjects.clear();
 		blocks.clear();
 
-		int[][][] level = Resources.getInstance().levels[levelnumber];
+		int[][][] level = Resources.getInstance().opening;
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;
@@ -743,6 +743,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			finished = true;
 		} else if (button2.contains(new Vector3(x, y, 0))) {
 			selectedMenuItem = 1;
+			finished = true;
 		} else if (button3.contains(new Vector3(x, y, 0))) {
 			selectedMenuItem = 2;
 		} else if (button4.contains(new Vector3(x, y, 0))) {
