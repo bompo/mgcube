@@ -88,7 +88,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Vector3 portalIntersection = new Vector3();
 	BoundingBox box = new BoundingBox(new Vector3(-10f, -10f, -10f), new Vector3(10f, 10f, 10f));
 	Vector3 exit = new Vector3();
-	int port = 0;
+	Portal port = new Portal();
 	Vector3 position = new Vector3();
 	
 	protected int lastTouchX;
@@ -104,6 +104,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.input.setCatchBackKey( true );
 		Gdx.input.setInputProcessor(this);
 
+		Resources.getInstance().currentlevel = level;
+		
 		blockModel = Resources.getInstance().blockModel;
 		playerModel = Resources.getInstance().playerModel;
 		targetModel = Resources.getInstance().targetModel;
@@ -239,6 +241,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				s.sBlocks = tmp;
 			}
 		}
+
+		for(int i = 0; i<portals.size; i++) {
+			Gdx.app.log("", "hey");
+			for(Portal q : portals) {
+				if(portals.get(i).id == -q.id) {
+					portals.get(i).correspondingPortal = q;
+				}
+			}
+		}	
+	
 		
 	}
 
@@ -257,7 +269,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		warplock = false;
 		movwarplock = false;
-		port=0;
+		port=new Portal();
 		
 		initLevel(Resources.getInstance().currentlevel);
 		if(Resources.getInstance().lives < 1)
@@ -771,22 +783,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					if (portaldst < 0.2f && portalintersect) {
 						warp = true;
 						warplock = false;
-						port = portal.id;
+						port = portal;
 						portal.isCollidedAnimation = true;
 						break;
 					}
 				}
 			} else {
 				//end warplock
-				for(Portal p : portals) {
-					if (p.id == -port) {
-						boolean portalintersect = Intersector.intersectRaySphere(pRay, p.position, 1f, portalIntersection);
-						if (!portalintersect) {
-							warplock = false;
-						}
+					boolean portalintersect = Intersector.intersectRaySphere(pRay, port.correspondingPortal.position, 1f, portalIntersection);
+					if (!portalintersect) {
+						warplock = false;
 					}
 				}
-			}
 
 			// player out of bound?
 			if (!box.contains(player.position)) {
@@ -801,12 +809,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 
 			if (warp) {
-				Portal tmp = getCorrespondingPortal(port);
-				if(tmp != null) {
-					player.position = tmp.position.cpy();
-					warplock = true;
-					tmp.isCollidedAnimation = true;
-				}
+				player.position = port.correspondingPortal.position.cpy();
+				warplock = true;
+				port.correspondingPortal.isCollidedAnimation = true;
 			}
 		}
 		else
@@ -875,30 +880,23 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						if (portaldst < 0.2f && portalintersect) {
 							warp = true;
 							movwarplock = false;
-							port = portal.id;
+							port = portal;
 							portal.isCollidedAnimation = true;
 							break;
 						}
 					}
 				} else {
 					//end warplock
-					for(Portal p : portals) {
-						if (p.id == -port) {
-							boolean portalintersect = Intersector.intersectRaySphere(mRay, p.position, 1f, portalIntersection);
-							if (!portalintersect) {
-								movwarplock = false;
-							}
-						}
+					boolean portalintersect = Intersector.intersectRaySphere(mRay, port.correspondingPortal.position, 1f, portalIntersection);
+					if (!portalintersect) {
+						movwarplock = false;
 					}
 				}
 				
 				if (warp) {
-					Portal tmp = getCorrespondingPortal(port);
-					if(tmp != null) {
-						m.position = tmp.position.cpy();
+						m.position = port.correspondingPortal.position.cpy();
 						movwarplock = true;
-						tmp.isCollidedAnimation = true;
-					}
+						port.correspondingPortal.isCollidedAnimation = true;
 				}
 				
 				for(MovableBlock mm : movableBlocks) {
@@ -1052,7 +1050,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f) {
+		if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f && startTime > 0.5) {
 			movePlayer();
 		}
 		
@@ -1088,16 +1086,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
 			cam.translate(0, 0, 1 * -amount);
 		return false;
-	}
-	
-	public Portal getCorrespondingPortal(int ids)
-	{
-		for(Portal p : portals)
-		{
-			if(p.id == -ids)
-				return p;
-		}
-		return null;
 	}
 	
 	public void setCorrespondingSwitchBlocks(Switch s) {
