@@ -601,84 +601,151 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Portal) {
 				if(renderable.position.x != -11) {
 					// render Portal
-					Portal tmp = (Portal) renderable;
+					Portal tmpPortal = (Portal) renderable;
 					
-					switch (Math.abs(tmp.id)) {
+					switch (Math.abs(tmpPortal.id)) {
 					case 4:
 						model.set(renderable.model);
+
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
 						
 						transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]  + renderable.collideAnimation);
-						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
 						
-						//render hull			
+						model.set(renderable.model);
+						//render hull		
+						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
+						model.mul(tmp);
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]);
+						playerModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
 					case 5:
 						model.set(renderable.model);
+
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);	
+						
 						transShader.setUniformMatrix("MMatrix", model);
 						
 						transShader.setUniformf("a_color", Resources.getInstance().portalColor2[0], Resources.getInstance().portalColor2[1], Resources.getInstance().portalColor2[2], Resources.getInstance().portalColor2[3]  + renderable.collideAnimation);
-						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
 						
-						//render hull			
+						model.set(renderable.model);
+						//render hull		
+						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
+						model.mul(tmp);
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor2[0], Resources.getInstance().portalColor2[1], Resources.getInstance().portalColor2[2], Resources.getInstance().portalColor2[3]);
+						playerModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
 					case 6:
 						model.set(renderable.model);
+
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
 						
 						transShader.setUniformf("a_color", Resources.getInstance().portalColor3[0], Resources.getInstance().portalColor3[1], Resources.getInstance().portalColor3[2], Resources.getInstance().portalColor3[3]  + renderable.collideAnimation);
-						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
 						
-						//render hull			
+						model.set(renderable.model);
+						//render hull		
+						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
+						model.mul(tmp);
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor3[0], Resources.getInstance().portalColor3[1], Resources.getInstance().portalColor3[2], Resources.getInstance().portalColor3[3]);
+						playerModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
 					case 7:
 						model.set(renderable.model);
+
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
-
-						transShader.setUniformf("a_color", Resources.getInstance().portalColor4[0], Resources.getInstance().portalColor4[1], Resources.getInstance().portalColor4[2], Resources.getInstance().portalColor4[3]  + renderable.collideAnimation);
-						blockModel.render(transShader, GL20.GL_TRIANGLES);
 						
-						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor4[0], Resources.getInstance().portalColor4[1], Resources.getInstance().portalColor4[2], Resources.getInstance().portalColor4[3]  + renderable.collideAnimation);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						model.set(renderable.model);
+						//render hull		
+						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
+						model.mul(tmp);
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor4[0], Resources.getInstance().portalColor4[1], Resources.getInstance().portalColor4[2], Resources.getInstance().portalColor4[3]);
+						playerModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
 					case 8:
 						model.set(renderable.model);
+
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
 						
 						transShader.setUniformf("a_color", Resources.getInstance().portalColor5[0], Resources.getInstance().portalColor5[1], Resources.getInstance().portalColor5[2], Resources.getInstance().portalColor5[3]  + renderable.collideAnimation);
-						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
 						
-						//render hull			
+						model.set(renderable.model);
+						//render hull		
+						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
+						model.mul(tmp);
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor5[0], Resources.getInstance().portalColor5[1], Resources.getInstance().portalColor5[2], Resources.getInstance().portalColor5[3]);
+						playerModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 
 					default:
 						model.set(renderable.model);
+
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
-						Gdx.app.log("", "dd");
-						transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]  + renderable.collideAnimation);
-						blockModel.render(transShader, GL20.GL_TRIANGLES);
 						
-						//render hull			
+						transShader.setUniformf("a_color", Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]  + renderable.collideAnimation);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						model.set(renderable.model);
+						//render hull		
+						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+						
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
+						model.mul(tmp);
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]);
+						playerModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 					}
 				}
