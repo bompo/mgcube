@@ -103,7 +103,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		sphereModel = Resources.getInstance().sphereModel;
 		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(12.0f, 0, 25f);
+		cam.position.set(12.0f, -4, 25f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -143,7 +143,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		initRender();
 		initLevel(0);
 		angleY = -70;
-		angleX = -10;
+		angleX = 0;
 	}
 	
 	public void initRender() {
@@ -298,6 +298,18 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
 		batch.begin();
 		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
+		batch.end();
+		
+		batch.begin();
+		//render highscore
+		selectedFont.draw(batch, "Highscore", 50, 150);
+		font.draw(batch, "1. -", 50, 110);
+		font.draw(batch, "2. -", 50, 80);
+		font.draw(batch, "3. -", 50, 50);
+		//render level description
+		for(LevelButton button : buttons) {
+			font.draw(batch, button.levelnumber + "", button.box.getCenter().x-22, button.box.getCenter().y);
+		}
 		batch.end();
 		
 		
