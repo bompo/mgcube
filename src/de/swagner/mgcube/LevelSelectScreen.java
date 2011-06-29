@@ -138,7 +138,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		buttons.clear();
 		int y = 0;
 		int x = 0;
-		for (int i = 0; i < Resources.getInstance().levelcount-1; i++) {
+		for (int i = 0; i < Resources.getInstance().levelcount; i++) {
 			LevelButton temp = new LevelButton(i+1);
 			buttons.add(temp);
 			temp.box = new BoundingBox(new Vector3(350+ (distX * x), 350 - (distY * y) ,0), new Vector3(450 + (distX * x),450  - (distY * y) ,0));
@@ -187,7 +187,12 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		movableBlocks.clear();
 		switchblocks.clear();
 		switches.clear();
-		int[][][] level = Resources.getInstance().levels[levelnumber];
+		int[][][] level = Resources.getInstance().opening;
+		try {
+		level = Resources.getInstance().levels[levelnumber-1];
+		} catch(ArrayIndexOutOfBoundsException e) {
+			
+		}
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;

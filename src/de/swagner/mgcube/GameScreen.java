@@ -168,7 +168,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		movableBlocks.clear();
 		switchblocks.clear();
 		switches.clear();
-		int[][][] level = Resources.getInstance().levels[levelnumber];
+		int[][][] level = Resources.getInstance().level1;
+		try {
+		level = Resources.getInstance().levels[levelnumber-1];
+		} catch(ArrayIndexOutOfBoundsException e) {
+			
+		}
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;
