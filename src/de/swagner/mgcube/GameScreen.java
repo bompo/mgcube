@@ -101,6 +101,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	public GameScreen(Game game, int level) {
 		super(game);
+		Gdx.input.setCatchBackKey( true );
 		Gdx.input.setInputProcessor(this);
 
 		blockModel = Resources.getInstance().blockModel;
@@ -984,6 +985,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			Resources.getInstance().switchColorTheme();
 		}
 		
+		if(keycode == Input.Keys.BACK) {
+			game.setScreen(new MainMenuScreen(game));
+		}		
 		
 		return false;
 	}

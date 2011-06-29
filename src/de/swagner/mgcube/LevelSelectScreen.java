@@ -2,6 +2,7 @@ package de.swagner.mgcube;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -96,6 +97,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 	public LevelSelectScreen(Game game) {
 		super(game);
+		Gdx.input.setCatchBackKey( true );
 		Gdx.input.setInputProcessor(this);
 		
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
@@ -694,7 +696,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
 		
 	}
 	
@@ -705,7 +707,9 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+		if(keycode == Input.Keys.BACK) {
+			game.setScreen(new MainMenuScreen(game));
+		}		
 		return false;
 	}
 
