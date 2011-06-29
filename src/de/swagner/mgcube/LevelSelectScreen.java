@@ -109,8 +109,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		wireCubeModel = Resources.getInstance().wireCubeModel;
 		sphereModel = Resources.getInstance().sphereModel;
 		
-		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(12.0f, -4, 25f);
+		cam = new PerspectiveCamera(40, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(12.0f, -3.5f, 35f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
@@ -155,7 +155,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		initRender();
 		initLevel(1);
-		angleY = -70;
+		angleY = -60;
 		angleX = 0;
 	}
 	
