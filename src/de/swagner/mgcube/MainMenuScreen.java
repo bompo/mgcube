@@ -298,7 +298,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			if (fade >= 1) {
 				switch (selectedMenuItem) {
 				case 0:
-					game.setScreen(new GameScreen(game));
+					game.setScreen(new GameScreen(game,1));
 					break;
 				case 1:
 					game.setScreen(new LevelSelectScreen(game));

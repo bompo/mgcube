@@ -77,6 +77,10 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 	Array<LevelButton> buttons = new Array<LevelButton>();
 	
+	BoundingBox collisionLevelBack = new BoundingBox();
+	BoundingBox collisionLevelForward = new BoundingBox();
+	BoundingBox collisionLevelStart = new BoundingBox();
+	
 	Player player = new Player();
 	Target target = new Target();
 	
@@ -88,6 +92,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	Array<SwitchableBlock> switchblocks = new Array<SwitchableBlock>();
 
 	Vector3 position = new Vector3();
+	private int currentSelectedLevel = 1;
 	
 	public LevelSelectScreen(Game game) {
 		super(game);
@@ -140,8 +145,12 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}			
 		}
 		
+		collisionLevelBack.set(new Vector3(370 , 25, 0),new Vector3(430, 85, 0));
+		collisionLevelForward.set(new Vector3(470 , 25, 0),new Vector3(530, 85, 0));
+		collisionLevelStart.set(new Vector3(570 , 25, 0),new Vector3(730, 85, 0));
+		
 		initRender();
-		initLevel(0);
+		initLevel(1);
 		angleY = -70;
 		angleX = 0;
 	}
@@ -310,6 +319,9 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		for(LevelButton button : buttons) {
 			font.draw(batch, button.levelnumber + "", button.box.getCenter().x-22, button.box.getCenter().y);
 		}
+		font.draw(batch, "<", 377, 55);
+		font.draw(batch, ">", 480, 55);
+		font.draw(batch, "Start", 578, 55);
 		batch.end();
 		
 		
@@ -328,7 +340,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			blackFade.draw(fadeBatch);
 			fadeBatch.end();
 			if (fade >= 1) {
-				game.setScreen(new GameScreen(game));
+				game.setScreen(new GameScreen(game,currentSelectedLevel));
 			}
 		}
 		
@@ -376,6 +388,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		transShader.setUniformMatrix("VPMatrix", camMenu.combined);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		//render level buttons
 		{
 			
 			for(LevelButton button : buttons) {
@@ -387,9 +400,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				model.mul(tmp);
 				
 				tmp.setToTranslation(button.box.getCenter().x , button.box.getCenter().y, 0);
-				model.mul(tmp);
-				Gdx.app.log("", button.box.getCenter().x + "   " + button.box.getCenter().y);
-				
+				model.mul(tmp);				
 				
 				tmp.setToScaling(30.0f, 30.0f, 10.0f);
 				model.mul(tmp);
@@ -403,12 +414,78 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 					
 			}
-			
 		}
+		//render back button
+		{
+				tmp.idt();
+				model.idt();
 
-		transShader.end();
+				tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+				model.mul(tmp);
+				
+				tmp.setToTranslation(400 , 55, 0);
+				model.mul(tmp);
+				
+				tmp.setToScaling(30.0f, 30.0f, 10.0f);
+				model.mul(tmp);
 
+				transShader.setUniformMatrix("MMatrix", model);
+
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+	
+		}
+		//render forward button
+		{
+				tmp.idt();
+				model.idt();
+
+				tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+				model.mul(tmp);
+				
+				tmp.setToTranslation(500 , 55, 0);
+				model.mul(tmp);
+				
+				tmp.setToScaling(30.0f, 30.0f, 10.0f);
+				model.mul(tmp);
+
+				transShader.setUniformMatrix("MMatrix", model);
+
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+	
+		}
 		
+		//render forward button
+		{
+				tmp.idt();
+				model.idt();
+
+				tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+				model.mul(tmp);
+				
+				tmp.setToTranslation(650 , 55, 0);
+				model.mul(tmp);
+				
+				tmp.setToScaling(80.0f, 30.0f, 10.0f);
+				model.mul(tmp);
+
+				transShader.setUniformMatrix("MMatrix", model);
+
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+	
+		}
+		transShader.end();		
 	}
 	
 	private void renderScene() {		
@@ -653,8 +730,13 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		for(LevelButton b : buttons) {
 			if(b.box.contains(new Vector3(x,y,0))) {
 				initLevel(b.levelnumber);
+				currentSelectedLevel = b.levelnumber;
 			}
 		}
+		if(collisionLevelStart.contains(new Vector3(x,y,0))) {
+			game.setScreen(new GameScreen(game,currentSelectedLevel));
+		}
+		Gdx.app.log("", x + "   " + y);
 		return false;
 	}
 

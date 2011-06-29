@@ -99,7 +99,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	float touchStartY = 0;
 	private boolean changeLevel;
 
-	public GameScreen(Game game) {
+	public GameScreen(Game game, int level) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 
@@ -135,7 +135,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleY = 160;
 		angleX = 0;
 		
-		initLevel(1);
+		initLevel(level);
 	}
 	
 	public void initRender() {
