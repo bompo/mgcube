@@ -174,54 +174,65 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		movableBlocks.clear();
 		switchblocks.clear();
 		switches.clear();
-
 		int[][][] level = Resources.getInstance().levels[levelnumber];
-		
+
 		// finde player pos
 		int z = 0, y = 0, x = 0;
 		for (z = 0; z < 10; z++) {
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
 					if (level[z][y][x] == 1) {
-						blocks.add(new Block(new Vector3(-10f + (x), -10f + (y), -10f + (z))));
+						blocks.add(new Block(new Vector3(-10f + (x * 2), -10f + (y * 2), -10f + (z * 2))));
 					}
 					if (level[z][y][x] == 2) {
-						player.position.x = -10f + (x);
-						player.position.y = -10f + (y);
-						player.position.z = -10f + (z);
+						player.position.x = -10f + (x * 2);
+						player.position.y = -10f + (y * 2);
+						player.position.z = -10f + (z * 2);
 					}
 					if (level[z][y][x] == 3) {
-						target.position.x = -10f + (x);
-						target.position.y = -10f + (y);
-						target.position.z = -10f + (z);
+						target.position.x = -10f + (x * 2);
+						target.position.y = -10f + (y * 2);
+						target.position.z = -10f + (z * 2);
 					}
-					if (level[z][y][x] >= 4 && level[z][y][x] <= 8) {
+					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
 						Portal temp = new Portal(level[z][y][x]);
-						temp.position.x = -10f + (x);
-						temp.position.y = -10f + (y);
-						temp.position.z = -10f + (z);
+						temp.position.x = -10f + (x * 2);
+						temp.position.y = -10f + (y * 2);
+						temp.position.z = -10f + (z * 2);
 						portals.add(temp);
-					}
-					if (level[z][y][x] >= -8 && level[z][y][x] <= -4) {
+						}
+					if (level[z][y][x] >=-8 && level[z][y][x] <=-4){
 						Portal temp = new Portal(level[z][y][x]);
-						temp.position.x = -10f + (x);
-						temp.position.y = -10f + (y);
-						temp.position.z = -10f + (z);
+						temp.position.x = -10f + (x * 2);
+						temp.position.y = -10f + (y * 2);
+						temp.position.z = -10f + (z * 2);
 						portals.add(temp);
-					}
-					if (level[z][y][x] == 9) {
-						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x), -10f + (y), -10f + (z)));
+						}
+					if (level[z][y][x] == 9){
+						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
 						movableBlocks.add(temp);
-					}
+						}
+					if (level[z][y][x] <= -10){
+						Switch temp = new Switch(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						temp.id = level[z][y][x];
+						switches.add(temp);
+						}
+					if (level[z][y][x] >= 10){
+						SwitchableBlock temp = new SwitchableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						temp.id = level[z][y][x];
+						switchblocks.add(temp);
+						}
 				}
 			}
 		}
-
+		
 		renderObjects.add(player);
 		renderObjects.add(target);
-		renderObjects.addAll(blocks);
+		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
 		renderObjects.addAll(movableBlocks);
+		renderObjects.addAll(switches);
+		renderObjects.addAll(switchblocks);		
 	}
 
 	@Override
@@ -238,7 +249,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 		angleX += MathUtils.sin(startTime) / 10f;
 		angleY += MathUtils.cos(startTime) / 5f;
-
+		
 		cam.update();		
 		
 		sortScene();
@@ -319,11 +330,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 			tmp.setToScaling(0.5f, 0.5f, 0.5f);
 			model.mul(tmp);
-			
+
 			tmp.setToRotation(xAxis, angleX);
 			model.mul(tmp);
 			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);	
+			model.mul(tmp);
 
 			tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
 			model.mul(tmp);
