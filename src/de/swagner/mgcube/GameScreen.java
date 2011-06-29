@@ -955,7 +955,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		if (Gdx.input.isTouched())
 			return false;
 		if (keycode == Input.Keys.ESCAPE) {
-			System.exit(0);
+			game.setScreen(new MainMenuScreen(game));
 		}
 
 		if (keycode == Input.Keys.SPACE) {

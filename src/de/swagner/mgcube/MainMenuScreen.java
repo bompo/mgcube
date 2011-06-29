@@ -99,8 +99,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = Resources.getInstance().font;
+		font.setScale(1);
 		font.scale(0.5f);
 		selectedFont = Resources.getInstance().selectedFont;
+		selectedFont.setScale(1);
 		selectedFont.scale(0.5f);
 
 		fadeBatch = new SpriteBatch();
@@ -703,6 +705,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		if (Gdx.input.isTouched())
 			return false;
 
+		if (keycode == Input.Keys.ESCAPE) {
+			System.exit(0);
+		}
 		if (keycode == Input.Keys.ENTER && selectedMenuItem != -1) {
 			finished = true;
 		}
@@ -738,18 +743,20 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 		
-		if (button1.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 0;
-			finished = true;
-		} else if (button2.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 1;
-			finished = true;
-		} else if (button3.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 2;
-		} else if (button4.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 3;
-		} else {
-			selectedMenuItem = -1;
+		if(!finished) {
+			if (button1.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 0;
+				finished = true;
+			} else if (button2.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 1;
+				finished = true;
+			} else if (button3.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 2;
+			} else if (button4.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 3;
+			} else {
+				selectedMenuItem = -1;
+			}
 		}
 
 		return false;

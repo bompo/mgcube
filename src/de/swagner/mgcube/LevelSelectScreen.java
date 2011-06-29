@@ -121,9 +121,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = Resources.getInstance().font;
-		//font.scale(0.5f);
+		font.setScale(1);
+		font.scale(0.5f);
 		selectedFont = Resources.getInstance().selectedFont;
-		//selectedFont.scale(0.5f);
+		selectedFont.setScale(1);
+		selectedFont.scale(0.5f);
 		
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
@@ -709,7 +711,10 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	public boolean keyDown(int keycode) {
 		if(keycode == Input.Keys.BACK) {
 			game.setScreen(new MainMenuScreen(game));
-		}		
+		}
+		if (keycode == Input.Keys.ESCAPE) {
+			game.setScreen(new MainMenuScreen(game));
+		}
 		return false;
 	}
 
