@@ -750,7 +750,6 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if(collisionLevelStart.contains(new Vector3(x,y,0))) {
 			game.setScreen(new GameScreen(game,currentSelectedLevel));
 		}
-		Gdx.app.log("", x + "   " + y);
 		return false;
 	}
 

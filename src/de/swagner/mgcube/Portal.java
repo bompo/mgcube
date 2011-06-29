@@ -9,6 +9,8 @@ public class Portal extends Renderable {
 
 	public int id= 0;
 	
+	public Portal correspondingPortal;
+	
 	public Portal(int id) { 
 		position = new Vector3(-11,-11,-11);
 		this.id = id;
