@@ -764,6 +764,40 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if (keycode == Input.Keys.ESCAPE) {
 			game.setScreen(new MainMenuScreen(game));
 		}
+		if (keycode == Input.Keys.ENTER && Resources.getInstance().currentlevel != 0) {
+			game.setScreen(new GameScreen(game, Resources.getInstance().currentlevel));
+		}
+		if(keycode == Input.Keys.LEFT) {
+			int lvl = Resources.getInstance().currentlevel;
+			lvl--;
+			if(lvl >0 && next==0)
+				initLevel(lvl);
+			else if(lvl > 12*next)
+				initLevel(lvl);
+		}
+		
+		if(keycode == Input.Keys.RIGHT) {
+			int lvl = Resources.getInstance().currentlevel;
+			lvl++;
+			if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().levelcount)
+				initLevel(lvl);
+		}
+		
+		if(keycode==Input.Keys.DOWN) {
+			int lvl = Resources.getInstance().currentlevel;
+			lvl+=4;
+			if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().levelcount)
+				initLevel(lvl);
+		}
+		
+		if(keycode==Input.Keys.UP) {
+			int lvl = Resources.getInstance().currentlevel;
+			lvl-=4;
+			if(lvl >0 && next==0)
+				initLevel(lvl);
+			else if(lvl > 12*next)
+				initLevel(lvl);
+		}
 		return false;
 	}
 

@@ -460,7 +460,7 @@ public class Resources {
 			}, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } } };
 	
 
-	public int currentlevel = 1;
+	public int currentlevel = 0;
 	public int[][][][] levels = {level1,level2,level3,level4,level5,level6,level7,level8,level9,level10,level11,level12,level13};
 
 	public int lives = 3;
