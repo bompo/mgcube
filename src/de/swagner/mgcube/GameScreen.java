@@ -589,15 +589,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				model.mul(tmp);
 
 				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color",Resources.getInstance().playerColor[0], Resources.getInstance().playerColor[1], Resources.getInstance().playerColor[2], Resources.getInstance().playerColor[3]);
+				transShader.setUniformf("a_color",Resources.getInstance().playerColor[0], Resources.getInstance().playerColor[1], Resources.getInstance().playerColor[2], Resources.getInstance().playerColor[3]  + renderable.collideAnimation);
 				playerModel.render(transShader, GL20.GL_TRIANGLES);
 				
-				tmp.setToScaling(2.0f, 2.0f, 2.0f);
+				tmp.setToScaling(2.0f - (renderable.collideAnimation), 2.0f - (renderable.collideAnimation), 2.0f  - (renderable.collideAnimation));
 				model.mul(tmp);
 
 				//render hull			
 				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]);
+				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]  + renderable.collideAnimation);
 				playerModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 			
@@ -633,7 +633,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
@@ -662,7 +662,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color",Resources.getInstance().portalColor2[0], Resources.getInstance().portalColor2[1], Resources.getInstance().portalColor2[2], Resources.getInstance().portalColor2[3]);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor2[0], Resources.getInstance().portalColor2[1], Resources.getInstance().portalColor2[2], Resources.getInstance().portalColor2[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
@@ -691,7 +691,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color",Resources.getInstance().portalColor3[0], Resources.getInstance().portalColor3[1], Resources.getInstance().portalColor3[2], Resources.getInstance().portalColor3[3]);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor3[0], Resources.getInstance().portalColor3[1], Resources.getInstance().portalColor3[2], Resources.getInstance().portalColor3[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
@@ -720,7 +720,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color",Resources.getInstance().portalColor4[0], Resources.getInstance().portalColor4[1], Resources.getInstance().portalColor4[2], Resources.getInstance().portalColor4[3]);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor4[0], Resources.getInstance().portalColor4[1], Resources.getInstance().portalColor4[2], Resources.getInstance().portalColor4[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 						
@@ -749,7 +749,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color",Resources.getInstance().portalColor5[0], Resources.getInstance().portalColor5[1], Resources.getInstance().portalColor5[2], Resources.getInstance().portalColor5[3]);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor5[0], Resources.getInstance().portalColor5[1], Resources.getInstance().portalColor5[2], Resources.getInstance().portalColor5[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 
@@ -778,7 +778,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]);
+						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]  + renderable.collideAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						break;
 					}
@@ -886,6 +886,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						warplock = false;
 						port = portal;
 						portal.isCollidedAnimation = true;
+						player.isCollidedAnimation = true;
 						break;
 					}
 				}
@@ -983,6 +984,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 							movwarplock = false;
 							port = portal;
 							portal.isCollidedAnimation = true;
+							m.isCollidedAnimation = true;
 							break;
 						}
 					}
