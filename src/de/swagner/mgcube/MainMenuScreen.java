@@ -111,9 +111,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
 
-		menuItems.add("start game");
-		menuItems.add("select level");
+		menuItems.add("puzzle mode");
 		menuItems.add("time attack");
+		menuItems.add("help");
 		menuItems.add("options");
 
 		initRender();
@@ -304,17 +304,17 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			if (fade >= 1) {
 				switch (selectedMenuItem) {
 				case 0:
-					game.setScreen(new GameScreen(game,1));
+					game.setScreen(new LevelSelectScreen(game));
 					break;
 				case 1:
-					game.setScreen(new LevelSelectScreen(game));
+					break;
+				case 2:
 					break;
 				case 3:
 					game.setScreen(new OptionsScreen(game));
 					break;
 
 				default:
-					Gdx.app.log("", selectedMenuItem + "");
 					break;
 				}
 				
@@ -756,7 +756,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				finished = true;
 			} else if (button2.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 1;
-				finished = true;
 			} else if (button3.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 2;
 			} else if (button4.contains(new Vector3(x, y, 0))) {
