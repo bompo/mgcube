@@ -245,7 +245,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		for(int i = 0; i<portals.size; i++) {
-			Gdx.app.log("", "hey");
 			for(Portal q : portals) {
 				if(portals.get(i).id == -q.id) {
 					portals.get(i).correspondingPortal = q;
@@ -612,7 +611,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					case 4:
 						model.set(renderable.model);
 
-						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						tmp.setToScaling(0.4f, 0.4f, 0.4f);
 						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
@@ -621,17 +620,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						playerModel.render(transShader, GL20.GL_TRIANGLES);
 						
 						model.set(renderable.model);
-						//render hull		
-						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
-						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//						//render hull		
+//						transShader.setUniformMatrix("MMatrix", model);
+//						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+//						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
 						tmp.setToRotation(xAxis, angleXFront);
 						model.mul(tmp);
 						tmp.setToRotation(yAxis, angleYFront);
 						model.mul(tmp);
 						
-						tmp.setToScaling(0.6f, 0.6f, 0.6f);
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]);
@@ -641,7 +640,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					case 5:
 						model.set(renderable.model);
 
-						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						tmp.setToScaling(0.4f, 0.4f, 0.4f);
 						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
@@ -651,16 +650,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						
 						model.set(renderable.model);
 						//render hull		
-						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
-						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//						transShader.setUniformMatrix("MMatrix", model);
+//						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+//						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
 						tmp.setToRotation(xAxis, angleXFront);
 						model.mul(tmp);
 						tmp.setToRotation(yAxis, angleYFront);
 						model.mul(tmp);
 						
-						tmp.setToScaling(0.6f, 0.6f, 0.6f);
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color",Resources.getInstance().portalColor2[0], Resources.getInstance().portalColor2[1], Resources.getInstance().portalColor2[2], Resources.getInstance().portalColor2[3]);
@@ -670,7 +669,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					case 6:
 						model.set(renderable.model);
 
-						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						tmp.setToScaling(0.4f, 0.4f, 0.4f);
 						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
@@ -680,16 +679,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						
 						model.set(renderable.model);
 						//render hull		
-						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
-						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//						transShader.setUniformMatrix("MMatrix", model);
+//						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+//						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
 						tmp.setToRotation(xAxis, angleXFront);
 						model.mul(tmp);
 						tmp.setToRotation(yAxis, angleYFront);
 						model.mul(tmp);
 						
-						tmp.setToScaling(0.6f, 0.6f, 0.6f);
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color",Resources.getInstance().portalColor3[0], Resources.getInstance().portalColor3[1], Resources.getInstance().portalColor3[2], Resources.getInstance().portalColor3[3]);
@@ -699,7 +698,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					case 7:
 						model.set(renderable.model);
 
-						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						tmp.setToScaling(0.4f, 0.4f, 0.4f);
 						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
@@ -709,16 +708,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						
 						model.set(renderable.model);
 						//render hull		
-						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
-						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//						transShader.setUniformMatrix("MMatrix", model);
+//						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+//						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
-						tmp.setToRotation(xAxis, angleXBack);
+						tmp.setToRotation(xAxis, angleXFront);
 						model.mul(tmp);
-						tmp.setToRotation(yAxis, angleYBack);
+						tmp.setToRotation(yAxis, angleYFront);
 						model.mul(tmp);
 						
-						tmp.setToScaling(0.6f, 0.6f, 0.6f);
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color",Resources.getInstance().portalColor4[0], Resources.getInstance().portalColor4[1], Resources.getInstance().portalColor4[2], Resources.getInstance().portalColor4[3]);
@@ -728,7 +727,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					case 8:
 						model.set(renderable.model);
 
-						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						tmp.setToScaling(0.4f, 0.4f, 0.4f);
 						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
@@ -738,16 +737,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						
 						model.set(renderable.model);
 						//render hull		
-						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
-						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//						transShader.setUniformMatrix("MMatrix", model);
+//						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+//						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
 						tmp.setToRotation(xAxis, angleXFront);
 						model.mul(tmp);
 						tmp.setToRotation(yAxis, angleYFront);
 						model.mul(tmp);
 						
-						tmp.setToScaling(0.6f, 0.6f, 0.6f);
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color",Resources.getInstance().portalColor5[0], Resources.getInstance().portalColor5[1], Resources.getInstance().portalColor5[2], Resources.getInstance().portalColor5[3]);
@@ -757,7 +756,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					default:
 						model.set(renderable.model);
 
-						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						tmp.setToScaling(0.4f, 0.4f, 0.4f);
 						model.mul(tmp);	
 						
 						transShader.setUniformMatrix("MMatrix", model);
@@ -767,16 +766,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						
 						model.set(renderable.model);
 						//render hull		
-						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
-						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//						transShader.setUniformMatrix("MMatrix", model);
+//						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
+//						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
 						tmp.setToRotation(xAxis, angleXFront);
 						model.mul(tmp);
 						tmp.setToRotation(yAxis, angleYFront);
 						model.mul(tmp);
 						
-						tmp.setToScaling(0.6f, 0.6f, 0.6f);
+						tmp.setToScaling(0.8f, 0.8f, 0.8f);
 						model.mul(tmp);
 						transShader.setUniformMatrix("MMatrix", model);
 						transShader.setUniformf("a_color",Resources.getInstance().portalColor[0], Resources.getInstance().portalColor[1], Resources.getInstance().portalColor[2], Resources.getInstance().portalColor[3]);
