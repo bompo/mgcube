@@ -59,6 +59,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	float fade = 1.0f;
 	boolean finished = false;
 	
+	int next = 0;
+	
 	// GLES20
 	Matrix4 model = new Matrix4().idt();
 	Matrix4 tmp = new Matrix4().idt();
@@ -93,7 +95,6 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	Array<SwitchableBlock> switchblocks = new Array<SwitchableBlock>();
 
 	Vector3 position = new Vector3();
-	private int currentSelectedLevel = 1;
 	
 	public LevelSelectScreen(Game game) {
 		super(game);
@@ -138,6 +139,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		buttons.clear();
 		int y = 0;
 		int x = 0;
+
 		for (int i = 0; i < Resources.getInstance().levelcount; i++) {
 			LevelButton temp = new LevelButton(i+1);
 			buttons.add(temp);
@@ -146,6 +148,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			if(x%4 == 0) {
 				++y;
 				x=0;
+				if(y%3 == 0)
+					y=0;
 			}			
 		}
 		
@@ -193,6 +197,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		} catch(ArrayIndexOutOfBoundsException e) {
 			
 		}
+		
+		Resources.getInstance().currentlevel = levelnumber;
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;
@@ -326,10 +332,23 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		font.draw(batch, "3. -", 50, 50);
 		//render level description
 		for(LevelButton button : buttons) {
-			font.draw(batch, button.levelnumber + "", button.box.getCenter().x-22, button.box.getCenter().y);
+			if(button.levelnumber <=12 && next==0) {
+				if(button.levelnumber == Resources.getInstance().currentlevel)
+					selectedFont.draw(batch, button.levelnumber + "", button.box.getCenter().x-22, button.box.getCenter().y);
+				else
+					font.draw(batch, button.levelnumber + "", button.box.getCenter().x-22, button.box.getCenter().y);
+			}
+			else if(button.levelnumber > 12*next && next > 0 && button.levelnumber <= 12*(next+1)){
+				if(button.levelnumber == Resources.getInstance().currentlevel)
+					selectedFont.draw(batch, button.levelnumber + "", button.box.getCenter().x-22, button.box.getCenter().y);
+				else
+					font.draw(batch, button.levelnumber + "", button.box.getCenter().x-22, button.box.getCenter().y);
+			}
 		}
-		font.draw(batch, "<", 377, 55);
-		font.draw(batch, ">", 480, 55);
+		if(next>0)
+			font.draw(batch, "<", 377, 55);
+		if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
+			font.draw(batch, ">", 480, 55);
 		font.draw(batch, "Start", 578, 55);
 		batch.end();
 		
@@ -349,7 +368,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			blackFade.draw(fadeBatch);
 			fadeBatch.end();
 			if (fade >= 1) {
-				game.setScreen(new GameScreen(game,currentSelectedLevel));
+				game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel));
 			}
 		}
 		
@@ -401,31 +420,54 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		{
 			
 			for(LevelButton button : buttons) {
-
-				tmp.idt();
-				model.idt();
-
-				tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
-				model.mul(tmp);
-				
-				tmp.setToTranslation(button.box.getCenter().x , button.box.getCenter().y, 0);
-				model.mul(tmp);				
-				
-				tmp.setToScaling(30.0f, 30.0f, 10.0f);
-				model.mul(tmp);
-
-				transShader.setUniformMatrix("MMatrix", model);
-
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+				if(button.levelnumber <=12 && next==0 ) { 
+					tmp.idt();
+					model.idt();
 	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
+					tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+					model.mul(tmp);
+					
+					tmp.setToTranslation(button.box.getCenter().x , button.box.getCenter().y, 0);
+					model.mul(tmp);				
+					
+					tmp.setToScaling(30.0f, 30.0f, 10.0f);
+					model.mul(tmp);
+	
+					transShader.setUniformMatrix("MMatrix", model);
+	
+					transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+		
+					transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+					blockModel.render(transShader, GL20.GL_TRIANGLES);
+				}
+				else if(button.levelnumber > 12*next && next > 0 && button.levelnumber <= 12*(next+1)) {
+					tmp.idt();
+					model.idt();
+	
+					tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+					model.mul(tmp);
+					
+					tmp.setToTranslation(button.box.getCenter().x , button.box.getCenter().y, 0);
+					model.mul(tmp);				
+					
+					tmp.setToScaling(30.0f, 30.0f, 10.0f);
+					model.mul(tmp);
+	
+					transShader.setUniformMatrix("MMatrix", model);
+	
+					transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+		
+					transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+					blockModel.render(transShader, GL20.GL_TRIANGLES);
+				}
 					
 			}
 		}
 		//render back button
 		{
+			if(next > 0) {
 				tmp.idt();
 				model.idt();
 
@@ -445,10 +487,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
 	
 		}
 		//render forward button
-		{
+		{ if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1)) {
 				tmp.idt();
 				model.idt();
 
@@ -468,10 +511,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
 	
 		}
 		
-		//render forward button
+		//render start button
 		{
 				tmp.idt();
 				model.idt();
@@ -742,13 +786,27 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		y = 480 -y;
 		for(LevelButton b : buttons) {
-			if(b.box.contains(new Vector3(x,y,0))) {
-				initLevel(b.levelnumber);
-				currentSelectedLevel = b.levelnumber;
+			if(b.levelnumber <= 12 && next==0) {
+				if(b.box.contains(new Vector3(x,y,0))) {
+					initLevel(b.levelnumber);
+				}
+			}
+			else if(b.levelnumber > 12*next && next > 0 && b.levelnumber <= 12*(next+1)) {
+				if(b.box.contains(new Vector3(x,y,0))) {
+					initLevel(b.levelnumber);
+				}
 			}
 		}
 		if(collisionLevelStart.contains(new Vector3(x,y,0))) {
-			game.setScreen(new GameScreen(game,currentSelectedLevel));
+			game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel));
+		}
+		
+		if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))) {
+			next++;
+		}
+		
+		if(collisionLevelBack.contains(new Vector3(x,y,0)) && next > 0) {
+			next--;
 		}
 		return false;
 	}
