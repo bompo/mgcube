@@ -16,7 +16,9 @@ public class MovableBlock extends Renderable{
 	public void move(Vector3 dir) {
 		direction = dir;
 		setDirection();
-		Resources.getInstance().move.play();
+		if(Resources.getInstance().musicOnOff) {
+			Resources.getInstance().move.play();
+		}
 		this.isMoving = true;
 	}
 	

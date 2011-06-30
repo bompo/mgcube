@@ -278,6 +278,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		sortScene();
 
+		if(Resources.getInstance().bloomOnOff) {
 		frameBuffer.begin();
 		renderScene();
 		renderLevelSelect();
@@ -309,6 +310,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		frameBuffer.end();
 
 		bloomShader.end();
+		}
 
 		// render scene again
 		renderScene();
@@ -318,11 +320,13 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
+		if(Resources.getInstance().bloomOnOff) {
 		batch.enableBlending();
 		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
 		batch.begin();
 		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
 		batch.end();
+		}
 		
 		batch.begin();
 		//render highscore

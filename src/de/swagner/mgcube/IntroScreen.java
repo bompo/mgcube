@@ -73,15 +73,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		bloomShader = Resources.getInstance().bloomShader;
 		
 		initRender();
-		
-		Preferences prefs = Gdx.app.getPreferences("cubism3000");
-		if(prefs.getBoolean("music") != true) { 
-			if(Resources.getInstance().music == null) Resources.getInstance().reInit();
-			Resources.getInstance().music.play();
-			Resources.getInstance().music.setLooping(true);
-		} else {
-			Resources.getInstance().music.stop();	
-		}
 	}
 	
 	public void initRender() {

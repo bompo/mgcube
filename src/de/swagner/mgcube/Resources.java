@@ -1,6 +1,7 @@
 package de.swagner.mgcube;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -507,6 +508,9 @@ public class Resources {
 	public float[] targetEdgeColor = { 0.0f, 1.0f, 0.1f, 0.4f };
 
 	public int colorTheme = 0;
+	
+	public boolean bloomOnOff = true;
+	public boolean musicOnOff = true;
 
 	public static Resources instance;
 
@@ -586,12 +590,21 @@ public class Resources {
 
 		music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 		move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
-
+		
 		initShader();
 
 		font = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
 		// font.setColor(1, 1, 1, 0.8f);
 		selectedFont = new BitmapFont(Gdx.files.internal("data/selected.fnt"), false);
+		
+		Preferences prefs = Gdx.app.getPreferences("qb");
+		bloomOnOff = !prefs.getBoolean("bloom");
+		musicOnOff = !prefs.getBoolean("music");
+		
+		if(musicOnOff) { 
+			music.play();
+			music.setLooping(true);
+		} 
 	}
 
 	private void initShader() {
@@ -631,8 +644,8 @@ public class Resources {
 		quadModel.dispose();
 		wireCubeModel.dispose();
 
-		music.dispose();
-		move.dispose();
+//		music.dispose();
+//		move.dispose();
 
 		transShader.dispose();
 		bloomShader.dispose();

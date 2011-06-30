@@ -12,7 +12,9 @@ public class Player extends Renderable {
 	
 	public void move() {
 		this.setDirection();
-		Resources.getInstance().move.play();
+		if(Resources.getInstance().musicOnOff) {
+			Resources.getInstance().move.play();
+		}
 		this.isMoving = true;
 	}
 	
