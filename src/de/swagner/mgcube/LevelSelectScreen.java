@@ -371,7 +371,10 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			font.draw(batch, "<", 377, 55);
 		if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
 			font.draw(batch, ">", 480, 55);
-		font.draw(batch, "Start", 578, 55);
+		if(HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0)
+			font.draw(batch, "Start", 578, 55);
+		else
+			font.draw(batch, "Locked", 578, 55);
 		batch.end();
 		
 		
@@ -853,7 +856,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				}
 			}
 		}
-		if(collisionLevelStart.contains(new Vector3(x,y,0))) {
+		if(collisionLevelStart.contains(new Vector3(x,y,0)) && HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0) {
 			game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel));
 		}
 		
