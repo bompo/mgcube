@@ -307,6 +307,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					game.setScreen(new LevelSelectScreen(game));
 					break;
 				case 1:
+					game.setScreen(new GameScreen(game,1));
 					break;
 				case 2:
 					break;
@@ -711,9 +712,13 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		if (Gdx.input.isTouched())
 			return false;
+		
+		if(keycode == Input.Keys.BACK) {
+			Gdx.app.exit();
+		}
 
 		if (keycode == Input.Keys.ESCAPE) {
-			System.exit(0);
+			Gdx.app.exit();
 		}
 		if (keycode == Input.Keys.ENTER && selectedMenuItem != -1) {
 			finished = true;
@@ -756,6 +761,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				finished = true;
 			} else if (button2.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 1;
+				finished = true;
 			} else if (button3.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 2;
 			} else if (button4.contains(new Vector3(x, y, 0))) {

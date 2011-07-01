@@ -714,9 +714,13 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		if (Gdx.input.isTouched())
 			return false;
+		
+		if(keycode == Input.Keys.BACK) {
+			game.setScreen(new MainMenuScreen(game));
+		}		
 
 		if (keycode == Input.Keys.ESCAPE) {
-			System.exit(0);
+			processOption(3);
 		}
 		if (keycode == Input.Keys.ENTER && selectedMenuItem != -1) {
 			processOption(selectedMenuItem);
