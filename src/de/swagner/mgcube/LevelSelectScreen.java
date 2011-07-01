@@ -194,12 +194,12 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		switchblocks.clear();
 		switches.clear();
 		int[][][] level = Resources.getInstance().locked;
-		try {
-			if(HighScoreManager.getInstance().getHighScore(levelnumber).first != 0)
+//		try {
+			if(HighScoreManager.getInstance().getHighScore(levelnumber).first != 0 ||  levelnumber ==1)
 				level = Resources.getInstance().levels[levelnumber-1];
-		} catch(ArrayIndexOutOfBoundsException e) {
+//		} catch(ArrayIndexOutOfBoundsException e) {
 			
-		}
+//		}
 		
 		Resources.getInstance().currentlevel = levelnumber;
 
@@ -371,7 +371,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			font.draw(batch, "<", 377, 55);
 		if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
 			font.draw(batch, ">", 480, 55);
-		if(HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0)
+		if(HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0 || Resources.getInstance().currentlevel ==1)
 			font.draw(batch, "Start", 578, 55);
 		else
 			font.draw(batch, "Locked", 578, 55);
@@ -445,28 +445,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		{
 			
 			for(LevelButton button : buttons) {
-				if(button.levelnumber <=12 && next==0 ) { 
-					tmp.idt();
-					model.idt();
-	
-					tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
-					model.mul(tmp);
-					
-					tmp.setToTranslation(button.box.getCenter().x , button.box.getCenter().y, 0);
-					model.mul(tmp);				
-					
-					tmp.setToScaling(30.0f, 30.0f, 10.0f);
-					model.mul(tmp);
-	
-					transShader.setUniformMatrix("MMatrix", model);
-	
-					transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-		
-					transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-					blockModel.render(transShader, GL20.GL_TRIANGLES);
-				}
-				else if(button.levelnumber > 12*next && next > 0 && button.levelnumber <= 12*(next+1)) {
+				if(button.levelnumber <=12 && next==0 || (button.levelnumber > 12*next && next > 0 && button.levelnumber <= 12*(next+1))) { 
 					tmp.idt();
 					model.idt();
 	
@@ -856,7 +835,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				}
 			}
 		}
-		if(collisionLevelStart.contains(new Vector3(x,y,0)) && HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0) {
+		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0
+			|| Resources.getInstance().currentlevel==1)) {
 			game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel));
 		}
 		

@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class HighScoreManager {
 
-	Array<HighScore> highscores = new Array<HighScore>();
+	Array<HighScore> highscores = new Array<HighScore>(true,Resources.getInstance().levelcount);
 
 	public static HighScoreManager instance;
 
