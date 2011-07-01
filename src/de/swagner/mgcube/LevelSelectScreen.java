@@ -193,9 +193,10 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		movableBlocks.clear();
 		switchblocks.clear();
 		switches.clear();
-		int[][][] level = Resources.getInstance().opening;
+		int[][][] level = Resources.getInstance().locked;
 		try {
-		level = Resources.getInstance().levels[levelnumber-1];
+			if(HighScoreManager.getInstance().getHighScore(levelnumber).first != 0)
+				level = Resources.getInstance().levels[levelnumber-1];
 		} catch(ArrayIndexOutOfBoundsException e) {
 			
 		}
@@ -697,7 +698,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}
 			
 			// render Player
-			if(renderable instanceof Player) {
+			if(renderable instanceof Player && HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0) {
 				model.set(renderable.model);	
 				
 				tmp.setToRotation(xAxis, angleXBack);
@@ -739,7 +740,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}
 				
 			// render Target
-			if(renderable instanceof Target) {
+			if(renderable instanceof Target && HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0) {
 				model.set(renderable.model);
 				
 				tmp.setToRotation(yAxis, angleY + angleYBack);
