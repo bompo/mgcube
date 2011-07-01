@@ -16,7 +16,7 @@ public class HighScoreManager {
 	}
 	
 	private HighScoreManager() {
-		for(int i=1; i< Resources.getInstance().levelcount; ++i) {
+		for(int i=1; i<= Resources.getInstance().levelcount; ++i) {
 			HighScore highScore = new HighScore();
 			highScore.level = i;
 			highScore.first = Resources.getInstance().prefs.getInteger("score_first_level_"+i);

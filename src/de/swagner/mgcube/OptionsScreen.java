@@ -726,12 +726,19 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 
 		if (keycode == Input.Keys.DOWN) {
 			selectedMenuItem++;
+			if(selectedMenuItem == 2) {
+				selectedMenuItem++;
+				selectedMenuItem %= 4;
+			}
 			selectedMenuItem %= 4;
 		}
 
 		if (keycode == Input.Keys.UP) {
-			if (selectedMenuItem > 0)
+			if (selectedMenuItem > 0) {
 				selectedMenuItem--;
+				if(menuItems.get(selectedMenuItem).equals(""))
+					selectedMenuItem--;
+			}
 			else
 				selectedMenuItem = 3;
 		}

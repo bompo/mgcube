@@ -858,10 +858,12 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))) {
 			next++;
+			initLevel(12*next +1);
 		}
 		
 		if(collisionLevelBack.contains(new Vector3(x,y,0)) && next > 0) {
 			next--;
+			initLevel(12*next +1);
 		}
 		return false;
 	}
