@@ -111,9 +111,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
 
-		menuItems.add("puzzle mode");
+		menuItems.add("start game");
+		menuItems.add("select level");
 		menuItems.add("time attack");
-		menuItems.add("help");
 		menuItems.add("options");
 
 		initRender();
@@ -304,10 +304,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			if (fade >= 1) {
 				switch (selectedMenuItem) {
 				case 0:
-					game.setScreen(new LevelSelectScreen(game));
+					game.setScreen(new GameScreen(game,1));
 					break;
 				case 1:
-					game.setScreen(new GameScreen(game,1));
+					game.setScreen(new LevelSelectScreen(game));
 					break;
 				case 2:
 					break;
