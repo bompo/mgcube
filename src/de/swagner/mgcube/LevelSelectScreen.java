@@ -96,6 +96,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 	Vector3 position = new Vector3();
 	
+	HighScore currentHighScore;
+	
 	public LevelSelectScreen(Game game) {
 		super(game);
 		Gdx.input.setCatchBackKey( true );
@@ -257,6 +259,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		renderObjects.addAll(movableBlocks);
 		renderObjects.addAll(switches);
 		renderObjects.addAll(switchblocks);		
+		
+		currentHighScore = HighScoreManager.getInstance().getHighScore( Resources.getInstance().currentlevel);
 	}
 
 	@Override
@@ -327,13 +331,26 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
 		batch.end();
 		}
-		
+
 		batch.begin();
-		//render highscore
+		// render highscore
 		selectedFont.draw(batch, "Highscore", 50, 150);
-		font.draw(batch, "1. -", 50, 110);
-		font.draw(batch, "2. -", 50, 80);
-		font.draw(batch, "3. -", 50, 50);
+		if (currentHighScore.first == 0) {
+			font.draw(batch, "1. -", 50, 110);
+		} else {
+			font.draw(batch, "1. " + currentHighScore.first, 50, 110);
+		}
+		if (currentHighScore.second == 0) {
+			font.draw(batch, "2. -", 50, 80);
+		} else {
+			font.draw(batch, "2. " + currentHighScore.second, 50, 80);
+		}
+		if (currentHighScore.third == 0) {
+			font.draw(batch, "3. -", 50, 50);
+		} else {
+			font.draw(batch, "3. " + currentHighScore.third, 50, 50);
+		}
+
 		//render level description
 		for(LevelButton button : buttons) {
 			if(button.levelnumber <=12 && next==0) {

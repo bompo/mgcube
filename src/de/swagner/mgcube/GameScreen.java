@@ -910,6 +910,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 
 			if (win) {
+				HighScoreManager.getInstance().newHighScore( (int) Resources.getInstance().time,Resources.getInstance().currentlevel);
 				player.stop();
 				changeLevel = true;
 			}

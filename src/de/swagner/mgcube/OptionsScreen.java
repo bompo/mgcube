@@ -46,8 +46,6 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 	float fade = 1.0f;
 	boolean finished = false;
 
-	Preferences prefs = Gdx.app.getPreferences("qb");
-
 	BoundingBox button1 = new BoundingBox();
 	BoundingBox button2 = new BoundingBox();
 	BoundingBox button4 = new BoundingBox();
@@ -744,9 +742,9 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 		if (selectedMenuItem2 == 3) {
 			finished = true;
 		} else if (selectedMenuItem2 == 0) {
-			prefs.putBoolean("music", !prefs.getBoolean("music"));
-			Resources.getInstance().musicOnOff = !prefs.getBoolean("music");
-			prefs.flush();
+			Resources.getInstance().prefs.putBoolean("music", !Resources.getInstance().prefs.getBoolean("music"));
+			Resources.getInstance().musicOnOff = !Resources.getInstance().prefs.getBoolean("music");
+			Resources.getInstance().prefs.flush();
 			if (Resources.getInstance().musicOnOff) {
 				if (Resources.getInstance().music == null)
 					Resources.getInstance().reInit();
@@ -760,9 +758,9 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 				menuItems.set(0, "Sound Off");
 			}
 		} else if (selectedMenuItem2 == 1) {
-			prefs.putBoolean("bloom", !prefs.getBoolean("bloom"));
-			Resources.getInstance().bloomOnOff = !prefs.getBoolean("bloom");
-			prefs.flush();
+			Resources.getInstance().prefs.putBoolean("bloom", !Resources.getInstance().prefs.getBoolean("bloom"));
+			Resources.getInstance().bloomOnOff = !Resources.getInstance().prefs.getBoolean("bloom");
+			Resources.getInstance().prefs.flush();
 			if (Resources.getInstance().bloomOnOff) {
 				menuItems.set(1, "Bloom On");
 			} else {

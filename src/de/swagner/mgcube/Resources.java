@@ -509,6 +509,7 @@ public class Resources {
 
 	public int colorTheme = 0;
 	
+	public Preferences prefs = Gdx.app.getPreferences("qb");
 	public boolean bloomOnOff = true;
 	public boolean musicOnOff = true;
 
@@ -597,7 +598,6 @@ public class Resources {
 		// font.setColor(1, 1, 1, 0.8f);
 		selectedFont = new BitmapFont(Gdx.files.internal("data/selected.fnt"), false);
 		
-		Preferences prefs = Gdx.app.getPreferences("qb");
 		bloomOnOff = !prefs.getBoolean("bloom");
 		musicOnOff = !prefs.getBoolean("music");
 		
