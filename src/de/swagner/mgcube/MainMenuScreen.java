@@ -112,7 +112,12 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
 
-		menuItems.add("start game");
+		menuItems.clear();
+		if(HighScoreManager.getInstance().getHighScore(1).first==0) {
+			menuItems.add("start game");
+		} else {
+			menuItems.add("resume game");
+		}
 		menuItems.add("select level");
 		menuItems.add("time attack");
 		menuItems.add("options");
@@ -307,7 +312,19 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			if (fade >= 1) {
 				switch (selectedMenuItem) {
 				case 0:
-					game.setScreen(new GameScreen(game,1));
+					//search level which has a highscore
+					boolean found = false;
+					for(HighScore highscore:HighScoreManager.getInstance().highscores) {
+						if(highscore.first==0) {
+							game.setScreen(new GameScreen(game,highscore.level));
+							found = true;
+							break;
+						}
+					}		
+					//all played?
+					if(found==false) {
+						game.setScreen(new GameScreen(game,1));
+					}
 					break;
 				case 1:
 					game.setScreen(new LevelSelectScreen(game));

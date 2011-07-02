@@ -1,0 +1,1464 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGBUS (0x7) at pc=0x00007f94651beb78, pid=13437, tid=140275331852032
+#
+# JRE version: 6.0_24-b07
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (19.1-b02 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# 
+[error occurred during error reporting (printing problematic frame), id 0x7]
+
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f9468118000):  JavaThread "AWT-EventQueue-0" [_thread_in_native, id=13458, stack(0x00007f9465436000,0x00007f9465537000)]
+
+siginfo:si_signo=SIGBUS: si_errno=0, si_code=2 (BUS_ADRERR), si_addr=0x00007f9465432758
+
+Registers:
+RAX=0x00000000f1874b28, RBX=0x00007f94681181c8, RCX=0x00000000404d32e0, RDX=0x0000000000010e00
+RSP=0x00007f946551e908, RBP=0x00007f946551e9e8, RSI=0x00000000f1874b28, RDI=0x00007f940dcf5000
+R8 =0x00007f9471abd1a8, R9 =0x00007f9471ac0f78, R10=0x00000000404d36c8, R11=0x00000000404d3328
+R12=0x00000000f1874b28, R13=0x0000000000010e00, R14=0x00007f940dcf5000, R15=0x0000000000000000
+RIP=0x00007f94651beb78, EFL=0x0000000000010202, CSGSFS=0x3434000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Register to memory mapping:
+
+RAX=0x00000000f1874b28
+
+[error occurred during error reporting (printing registers, top of stack, instructions near pc), id 0xe0000000]
+
+Stack: [0x00007f9465436000,0x00007f9465537000],  sp=0x00007f946551e908,  free space=930k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+[error occurred during error reporting (printing native stack), id 0x7]
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  com.badlogic.gdx.utils.BufferUtils.copyJni([FLjava/nio/Buffer;II)V+0
+j  com.badlogic.gdx.utils.BufferUtils.copy([FLjava/nio/Buffer;II)V+4
+j  com.badlogic.gdx.graphics.glutils.VertexBufferObject.setVertices([FII)V+19
+j  com.badlogic.gdx.graphics.Mesh.setVertices([F)V+8
+J  com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader.loadObjFromString(Ljava/lang/String;Z)Lcom/badlogic/gdx/graphics/Mesh;
+J  com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader.loadObj(Ljava/io/InputStream;Z)Lcom/badlogic/gdx/graphics/Mesh;
+j  com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader.loadObj(Ljava/io/InputStream;)Lcom/badlogic/gdx/graphics/Mesh;+2
+j  de.swagner.mgcube.Resources.reInit()V+82
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.Resources.reInit()V+1113
+j  de.swagner.mgcube.Resources.<init>()V+13918
+j  de.swagner.mgcube.Resources.getInstance()Lde/swagner/mgcube/Resources;+10
+j  de.swagner.mgcube.IntroScreen.<init>(Lcom/badlogic/gdx/Game;)V+152
+j  de.swagner.mgcube.DesktopStarter.create()V+6
+j  com.badlogic.gdx.backends.jogl.JoglGraphics.init(Ljavax/media/opengl/GLAutoDrawable;)V+16
+j  com.sun.opengl.impl.GLDrawableHelper.init(Ljavax/media/opengl/GLAutoDrawable;)V+29
+j  javax.media.opengl.GLCanvas$InitAction.run()V+11
+j  com.sun.opengl.impl.GLDrawableHelper.invokeGL(Ljavax/media/opengl/GLDrawable;Ljavax/media/opengl/GLContext;Ljava/lang/Runnable;Ljava/lang/Runnable;)V+370
+j  javax.media.opengl.GLCanvas$DisplayOnEventDispatchThreadAction.run()V+35
+j  java.awt.event.InvocationEvent.dispatch()V+11
+j  java.awt.EventQueue.dispatchEventImpl(Ljava/awt/AWTEvent;Ljava/lang/Object;)V+21
+j  java.awt.EventQueue.access$000(Ljava/awt/EventQueue;Ljava/awt/AWTEvent;Ljava/lang/Object;)V+3
+j  java.awt.EventQueue$1.run()Ljava/lang/Void;+12
+j  java.awt.EventQueue$1.run()Ljava/lang/Object;+1
+v  ~StubRoutines::call_stub
+j  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;+0
+j  java.security.AccessControlContext$1.doIntersectionPrivilege(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;Ljava/security/AccessControlContext;)Ljava/lang/Object;+28
+j  java.awt.EventQueue.dispatchEvent(Ljava/awt/AWTEvent;)V+46
+j  java.awt.EventDispatchThread.pumpOneEventForFilters(I)Z+204
+j  java.awt.EventDispatchThread.pumpEventsForFilter(ILjava/awt/Conditional;Ljava/awt/EventFilter;)V+30
+j  java.awt.EventDispatchThread.pumpEventsForHierarchy(ILjava/awt/Conditional;Ljava/awt/Component;)V+11
+j  java.awt.EventDispatchThread.pumpEvents(ILjava/awt/Conditional;)V+4
+j  java.awt.EventDispatchThread.pumpEvents(Ljava/awt/Conditional;)V+3
+j  java.awt.EventDispatchThread.run()V+9
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007f946820f800 JavaThread "DestroyJavaVM" [_thread_blocked, id=13442, stack(0x00007f9470d86000,0x00007f9470e87000)]
+  0x00007f94681cc800 JavaThread "Thread-1" [_thread_blocked, id=13462, stack(0x00007f945ab9d000,0x00007f945ac9e000)]
+=>0x00007f9468118000 JavaThread "AWT-EventQueue-0" [_thread_in_native, id=13458, stack(0x00007f9465436000,0x00007f9465537000)]
+  0x00007f946818e800 JavaThread "AWT-Shutdown" [_thread_blocked, id=13457, stack(0x00007f9465663000,0x00007f9465764000)]
+  0x0000000040813000 JavaThread "AWT-XAWT" daemon [_thread_blocked, id=13456, stack(0x00007f9465764000,0x00007f9465865000)]
+  0x000000004050c000 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=13455, stack(0x00007f9465ead000,0x00007f9465fae000)]
+  0x000000004043d800 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=13453, stack(0x00007f94674f1000,0x00007f94675f2000)]
+  0x000000004043b000 JavaThread "CompilerThread1" daemon [_thread_blocked, id=13452, stack(0x00007f94675f2000,0x00007f94676f3000)]
+  0x0000000040437800 JavaThread "CompilerThread0" daemon [_thread_blocked, id=13451, stack(0x00007f94676f3000,0x00007f94677f4000)]
+  0x0000000040435800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=13450, stack(0x00007f94677f4000,0x00007f94678f5000)]
+  0x0000000040419000 JavaThread "Finalizer" daemon [_thread_blocked, id=13449, stack(0x00007f9467cfd000,0x00007f9467dfe000)]
+  0x0000000040411800 JavaThread "Reference Handler" daemon [_thread_blocked, id=13448, stack(0x00007f9467dfe000,0x00007f9467eff000)]
+
+Other Threads:
+  0x000000004040a800 VMThread [stack: 0x00007f9467eff000,0x00007f9468000000] [id=13447]
+  0x0000000040448000 WatcherThread [stack: 0x00007f94673f0000,0x00007f94674f1000] [id=13454]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 280576K, used 100924K [0x00000000eb600000, 0x00000000ff7f0000, 0x0000000100000000)
+  eden space 276224K, 36% used [0x00000000eb600000,0x00000000f188f138,0x00000000fc3c0000)
+  from space 4352K, 0% used [0x00000000ff3b0000,0x00000000ff3b0000,0x00000000ff7f0000)
+  to   space 11392K, 0% used [0x00000000fe1b0000,0x00000000fe1b0000,0x00000000fecd0000)
+ PSOldGen        total 74944K, used 42239K [0x00000000c2200000, 0x00000000c6b30000, 0x00000000eb600000)
+  object space 74944K, 56% used [0x00000000c2200000,0x00000000c4b3fff8,0x00000000c6b30000)
+ PSPermGen       total 32128K, used 15904K [0x00000000bd000000, 0x00000000bef60000, 0x00000000c2200000)
+  object space 32128K, 49% used [0x00000000bd000000,0x00000000bdf882c0,0x00000000bef60000)
+
+Dynamic libraries:
+40000000-40009000 r-xp 00000000 08:05 1662394                            /usr/lib/jvm/java-6-sun-1.6.0.24/jre/bin/java
+40108000-4010a000 rwxp 00008000 08:05 1662394                            /usr/lib/jvm/java-6-sun-1.6.0.24/jre/bin/java
+403a4000-40a0b000 rwxp 00000000 00:00 0                                  [heap]
+40a1d000-40a1f000 r-xs 00000000 08:05 525596                             /tmp/glM1Jcv8 (deleted)
+412a8000-4131f000 rwxp 00000000 00:00 0 
+bd000000-bef60000 rwxp 00000000 00:00 0 
+bef60000-c2200000 rwxp 00000000 00:00 0 
+c2200000-c6b30000 rwxp 00000000 00:00 0 
+c6b30000-eb600000 rwxp 00000000 00:00 0 
+eb600000-ff7f0000 rwxp 00000000 00:00 0 
+ff7f0000-100000000 ---p 00000000 00:00 0 
+7f940c000000-7f940dee6000 rwxp 00000000 00:00 0 
+7f940dee6000-7f9410000000 ---p 00000000 00:00 0 
+7f9413ddf000-7f9414000000 rwxp 00000000 00:00 0 
+7f9414000000-7f9417fa3000 rwxp 00000000 00:00 0 
+7f9417fa3000-7f9418000000 ---p 00000000 00:00 0 
+7f941c000000-7f941fffa000 rwxp 00000000 00:00 0 
+7f941fffa000-7f9420000000 ---p 00000000 00:00 0 
+7f9424000000-7f9427fd8000 rwxp 00000000 00:00 0 
+7f9427fd8000-7f9428000000 ---p 00000000 00:00 0 
+7f942bddf000-7f942c000000 rwxp 00000000 00:00 0 
+7f942c000000-7f942ff29000 rwxp 00000000 00:00 0 
+7f942ff29000-7f9430000000 ---p 00000000 00:00 0 
+7f9433119000-7f9434000000 rwxp 00000000 00:00 0 
+7f9434000000-7f9437fb3000 rwxp 00000000 00:00 0 
+7f9437fb3000-7f9438000000 ---p 00000000 00:00 0 
+7f943bddf000-7f943c000000 rwxp 00000000 00:00 0 
+7f943c000000-7f9440000000 rwxp 00000000 00:00 0 
+7f9444000000-7f9447f17000 rwxp 00000000 00:00 0 
+7f9447f17000-7f9448000000 ---p 00000000 00:00 0 
+7f944c000000-7f944ffc4000 rwxp 00000000 00:00 0 
+7f944ffc4000-7f9450000000 ---p 00000000 00:00 0 
+7f9453ddf000-7f9454000000 rwxp 00000000 00:00 0 
+7f9454000000-7f9457fec000 rwxp 00000000 00:00 0 
+7f9457fec000-7f9458000000 ---p 00000000 00:00 0 
+7f94596b2000-7f945a34f000 rwxp 00000000 00:00 0 
+7f945a34f000-7f945a357000 r-xs 0003d000 08:05 1311180                    /home/bompo/git/mgcube/libs/scoreloop-core.jar
+7f945a357000-7f945a899000 rwxp 00000000 00:00 0 
+7f945a899000-7f945aa99000 rwxs 960a7000 00:05 6740                       /dev/nvidia0
+7f945aa99000-7f945aa9d000 rwxs 5b4dc000 00:05 6740                       /dev/nvidia0
+7f945aa9d000-7f945ab9d000 rwxs 36d0c000 00:05 6740                       /dev/nvidia0
+7f945ab9d000-7f945aba0000 ---p 00000000 00:00 0 
+7f945aba0000-7f945ac9e000 rwxp 00000000 00:00 0 
+7f945ac9e000-7f945ac9f000 ---p 00000000 00:00 0 
+7f945ac9f000-7f945b49f000 rwxp 00000000 00:00 0 
+7f945b49f000-7f945f4a0000 rwxs 00000000 00:10 391979                     /dev/shm/pulse-shm-1171977579
+7f945f4a0000-7f945f4a1000 ---p 00000000 00:00 0 
+7f945f4a1000-7f945fca1000 rwxp 00000000 00:00 0 
+7f945fca1000-7f945fca7000 r-xp 00000000 08:05 1573092                    /usr/lib/libogg.so.0.7.0
+7f945fca7000-7f945fea6000 ---p 00006000 08:05 1573092                    /usr/lib/libogg.so.0.7.0
+7f945fea6000-7f945fea7000 r-xp 00005000 08:05 1573092                    /usr/lib/libogg.so.0.7.0
+7f945fea7000-7f945fea8000 rwxp 00006000 08:05 1573092                    /usr/lib/libogg.so.0.7.0
+7f945fea8000-7f945fed3000 r-xp 00000000 08:05 1582648                    /usr/lib/libvorbis.so.0.4.5
+7f945fed3000-7f94600d2000 ---p 0002b000 08:05 1582648                    /usr/lib/libvorbis.so.0.4.5
+7f94600d2000-7f94600d3000 r-xp 0002a000 08:05 1582648                    /usr/lib/libvorbis.so.0.4.5
+7f94600d3000-7f94600d4000 rwxp 0002b000 08:05 1582648                    /usr/lib/libvorbis.so.0.4.5
+7f94600d4000-7f9460387000 r-xp 00000000 08:05 1573212                    /usr/lib/libvorbisenc.so.2.0.8
+7f9460387000-7f9460586000 ---p 002b3000 08:05 1573212                    /usr/lib/libvorbisenc.so.2.0.8
+7f9460586000-7f94605a2000 r-xp 002b2000 08:05 1573212                    /usr/lib/libvorbisenc.so.2.0.8
+7f94605a2000-7f94605a3000 rwxp 002ce000 08:05 1573212                    /usr/lib/libvorbisenc.so.2.0.8
+7f94605a3000-7f94605eb000 r-xp 00000000 08:05 1570101                    /usr/lib/libFLAC.so.8.2.0
+7f94605eb000-7f94607eb000 ---p 00048000 08:05 1570101                    /usr/lib/libFLAC.so.8.2.0
+7f94607eb000-7f94607ec000 r-xp 00048000 08:05 1570101                    /usr/lib/libFLAC.so.8.2.0
+7f94607ec000-7f94607ed000 rwxp 00049000 08:05 1570101                    /usr/lib/libFLAC.so.8.2.0
+7f94607ed000-7f946084e000 r-xp 00000000 08:05 1570821                    /usr/lib/libsndfile.so.1.0.23
+7f946084e000-7f9460a4e000 ---p 00061000 08:05 1570821                    /usr/lib/libsndfile.so.1.0.23
+7f9460a4e000-7f9460a50000 r-xp 00061000 08:05 1570821                    /usr/lib/libsndfile.so.1.0.23
+7f9460a50000-7f9460a51000 rwxp 00063000 08:05 1570821                    /usr/lib/libsndfile.so.1.0.23
+7f9460a51000-7f9460a55000 rwxp 00000000 00:00 0 
+7f9460a55000-7f9460a5d000 r-xp 00000000 08:05 538930                     /lib/libwrap.so.0.7.6
+7f9460a5d000-7f9460c5d000 ---p 00008000 08:05 538930                     /lib/libwrap.so.0.7.6
+7f9460c5d000-7f9460c5e000 r-xp 00008000 08:05 538930                     /lib/libwrap.so.0.7.6
+7f9460c5e000-7f9460c5f000 rwxp 00009000 08:05 538930                     /lib/libwrap.so.0.7.6
+7f9460c5f000-7f9460c60000 rwxp 00000000 00:00 0 
+7f9460c60000-7f9460c64000 r-xp 00000000 08:05 534738                     /lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f9460c64000-7f9460e63000 ---p 00004000 08:05 534738                     /lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f9460e63000-7f9460e64000 r-xp 00003000 08:05 534738                     /lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f9460e64000-7f9460e65000 rwxp 00004000 08:05 534738                     /lib/x86_64-linux-gnu/libuuid.so.1.3.0
+7f9460e65000-7f9460ea7000 r-xp 00000000 08:05 525819                     /lib/x86_64-linux-gnu/libdbus-1.so.3.5.4
+7f9460ea7000-7f94610a7000 ---p 00042000 08:05 525819                     /lib/x86_64-linux-gnu/libdbus-1.so.3.5.4
+7f94610a7000-7f94610a8000 r-xp 00042000 08:05 525819                     /lib/x86_64-linux-gnu/libdbus-1.so.3.5.4
+7f94610a8000-7f94610a9000 rwxp 00043000 08:05 525819                     /lib/x86_64-linux-gnu/libdbus-1.so.3.5.4
+7f94610a9000-7f94610f4000 r-xp 00000000 08:05 1580900                    /usr/lib/libpulsecommon-0.9.22.so
+7f94610f4000-7f94612f3000 ---p 0004b000 08:05 1580900                    /usr/lib/libpulsecommon-0.9.22.so
+7f94612f3000-7f94612f4000 r-xp 0004a000 08:05 1580900                    /usr/lib/libpulsecommon-0.9.22.so
+7f94612f4000-7f94612f5000 rwxp 0004b000 08:05 1580900                    /usr/lib/libpulsecommon-0.9.22.so
+7f94612f5000-7f94612f8000 r-xp 00000000 08:05 1573582                    /usr/lib/libxcb-atom.so.1.0.0
+7f94612f8000-7f94614f8000 ---p 00003000 08:05 1573582                    /usr/lib/libxcb-atom.so.1.0.0
+7f94614f8000-7f94614f9000 r-xp 00003000 08:05 1573582                    /usr/lib/libxcb-atom.so.1.0.0
+7f94614f9000-7f94614fa000 rwxp 00004000 08:05 1573582                    /usr/lib/libxcb-atom.so.1.0.0
+7f94614fa000-7f9461501000 r-xp 00000000 08:05 1578963                    /usr/lib/x86_64-linux-gnu/libSM.so.6.0.1
+7f9461501000-7f9461700000 ---p 00007000 08:05 1578963                    /usr/lib/x86_64-linux-gnu/libSM.so.6.0.1
+7f9461700000-7f9461701000 r-xp 00006000 08:05 1578963                    /usr/lib/x86_64-linux-gnu/libSM.so.6.0.1
+7f9461701000-7f9461702000 rwxp 00007000 08:05 1578963                    /usr/lib/x86_64-linux-gnu/libSM.so.6.0.1
+7f9461702000-7f9461718000 r-xp 00000000 08:05 1571606                    /usr/lib/x86_64-linux-gnu/libICE.so.6.3.0
+7f9461718000-7f9461918000 ---p 00016000 08:05 1571606                    /usr/lib/x86_64-linux-gnu/libICE.so.6.3.0
+7f9461918000-7f9461919000 r-xp 00016000 08:05 1571606                    /usr/lib/x86_64-linux-gnu/libICE.so.6.3.0
+7f9461919000-7f946191a000 rwxp 00017000 08:05 1571606                    /usr/lib/x86_64-linux-gnu/libICE.so.6.3.0
+7f946191a000-7f946191d000 rwxp 00000000 00:00 0 
+7f946191d000-7f946191e000 r-xp 00000000 08:05 1570508                    /usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f946191e000-7f9461b1d000 ---p 00001000 08:05 1570508                    /usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f9461b1d000-7f9461b1e000 r-xp 00000000 08:05 1570508                    /usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f9461b1e000-7f9461b1f000 rwxp 00001000 08:05 1570508                    /usr/lib/x86_64-linux-gnu/libX11-xcb.so.1.0.0
+7f9461b1f000-7f9461b5f000 r-xp 00000000 08:05 1573921                    /usr/lib/libpulse.so.0.12.3
+7f9461b5f000-7f9461d5e000 ---p 00040000 08:05 1573921                    /usr/lib/libpulse.so.0.12.3
+7f9461d5e000-7f9461d5f000 r-xp 0003f000 08:05 1573921                    /usr/lib/libpulse.so.0.12.3
+7f9461d5f000-7f9461d60000 rwxp 00040000 08:05 1573921                    /usr/lib/libpulse.so.0.12.3
+7f9461d60000-7f9461dac000 r-xp 00000000 08:05 525030                     /tmp/libgdx/2370704169/libopenal64.so
+7f9461dac000-7f9461fab000 ---p 0004c000 08:05 525030                     /tmp/libgdx/2370704169/libopenal64.so
+7f9461fab000-7f9461fad000 r-xp 0004b000 08:05 525030                     /tmp/libgdx/2370704169/libopenal64.so
+7f9461fad000-7f9461fae000 rwxp 0004d000 08:05 525030                     /tmp/libgdx/2370704169/libopenal64.so
+7f9461fae000-7f9461faf000 rwxp 00000000 00:00 0 
+7f9461faf000-7f9462028000 r-xp 00000000 08:05 525382                     /tmp/libgdx/2370704169/liblwjgl64.so
+7f9462028000-7f9462228000 ---p 00079000 08:05 525382                     /tmp/libgdx/2370704169/liblwjgl64.so
+7f9462228000-7f946222a000 r-xp 00079000 08:05 525382                     /tmp/libgdx/2370704169/liblwjgl64.so
+7f946222a000-7f946222b000 rwxp 0007b000 08:05 525382                     /tmp/libgdx/2370704169/liblwjgl64.so
+7f946222b000-7f9462233000 r-xp 00000000 08:05 1581969                    /usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f9462233000-7f9462432000 ---p 00008000 08:05 1581969                    /usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f9462432000-7f9462433000 r-xp 00007000 08:05 1581969                    /usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f9462433000-7f9462434000 rwxp 00008000 08:05 1581969                    /usr/lib/x86_64-linux-gnu/libXrandr.so.2.2.0
+7f9462434000-7f9462523000 r-xp 00000000 08:05 524903                     /tmp/libgdx/2370704169/libjogl-linux64.so
+7f9462523000-7f9462623000 ---p 000ef000 08:05 524903                     /tmp/libgdx/2370704169/libjogl-linux64.so
+7f9462623000-7f9462624000 rwxp 000ef000 08:05 524903                     /tmp/libgdx/2370704169/libjogl-linux64.so
+7f9462624000-7f9463a72000 r-xp 00000000 08:05 723                        /usr/lib/nvidia-current/libnvidia-glcore.so.270.41.19
+7f9463a72000-7f9463c72000 ---p 0144e000 08:05 723                        /usr/lib/nvidia-current/libnvidia-glcore.so.270.41.19
+7f9463c72000-7f946425a000 rwxp 0144e000 08:05 723                        /usr/lib/nvidia-current/libnvidia-glcore.so.270.41.19
+7f946425a000-7f9464271000 rwxp 00000000 00:00 0 
+7f9464271000-7f9464272000 r-xp 00000000 08:05 716                        /usr/lib/nvidia-current/tls/libnvidia-tls.so.270.41.19
+7f9464272000-7f9464472000 ---p 00001000 08:05 716                        /usr/lib/nvidia-current/tls/libnvidia-tls.so.270.41.19
+7f9464472000-7f9464473000 rwxp 00001000 08:05 716                        /usr/lib/nvidia-current/tls/libnvidia-tls.so.270.41.19
+7f9464473000-7f9464474000 r-xp 00000000 08:05 1734853                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libjawt.so
+7f9464474000-7f9464573000 ---p 00001000 08:05 1734853                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libjawt.so
+7f9464573000-7f9464574000 rwxp 00000000 08:05 1734853                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libjawt.so
+7f9464574000-7f9464579000 r-xp 00000000 08:05 1581972                    /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f9464579000-7f9464778000 ---p 00005000 08:05 1581972                    /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f9464778000-7f9464779000 r-xp 00004000 08:05 1581972                    /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f9464779000-7f946477a000 rwxp 00005000 08:05 1581972                    /usr/lib/x86_64-linux-gnu/libXxf86vm.so.1.0.0
+7f946477a000-7f9464837000 r-xp 00000000 08:05 928                        /usr/lib/nvidia-current/libGL.so.270.41.19
+7f9464837000-7f9464a37000 ---p 000bd000 08:05 928                        /usr/lib/nvidia-current/libGL.so.270.41.19
+7f9464a37000-7f9464a70000 rwxp 000bd000 08:05 928                        /usr/lib/nvidia-current/libGL.so.270.41.19
+7f9464a70000-7f9464a86000 rwxp 00000000 00:00 0 
+7f9464a86000-7f9464a88000 r-xp 00000000 08:05 524774                     /tmp/libgdx/2370704169/libjogl_awt-linux64.so
+7f9464a88000-7f9464b87000 ---p 00002000 08:05 524774                     /tmp/libgdx/2370704169/libjogl_awt-linux64.so
+7f9464b87000-7f9464b88000 rwxp 00001000 08:05 524774                     /tmp/libgdx/2370704169/libjogl_awt-linux64.so
+7f9464b88000-7f9464b89000 r-xp 00000000 08:05 524747                     /tmp/libgdx/2370704169/libgluegen-rt-linux64.so
+7f9464b89000-7f9464c88000 ---p 00001000 08:05 524747                     /tmp/libgdx/2370704169/libgluegen-rt-linux64.so
+7f9464c88000-7f9464c89000 rwxp 00000000 08:05 524747                     /tmp/libgdx/2370704169/libgluegen-rt-linux64.so
+7f9464c89000-7f9464c9e000 r-xp 00000000 08:05 528127                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9464c9e000-7f9464e9d000 ---p 00015000 08:05 528127                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9464e9d000-7f9464e9e000 r-xp 00014000 08:05 528127                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9464e9e000-7f9464e9f000 rwxp 00015000 08:05 528127                     /lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9464e9f000-7f9464f87000 r-xp 00000000 08:05 1571250                    /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.14
+7f9464f87000-7f9465186000 ---p 000e8000 08:05 1571250                    /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.14
+7f9465186000-7f946518e000 r-xp 000e7000 08:05 1571250                    /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.14
+7f946518e000-7f9465190000 rwxp 000ef000 08:05 1571250                    /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.14
+7f9465190000-7f94651a5000 rwxp 00000000 00:00 0 
+7f94651a5000-7f9465231000 r-xp 00000000 08:05 524745                     /tmp/libgdx/2370704169/libgdx-64.so
+7f9465231000-7f9465431000 ---p 0008c000 08:05 524745                     /tmp/libgdx/2370704169/libgdx-64.so
+7f9465431000-7f9465432000 r-xp 0008c000 08:05 524745                     /tmp/libgdx/2370704169/libgdx-64.so
+7f9465432000-7f9465433000 rwxp 0008d000 08:05 524745                     /tmp/libgdx/2370704169/libgdx-64.so
+7f9465433000-7f9465436000 rwxp 00000000 00:00 0 
+7f9465436000-7f9465439000 ---p 00000000 00:00 0 
+7f9465439000-7f9465537000 rwxp 00000000 00:00 0 
+7f9465537000-7f9465538000 r-xs 00000000 08:05 532633                     /var/cache/fontconfig/26de28bc8622bbc1fb67fd234c21975f-le64.cache-3
+7f9465538000-7f9465539000 r-xs 00000000 08:05 554485                     /var/cache/fontconfig/c05880de57d1f5e948fdfacc138775d9-le64.cache-3
+7f9465539000-7f9465542000 r-xs 00000000 08:05 527845                     /var/cache/fontconfig/945677eb7aeaf62f1d50efc3fb3ec7d8-le64.cache-3
+7f9465542000-7f9465544000 r-xs 00000000 08:05 554480                     /var/cache/fontconfig/99e8ed0e538f840c565b6ed5dad60d56-le64.cache-3
+7f9465544000-7f9465547000 r-xs 00000000 08:05 554411                     /var/cache/fontconfig/f24b2111ab8703b4e963115a8cf14259-le64.cache-3
+7f9465547000-7f946554a000 r-xs 00000000 08:05 554479                     /var/cache/fontconfig/e383d7ea5fbe662a33d9b44caf393297-le64.cache-3
+7f946554a000-7f946554d000 r-xs 00000000 08:05 554477                     /var/cache/fontconfig/2cd17615ca594fa2959ae173292e504c-le64.cache-3
+7f946554d000-7f946554e000 r-xs 00000000 08:05 554471                     /var/cache/fontconfig/e7071f4a29fa870f4323321c154eba04-le64.cache-3
+7f946554e000-7f9465552000 r-xs 00000000 08:05 554470                     /var/cache/fontconfig/6eb3985aa4124903f6ff08ba781cd364-le64.cache-3
+7f9465552000-7f9465553000 r-xs 00000000 08:05 554466                     /var/cache/fontconfig/4c73fe0c47614734b17d736dbde7580a-le64.cache-3
+7f9465553000-7f9465554000 r-xs 00000000 08:05 554459                     /var/cache/fontconfig/0d8c3b2ac0904cb8a57a757ad11a4a08-le64.cache-3
+7f9465554000-7f9465555000 r-xs 00000000 08:05 554454                     /var/cache/fontconfig/6a53c69dea097a2d716e069445527da8-le64.cache-3
+7f9465555000-7f946555a000 r-xs 00000000 08:05 554453                     /var/cache/fontconfig/062808c12e6e608270f93bb230aed730-le64.cache-3
+7f946555a000-7f9465560000 r-xs 00000000 08:05 554429                     /var/cache/fontconfig/a755afe4a08bf5b97852ceb7400b47bc-le64.cache-3
+7f9465560000-7f9465565000 r-xs 00000000 08:05 554452                     /var/cache/fontconfig/515ca1ebc4b18308bea979be5704f9db-le64.cache-3
+7f9465565000-7f946556e000 r-xs 00000000 08:05 554448                     /var/cache/fontconfig/6d41288fd70b0be22e8c3a91e032eec0-le64.cache-3
+7f946556e000-7f946559c000 r-xs 00000000 08:05 554435                     /var/cache/fontconfig/365b55f210c0a22e9a19e35191240f32-le64.cache-3
+7f9465603000-7f9465643000 rwxs c31ad000 00:05 6740                       /dev/nvidia0
+7f9465663000-7f9465666000 ---p 00000000 00:00 0 
+7f9465666000-7f9465764000 rwxp 00000000 00:00 0 
+7f9465764000-7f9465767000 ---p 00000000 00:00 0 
+7f9465767000-7f9465865000 rwxp 00000000 00:00 0 
+7f9465865000-7f946586a000 r-xp 00000000 08:05 1570859                    /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f946586a000-7f9465a69000 ---p 00005000 08:05 1570859                    /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f9465a69000-7f9465a6a000 r-xp 00004000 08:05 1570859                    /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f9465a6a000-7f9465a6b000 rwxp 00005000 08:05 1570859                    /usr/lib/x86_64-linux-gnu/libXfixes.so.3.1.0
+7f9465a6b000-7f9465a74000 r-xp 00000000 08:05 1570620                    /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f9465a74000-7f9465c74000 ---p 00009000 08:05 1570620                    /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f9465c74000-7f9465c75000 r-xp 00009000 08:05 1570620                    /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f9465c75000-7f9465c76000 rwxp 0000a000 08:05 1570620                    /usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0
+7f9465c76000-7f9465c7f000 r-xp 00000000 08:05 1573929                    /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f9465c7f000-7f9465e7e000 ---p 00009000 08:05 1573929                    /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f9465e7e000-7f9465e7f000 r-xp 00008000 08:05 1573929                    /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f9465e7f000-7f9465e80000 rwxp 00009000 08:05 1573929                    /usr/lib/x86_64-linux-gnu/libXcursor.so.1.0.2
+7f9465e85000-7f9465e87000 rwxs 00000000 08:05 525596                     /tmp/glM1Jcv8 (deleted)
+7f9465e87000-7f9465e8b000 rwxs 5bbc1000 00:05 6740                       /dev/nvidia0
+7f9465e8b000-7f9465e8c000 rwxs d0008000 00:05 6740                       /dev/nvidia0
+7f9465e8c000-7f9465e8d000 rwxs 4b015000 00:05 6740                       /dev/nvidia0
+7f9465e8d000-7f9465e91000 rwxs 537be000 00:05 6740                       /dev/nvidia0
+7f9465e91000-7f9465e92000 rwxs fbc0a000 00:05 6740                       /dev/nvidia0
+7f9465e92000-7f9465ead000 rwxs 110c00000 00:05 6740                      /dev/nvidia0
+7f9465ead000-7f9465eb0000 ---p 00000000 00:00 0 
+7f9465eb0000-7f9465fae000 rwxp 00000000 00:00 0 
+7f9465fae000-7f9466027000 r-xp 00000000 08:05 1734841                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libfontmanager.so
+7f9466027000-7f9466126000 ---p 00079000 08:05 1734841                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libfontmanager.so
+7f9466126000-7f946613b000 rwxp 00078000 08:05 1734841                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libfontmanager.so
+7f946613b000-7f946614c000 rwxp 00000000 00:00 0 
+7f946614c000-7f9466151000 r-xp 00000000 08:05 1573561                    /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f9466151000-7f9466350000 ---p 00005000 08:05 1573561                    /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f9466350000-7f9466351000 r-xp 00004000 08:05 1573561                    /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f9466351000-7f9466352000 rwxp 00005000 08:05 1573561                    /usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0
+7f9466352000-7f9466354000 r-xp 00000000 08:05 1570542                    /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f9466354000-7f9466553000 ---p 00002000 08:05 1570542                    /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f9466553000-7f9466554000 r-xp 00001000 08:05 1570542                    /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f9466554000-7f9466555000 rwxp 00002000 08:05 1570542                    /usr/lib/x86_64-linux-gnu/libXau.so.6.0.0
+7f9466555000-7f9466570000 r-xp 00000000 08:05 1572615                    /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f9466570000-7f946676f000 ---p 0001b000 08:05 1572615                    /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f946676f000-7f9466770000 r-xp 0001a000 08:05 1572615                    /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f9466770000-7f9466771000 rwxp 0001b000 08:05 1572615                    /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+7f9466771000-7f9466780000 r-xp 00000000 08:05 1613065                    /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f9466780000-7f946697f000 ---p 0000f000 08:05 1613065                    /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f946697f000-7f9466980000 r-xp 0000e000 08:05 1613065                    /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f9466980000-7f9466981000 rwxp 0000f000 08:05 1613065                    /usr/lib/x86_64-linux-gnu/libXi.so.6.1.0
+7f9466981000-7f9466986000 r-xp 00000000 08:05 1572606                    /usr/lib/libXtst.so.6.1.0
+7f9466986000-7f9466b85000 ---p 00005000 08:05 1572606                    /usr/lib/libXtst.so.6.1.0
+7f9466b85000-7f9466b86000 r-xp 00004000 08:05 1572606                    /usr/lib/libXtst.so.6.1.0
+7f9466b86000-7f9466b87000 rwxp 00005000 08:05 1572606                    /usr/lib/libXtst.so.6.1.0
+7f9466b87000-7f9466cbc000 r-xp 00000000 08:05 1573591                    /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f9466cbc000-7f9466ebc000 ---p 00135000 08:05 1573591                    /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f9466ebc000-7f9466ebd000 r-xp 00135000 08:05 1573591                    /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f9466ebd000-7f9466ec1000 rwxp 00136000 08:05 1573591                    /usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+7f9466ec1000-7f9466ed2000 r-xp 00000000 08:05 1571673                    /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f9466ed2000-7f94670d1000 ---p 00011000 08:05 1571673                    /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f94670d1000-7f94670d2000 r-xp 00010000 08:05 1571673                    /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f94670d2000-7f94670d3000 rwxp 00011000 08:05 1571673                    /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0
+7f94670d3000-7f9467115000 r-xp 00000000 08:05 1734831                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/xawt/libmawt.so
+7f9467115000-7f9467214000 ---p 00042000 08:05 1734831                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/xawt/libmawt.so
+7f9467214000-7f9467220000 rwxp 00041000 08:05 1734831                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/xawt/libmawt.so
+7f9467220000-7f9467221000 rwxp 00000000 00:00 0 
+7f9467221000-7f94672b3000 r-xp 00000000 08:05 1734852                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libawt.so
+7f94672b3000-7f94673b2000 ---p 00092000 08:05 1734852                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libawt.so
+7f94673b2000-7f94673cb000 rwxp 00091000 08:05 1734852                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libawt.so
+7f94673cb000-7f94673f0000 rwxp 00000000 00:00 0 
+7f94673f0000-7f94673f1000 ---p 00000000 00:00 0 
+7f94673f1000-7f94674f1000 rwxp 00000000 00:00 0 
+7f94674f1000-7f94674f4000 ---p 00000000 00:00 0 
+7f94674f4000-7f94675f2000 rwxp 00000000 00:00 0 
+7f94675f2000-7f94675f5000 ---p 00000000 00:00 0 
+7f94675f5000-7f94676f3000 rwxp 00000000 00:00 0 
+7f94676f3000-7f94676f6000 ---p 00000000 00:00 0 
+7f94676f6000-7f94677f4000 rwxp 00000000 00:00 0 
+7f94677f4000-7f94677f7000 ---p 00000000 00:00 0 
+7f94677f7000-7f94678f5000 rwxp 00000000 00:00 0 
+7f94678f5000-7f9467cfd000 r-xp 00000000 08:05 1570348                    /usr/lib/locale/locale-archive
+7f9467cfd000-7f9467d00000 ---p 00000000 00:00 0 
+7f9467d00000-7f9467dfe000 rwxp 00000000 00:00 0 
+7f9467dfe000-7f9467e01000 ---p 00000000 00:00 0 
+7f9467e01000-7f9467eff000 rwxp 00000000 00:00 0 
+7f9467eff000-7f9467f00000 ---p 00000000 00:00 0 
+7f9467f00000-7f9468000000 rwxp 00000000 00:00 0 
+7f9468000000-7f946bfe2000 rwxp 00000000 00:00 0 
+7f946bfe2000-7f946c000000 ---p 00000000 00:00 0 
+7f946c000000-7f946c001000 rwxs fb641000 00:05 6740                       /dev/nvidia0
+7f946c001000-7f946c002000 rwxs 116c5f000 00:05 6740                      /dev/nvidia0
+7f946c002000-7f946c012000 r-xs 00000000 08:05 554447                     /var/cache/fontconfig/0f34bcd4b6ee430af32735b75db7f02b-le64.cache-3
+7f946c012000-7f946c015000 r-xs 00000000 08:05 554441                     /var/cache/fontconfig/d60319d88cac85ba9e1a07bd06cfbb8c-le64.cache-3
+7f946c015000-7f946c01f000 r-xs 00000000 08:05 554433                     /var/cache/fontconfig/d52a8644073d54c13679302ca1180695-le64.cache-3
+7f946c01f000-7f946c032000 r-xs 00000000 08:05 538224                     /var/cache/fontconfig/e13b20fdb08344e0e664864cc2ede53d-le64.cache-3
+7f946c032000-7f946c036000 r-xs 00000000 08:05 538228                     /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-le64.cache-3
+7f946c036000-7f946c04a000 r-xs 00000000 08:05 527842                     /var/cache/fontconfig/865f88548240fee46819705c6468c165-le64.cache-3
+7f946c04a000-7f946c055000 r-xs 00092000 08:05 1330406                    /home/bompo/git/mgcube/libs/gdx.jar
+7f946c055000-7f946c05c000 r-xs 00074000 08:05 1330357                    /home/bompo/git/mgcube/libs/gdx-sources.jar
+7f946c05c000-7f946c595000 rwxp 00000000 00:00 0 
+7f946c595000-7f946c72d000 r-xs 03027000 08:05 1662454                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/rt.jar
+7f946c72d000-7f946c755000 rwxp 00000000 00:00 0 
+7f946c755000-7f946c756000 ---p 00000000 00:00 0 
+7f946c756000-7f946c856000 rwxp 00000000 00:00 0 
+7f946c856000-7f946c857000 ---p 00000000 00:00 0 
+7f946c857000-7f946c957000 rwxp 00000000 00:00 0 
+7f946c957000-7f946c958000 ---p 00000000 00:00 0 
+7f946c958000-7f946ca58000 rwxp 00000000 00:00 0 
+7f946ca58000-7f946ca59000 ---p 00000000 00:00 0 
+7f946ca59000-7f946cb69000 rwxp 00000000 00:00 0 
+7f946cb69000-7f946cb82000 rwxp 00000000 00:00 0 
+7f946cb82000-7f946cba7000 rwxp 00000000 00:00 0 
+7f946cba7000-7f946cccc000 rwxp 00000000 00:00 0 
+7f946cccc000-7f946ccdc000 rwxp 00000000 00:00 0 
+7f946ccdc000-7f946ccf5000 rwxp 00000000 00:00 0 
+7f946ccf5000-7f946cd1a000 rwxp 00000000 00:00 0 
+7f946cd1a000-7f946ce3f000 rwxp 00000000 00:00 0 
+7f946ce3f000-7f946cee0000 rwxp 00000000 00:00 0 
+7f946cee0000-7f946cee4000 ---p 00000000 00:00 0 
+7f946cee4000-7f946d155000 rwxp 00000000 00:00 0 
+7f946d155000-7f946fee5000 rwxp 00000000 00:00 0 
+7f946fee5000-7f946fef3000 r-xp 00000000 08:05 1734847                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libzip.so
+7f946fef3000-7f946fff5000 ---p 0000e000 08:05 1734847                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libzip.so
+7f946fff5000-7f946fff8000 rwxp 00010000 08:05 1734847                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libzip.so
+7f946fff8000-7f946fff9000 rwxp 00000000 00:00 0 
+7f946fff9000-7f9470005000 r-xp 00000000 08:05 535712                     /lib/x86_64-linux-gnu/libnss_files-2.13.so
+7f9470005000-7f9470204000 ---p 0000c000 08:05 535712                     /lib/x86_64-linux-gnu/libnss_files-2.13.so
+7f9470204000-7f9470205000 r-xp 0000b000 08:05 535712                     /lib/x86_64-linux-gnu/libnss_files-2.13.so
+7f9470205000-7f9470206000 rwxp 0000c000 08:05 535712                     /lib/x86_64-linux-gnu/libnss_files-2.13.so
+7f9470206000-7f9470211000 r-xp 00000000 08:05 535714                     /lib/x86_64-linux-gnu/libnss_nis-2.13.so
+7f9470211000-7f9470410000 ---p 0000b000 08:05 535714                     /lib/x86_64-linux-gnu/libnss_nis-2.13.so
+7f9470410000-7f9470411000 r-xp 0000a000 08:05 535714                     /lib/x86_64-linux-gnu/libnss_nis-2.13.so
+7f9470411000-7f9470412000 rwxp 0000b000 08:05 535714                     /lib/x86_64-linux-gnu/libnss_nis-2.13.so
+7f9470412000-7f947041a000 r-xp 00000000 08:05 535710                     /lib/x86_64-linux-gnu/libnss_compat-2.13.so
+7f947041a000-7f9470619000 ---p 00008000 08:05 535710                     /lib/x86_64-linux-gnu/libnss_compat-2.13.so
+7f9470619000-7f947061a000 r-xp 00007000 08:05 535710                     /lib/x86_64-linux-gnu/libnss_compat-2.13.so
+7f947061a000-7f947061b000 rwxp 00008000 08:05 535710                     /lib/x86_64-linux-gnu/libnss_compat-2.13.so
+7f947061b000-7f9470622000 r-xp 00000000 08:05 1734857                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/native_threads/libhpi.so
+7f9470622000-7f9470723000 ---p 00007000 08:05 1734857                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/native_threads/libhpi.so
+7f9470723000-7f9470725000 rwxp 00008000 08:05 1734857                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/native_threads/libhpi.so
+7f9470725000-7f9470726000 rwxp 00000000 00:00 0 
+7f9470726000-7f947073d000 r-xp 00000000 08:05 535709                     /lib/x86_64-linux-gnu/libnsl-2.13.so
+7f947073d000-7f947093c000 ---p 00017000 08:05 535709                     /lib/x86_64-linux-gnu/libnsl-2.13.so
+7f947093c000-7f947093d000 r-xp 00016000 08:05 535709                     /lib/x86_64-linux-gnu/libnsl-2.13.so
+7f947093d000-7f947093e000 rwxp 00017000 08:05 535709                     /lib/x86_64-linux-gnu/libnsl-2.13.so
+7f947093e000-7f9470940000 rwxp 00000000 00:00 0 
+7f9470940000-7f9470969000 r-xp 00000000 08:05 1734846                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libjava.so
+7f9470969000-7f9470a68000 ---p 00029000 08:05 1734846                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libjava.so
+7f9470a68000-7f9470a6f000 rwxp 00028000 08:05 1734846                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libjava.so
+7f9470a6f000-7f9470a7c000 r-xp 00000000 08:05 1731420                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libverify.so
+7f9470a7c000-7f9470b7b000 ---p 0000d000 08:05 1731420                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libverify.so
+7f9470b7b000-7f9470b7e000 rwxp 0000c000 08:05 1731420                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/libverify.so
+7f9470b7e000-7f9470b85000 r-xp 00000000 08:05 535724                     /lib/x86_64-linux-gnu/librt-2.13.so
+7f9470b85000-7f9470d84000 ---p 00007000 08:05 535724                     /lib/x86_64-linux-gnu/librt-2.13.so
+7f9470d84000-7f9470d85000 r-xp 00006000 08:05 535724                     /lib/x86_64-linux-gnu/librt-2.13.so
+7f9470d85000-7f9470d86000 rwxp 00007000 08:05 535724                     /lib/x86_64-linux-gnu/librt-2.13.so
+7f9470d86000-7f9470d89000 ---p 00000000 00:00 0 
+7f9470d89000-7f9470e87000 rwxp 00000000 00:00 0 
+7f9470e87000-7f9470f0b000 r-xp 00000000 08:05 535703                     /lib/x86_64-linux-gnu/libm-2.13.so
+7f9470f0b000-7f947110a000 ---p 00084000 08:05 535703                     /lib/x86_64-linux-gnu/libm-2.13.so
+7f947110a000-7f947110b000 r-xp 00083000 08:05 535703                     /lib/x86_64-linux-gnu/libm-2.13.so
+7f947110b000-7f947110c000 rwxp 00084000 08:05 535703                     /lib/x86_64-linux-gnu/libm-2.13.so
+7f947110c000-7f947194a000 r-xp 00000000 08:05 1734849                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/server/libjvm.so
+7f947194a000-7f9471a49000 ---p 0083e000 08:05 1734849                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/server/libjvm.so
+7f9471a49000-7f9471bdd000 rwxp 0083d000 08:05 1734849                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/server/libjvm.so
+7f9471bdd000-7f9471c16000 rwxp 00000000 00:00 0 
+7f9471c16000-7f9471da0000 r-xp 00000000 08:05 535697                     /lib/x86_64-linux-gnu/libc-2.13.so
+7f9471da0000-7f9471f9f000 ---p 0018a000 08:05 535697                     /lib/x86_64-linux-gnu/libc-2.13.so
+7f9471f9f000-7f9471fa3000 r-xp 00189000 08:05 535697                     /lib/x86_64-linux-gnu/libc-2.13.so
+7f9471fa3000-7f9471fa4000 rwxp 0018d000 08:05 535697                     /lib/x86_64-linux-gnu/libc-2.13.so
+7f9471fa4000-7f9471faa000 rwxp 00000000 00:00 0 
+7f9471faa000-7f9471fac000 r-xp 00000000 08:05 535702                     /lib/x86_64-linux-gnu/libdl-2.13.so
+7f9471fac000-7f94721ac000 ---p 00002000 08:05 535702                     /lib/x86_64-linux-gnu/libdl-2.13.so
+7f94721ac000-7f94721ad000 r-xp 00002000 08:05 535702                     /lib/x86_64-linux-gnu/libdl-2.13.so
+7f94721ad000-7f94721ae000 rwxp 00003000 08:05 535702                     /lib/x86_64-linux-gnu/libdl-2.13.so
+7f94721ae000-7f94721c6000 r-xp 00000000 08:05 535718                     /lib/x86_64-linux-gnu/libpthread-2.13.so
+7f94721c6000-7f94723c6000 ---p 00018000 08:05 535718                     /lib/x86_64-linux-gnu/libpthread-2.13.so
+7f94723c6000-7f94723c7000 r-xp 00018000 08:05 535718                     /lib/x86_64-linux-gnu/libpthread-2.13.so
+7f94723c7000-7f94723c8000 rwxp 00019000 08:05 535718                     /lib/x86_64-linux-gnu/libpthread-2.13.so
+7f94723c8000-7f94723cc000 rwxp 00000000 00:00 0 
+7f94723cc000-7f94723ed000 r-xp 00000000 08:05 535673                     /lib/x86_64-linux-gnu/ld-2.13.so
+7f94723ed000-7f94723ee000 rwxs 5b521000 00:05 6740                       /dev/nvidia0
+7f94723ee000-7f94723ef000 rwxs fb060000 00:05 6740                       /dev/nvidia0
+7f94723ef000-7f94723f9000 rwxp 00000000 00:00 0 
+7f94723f9000-7f94724af000 rwxp 00000000 00:00 0 
+7f94724af000-7f94724b2000 rwxp 00000000 00:00 0 
+7f94724b2000-7f94724b9000 r-xp 00000000 08:05 1731410                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/jli/libjli.so
+7f94724b9000-7f94725ba000 ---p 00007000 08:05 1731410                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/jli/libjli.so
+7f94725ba000-7f94725bc000 rwxp 00008000 08:05 1731410                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/jli/libjli.so
+7f94725bc000-7f94725bd000 rwxp 00000000 00:00 0 
+7f94725bd000-7f94725be000 r-xs 00000000 08:05 530935                     /var/cache/fontconfig/4794a0821666d79190d59a36cb4f44b5-le64.cache-3
+7f94725be000-7f94725bf000 r-xs 00000000 08:05 554418                     /var/cache/fontconfig/ec648e9a1aea82bddd4bd6050028158d-le64.cache-3
+7f94725bf000-7f94725c0000 r-xs 00000000 08:05 1340105                    /home/bompo/.fontconfig/aa7e4f27e681240d22a1f116cf7520f0-le64.cache-3
+7f94725c0000-7f94725c1000 r-xs 001a1000 08:05 1339854                    /home/bompo/git/mgcube/libs/gdx-natives.jar
+7f94725c1000-7f94725db000 r-xs 00206000 08:05 1339556                    /home/bompo/git/mgcube/libs/gdx-backend-jogl.jar
+7f94725db000-7f94725dc000 r-xs 00007000 08:05 1330241                    /home/bompo/git/mgcube/libs/gdx-backend-jogl-sources.jar
+7f94725dc000-7f94725dd000 r-xs 00203000 08:05 1339177                    /home/bompo/git/mgcube/libs/gdx-backend-jogl-natives.jar
+7f94725dd000-7f94725e0000 r-xs 0000f000 08:05 1622792                    /usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/ext/pulse-java.jar
+7f94725e0000-7f94725e8000 rwxs 00000000 08:05 524710                     /tmp/hsperfdata_bompo/13437
+7f94725e8000-7f94725e9000 rwxp 00000000 00:00 0 
+7f94725e9000-7f94725ea000 r-xp 00000000 00:00 0 
+7f94725ea000-7f94725ec000 rwxp 00000000 00:00 0 
+7f94725ec000-7f94725ed000 r-xp 00020000 08:05 535673                     /lib/x86_64-linux-gnu/ld-2.13.so
+7f94725ed000-7f94725ef000 rwxp 00021000 08:05 535673                     /lib/x86_64-linux-gnu/ld-2.13.so
+7fff3d473000-7fff3d494000 rwxp 00000000 00:00 0                          [stack]
+7fff3d543000-7fff3d544000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 
+java_command: de.swagner.mgcube.DesktopStarter
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+USERNAME=bompo
+LD_LIBRARY_PATH=/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/server:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/../lib/amd64:/usr/lib/jvm/java-6-openjdk/jre/lib/amd64/server:/usr/lib/jvm/java-6-openjdk/jre/lib/amd64:/usr/lib/jvm/java-6-openjdk/jre/../lib/amd64:/usr/lib64/xulrunner-addons
+SHELL=/bin/bash
+DISPLAY=:0.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x791b30], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x791b30], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x640ba0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x640ba0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x640ba0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x640ba0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x643780], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x643380], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: [libjvm.so+0x643380], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGTERM: [libjvm.so+0x643380], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x643380], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:squeeze/sid
+
+uname:Linux 2.6.38-10-generic #44-Ubuntu SMP Thu Jun 2 21:32:22 UTC 2011 x86_64
+libc:glibc 2.13 NPTL 2.13 
+rlimit: STACK 8192k, CORE 0k, NPROC infinity, NOFILE 4096, AS infinity
+load average:0.29 0.19 0.16
+
+/proc/meminfo:
+MemTotal:        4047872 kB
+MemFree:           32516 kB
+Buffers:          150600 kB
+Cached:           966980 kB
+SwapCached:            0 kB
+Active:          2743180 kB
+Inactive:         920536 kB
+Active(anon):    2222180 kB
+Inactive(anon):   333856 kB
+Active(file):     521000 kB
+Inactive(file):   586680 kB
+Unevictable:         224 kB
+Mlocked:             132 kB
+SwapTotal:      19529724 kB
+SwapFree:       19529724 kB
+Dirty:              4212 kB
+Writeback:           660 kB
+AnonPages:       2547040 kB
+Mapped:           179088 kB
+Shmem:              9548 kB
+Slab:             140288 kB
+SReclaimable:     112432 kB
+SUnreclaim:        27856 kB
+KernelStack:        3664 kB
+PageTables:        33028 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    21553660 kB
+Committed_AS:    5124852 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      340628 kB
+VmallocChunk:   34359383832 kB
+HardwareCorrupted:     0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      200128 kB
+DirectMap2M:     3985408 kB
+
+
+CPU:total 4 (4 cores per cpu, 1 threads per core) family 6 model 30 stepping 5, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt
+
+Memory: 4k page, physical 4047872k(32516k free), swap 19529724k(19529724k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (19.1-b02) for linux-amd64 JRE (1.6.0_24-b07), built on Feb  2 2011 16:55:54 by "java_re" with gcc 3.2.2 (SuSE Linux)
+
+time: Thu Jun 30 23:43:44 2011
+elapsed time: 7 seconds
+

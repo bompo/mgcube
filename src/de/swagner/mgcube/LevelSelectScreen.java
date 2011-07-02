@@ -195,7 +195,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		switches.clear();
 		int[][][] level = Resources.getInstance().locked;
 //		try {
-			if(HighScoreManager.getInstance().getHighScore(levelnumber).first != 0 ||  levelnumber ==1)
+			if(levelnumber ==1 || HighScoreManager.getInstance().getHighScore(levelnumber-1).first != 0)
 				level = Resources.getInstance().levels[levelnumber-1];
 //		} catch(ArrayIndexOutOfBoundsException e) {
 			
@@ -371,7 +371,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			font.draw(batch, "<", 377, 55);
 		if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
 			font.draw(batch, ">", 480, 55);
-		if(HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0 || Resources.getInstance().currentlevel ==1)
+		if(Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)
 			font.draw(batch, "Start", 578, 55);
 		else
 			font.draw(batch, "Locked", 578, 55);
