@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 public class HighScoreManager {
 
 	Array<HighScore> highscores = new Array<HighScore>(true,Resources.getInstance().levelcount);
+	Array<HighScoreTimeAttack> timeAttackhighscores = new Array<HighScoreTimeAttack>(true,5);
 
 	public static HighScoreManager instance;
 
@@ -24,6 +25,14 @@ public class HighScoreManager {
 			highScore.third = Resources.getInstance().prefs.getInteger("score_third_level_"+i);
 			highscores.add(highScore);
 		}
+		
+		for(int i=1; i<= 5; ++i) {
+			HighScoreTimeAttack timeAttackHighscore = new HighScoreTimeAttack(0,0);
+			timeAttackHighscore.usedTime = Resources.getInstance().prefs.getInteger("score_timeattack_time_"+i);
+			timeAttackHighscore.level = Resources.getInstance().prefs.getInteger("score_timeattack_level_"+i);
+			timeAttackhighscores.add(timeAttackHighscore);
+		}
+		
 	}
 	
 	public void newHighScore(int score, int level) {
@@ -59,6 +68,19 @@ public class HighScoreManager {
 			}
 		}
 		return null;
+	}
+	
+	public void newTimeAttackHighScore(int score, int level) {
+		timeAttackhighscores.add(new HighScoreTimeAttack(score,level));
+		timeAttackhighscores.pop();
+		
+		int i = 1;
+		for(HighScoreTimeAttack highScoreTimeAttack:timeAttackhighscores) {
+			Resources.getInstance().prefs.putInteger("score_timeattack_time_"+i, highScoreTimeAttack.usedTime);
+			Resources.getInstance().prefs.putInteger("score_timeattack_level_"+i, highScoreTimeAttack.level);
+			++i;
+		}
+		Resources.getInstance().prefs.flush();
 	}
 	
 }
