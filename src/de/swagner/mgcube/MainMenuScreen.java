@@ -316,20 +316,21 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					boolean found = false;
 					for(HighScore highscore:HighScoreManager.getInstance().highscores) {
 						if(highscore.first==0) {
-							game.setScreen(new GameScreen(game,highscore.level));
+							game.setScreen(new GameScreen(game,highscore.level,0));
 							found = true;
 							break;
 						}
 					}		
 					//all played?
 					if(found==false) {
-						game.setScreen(new GameScreen(game,1));
+						game.setScreen(new GameScreen(game,1,0));
 					}
 					break;
 				case 1:
 					game.setScreen(new LevelSelectScreen(game));
 					break;
 				case 2:
+					game.setScreen(new GameScreen(game,1,1));
 					break;
 				case 3:
 					game.setScreen(new OptionsScreen(game));
@@ -790,6 +791,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				finished = true;
 			} else if (button3.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 2;
+				finished = true;
 			} else if (button4.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 3;
 				finished = true;

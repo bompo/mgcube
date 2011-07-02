@@ -100,12 +100,20 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	float touchStartX = 0;
 	float touchStartY = 0;
 	private boolean changeLevel;
+	
+	//0 = puzzle
+	//1 = time attack
+	int mode = 0;
 
-	public GameScreen(Game game, int level) {
+	public GameScreen(Game game, int level, int mode) {
 		super(game);
 		Gdx.input.setCatchBackKey( true );
 		Gdx.input.setInputProcessor(this);
 
+		this.mode = mode;
+		Resources.getInstance().time = 0;
+		Resources.getInstance().timeAttackTime = 120;
+		
 		Resources.getInstance().currentlevel = level;
 		
 		blockModel = Resources.getInstance().blockModel;
@@ -275,11 +283,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		initLevel(Resources.getInstance().currentlevel);
 		if(Resources.getInstance().lives < 1)
 		{
-			game.setScreen(new MainMenuScreen(game));
 			Resources.getInstance().lives = 3;
 			Resources.getInstance().currentlevel = 1;
 			initLevel(Resources.getInstance().currentlevel);
 			Resources.getInstance().time = 0;
+			game.setScreen(new MainMenuScreen(game));			
 		}
 	}
 
@@ -366,12 +374,24 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		//GUI
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
-		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 100);
-		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
-		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 80);
+		
+		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);	
+//		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
+		if(mode == 0) {
+		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 100);
+		}	
+		
 		Resources.getInstance().time += delta;
-		seconds = (int) Resources.getInstance().time % 60;
-		minutes = (int)Resources.getInstance().time / 60;
+		Resources.getInstance().timeAttackTime -= delta;
+		
+		if(mode == 0) {			
+			seconds = (int) Resources.getInstance().time % 60;
+			minutes = (int)Resources.getInstance().time / 60;
+		} else if ( mode == 1) {			
+			seconds = (int) Resources.getInstance().timeAttackTime % 60;
+			minutes = (int)Resources.getInstance().timeAttackTime / 60;
+		}
+
 		if(seconds > 9 && minutes > 9)
 			font.draw(fontbatch, "time: " + minutes + ":" + seconds, 620, 60);
 		else if(seconds > 9 && minutes < 10)
@@ -413,6 +433,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if (changeLevelEffect >= 5) {				
 				nextLevel();
 			}
+		}
+		
+		if(Resources.getInstance().timeAttackTime <= 0.5) {
+			finished = true;
+			HighScoreManager.getInstance().newTimeAttackHighScore(0, Resources.getInstance().levelcount);
 		}
 
 	}
@@ -905,14 +930,25 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// player out of bound?
 			if (!box.contains(player.position)) {
 				player.stop();
-				Resources.getInstance().lives--;
+				if(mode==0) {
+					Resources.getInstance().lives--;
+				}
 				reset();
 			}
 
 			if (win) {
 				HighScoreManager.getInstance().newHighScore( (int) Resources.getInstance().time,Resources.getInstance().currentlevel);
 				player.stop();
-				changeLevel = true;
+				Resources.getInstance().time = 0;
+				Resources.getInstance().timeAttackTime += 45;
+				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
+					changeLevel = true;
+				} else {
+					//game completed
+					if(mode==1) {
+						HighScoreManager.getInstance().newTimeAttackHighScore((int) Resources.getInstance().timeAttackTime, Resources.getInstance().levelcount);
+					}
+				}
 			}
 
 			if (warp) {

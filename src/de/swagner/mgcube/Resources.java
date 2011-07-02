@@ -474,8 +474,8 @@ public class Resources {
 	public int[][][][] levels = {level1,level2,level3,level4,level5,level6,level7,level8,level9,level10,level11,level12,level13,level14};
 
 	public int lives = 3;
-
 	public float time = 0;
+	public float timeAttackTime = 120;
 
 	public Mesh blockModel;
 	public Mesh playerModel;

@@ -393,7 +393,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			blackFade.draw(fadeBatch);
 			fadeBatch.end();
 			if (fade >= 1) {
-				game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel));
+				game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel,0));
 			}
 		}
 		
@@ -769,7 +769,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			game.setScreen(new MainMenuScreen(game));
 		}
 		if (keycode == Input.Keys.ENTER && Resources.getInstance().currentlevel != 0) {
-			game.setScreen(new GameScreen(game, Resources.getInstance().currentlevel));
+			game.setScreen(new GameScreen(game, Resources.getInstance().currentlevel,0));
 		}
 		if(keycode == Input.Keys.LEFT) {
 			int lvl = Resources.getInstance().currentlevel;
@@ -835,9 +835,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				}
 			}
 		}
-		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel).first != 0
-			|| Resources.getInstance().currentlevel==1)) {
-			game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel));
+		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) {
+			game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel,0));
 		}
 		
 		if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))) {
