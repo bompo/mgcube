@@ -1,5 +1,7 @@
 package de.swagner.mgcube;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,10 +19,10 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.scenes.scene2d.actions.Delay;
 import com.badlogic.gdx.utils.Array;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
@@ -100,6 +102,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	float touchStartX = 0;
 	float touchStartY = 0;
 	private boolean changeLevel;
+	
+	//pinchToZoom
+	HashMap<Integer, Vector2> pointers  = new HashMap<Integer,Vector2>();;
+	Vector2 v1 = new Vector2();
+	Vector2 v2 = new Vector2();
+	int finger_one_pointer = -1;
+	int finger_two_pointer = -1;
+	float initialDistance = 0f;
+	float distance = 0f;
 	
 	//0 = puzzle
 	//1 = time attack
@@ -1185,6 +1196,29 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		touchStartX = x;
 		touchStartY = y;
+		
+	     if(pointers.size() == 0) {
+	         // no fingers down so assign v1
+	         finger_one_pointer = pointer;
+	         v1 = new Vector2(x,y);
+	         pointers.put(pointer, v1);
+	      } else if (pointers.size() == 1) {
+	         // figure out which finger is down
+	         if (finger_one_pointer == -1) {
+	            //finger two is still down
+	            finger_one_pointer = pointer;
+	            v1 = new Vector2(x,y);
+	            pointers.put(pointer,v1);
+	            initialDistance = v1.dst(pointers.get(finger_two_pointer));
+	       
+	         } else {
+	            //finger one is still down
+	            finger_two_pointer = pointer;
+	            v2 = new Vector2(x,y);
+	            pointers.put(pointer, v2);
+	            initialDistance = v2.dst(pointers.get(finger_one_pointer));
+	         }
+	      }
 
 		return false;
 	}
@@ -1194,9 +1228,20 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
-		if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f && startTime > 0.5) {
-			movePlayer();
+		if (pointers.size() > 1) {
+			if (pointer == finger_one_pointer) {
+				finger_one_pointer = -1;
+			} else if (pointer == finger_two_pointer) {
+				finger_two_pointer = -1;
+			}
+			
+		} else {
+			if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f && startTime > 0.5) {
+				movePlayer();
+			}
+			
 		}
+		pointers.remove(pointer);
 		
 		return false;
 	}
@@ -1205,6 +1250,28 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchDragged(int x, int y, int pointer) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
+		
+		
+		if(pointers.size() == 2) {
+         // two finger pinch (zoom)
+         // now fingers are being dragged so measure the distance and apply zoom
+         if (pointer == finger_one_pointer) {
+            v1 = new Vector2(x,y);
+            v2 = pointers.get(finger_two_pointer);
+            pointers.put(pointer,v1);
+         } else if (pointer == finger_one_pointer) {
+            v2 = new Vector2(x,y);
+            v1 = pointers.get(finger_one_pointer);
+            pointers.put(pointer,v2);
+         }
+         distance = v2.dst(v1);
+         cam.position.z = ((int) Helper.map((initialDistance - distance),-200,200,2,20));
+         if(cam.position.z < 2) {
+        	 cam.position.z = 2;
+         } else if (cam.position.z > 20) {
+        	 cam.position.z = 20;
+         }
+		} else {
 
 		angleY += ((x - touchStartX) / 5.f);
 		angleX += ((y - touchStartY) / 5.f);
@@ -1214,6 +1281,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		touchStartX = x;
 		touchStartY = y;
+		}
 
 		return false;
 	}
