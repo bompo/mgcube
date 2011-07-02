@@ -483,7 +483,7 @@ public class Resources {
 
 	public ShaderProgram transShader;
 	public ShaderProgram bloomShader;
-	public int m_i32TexSize;
+	public int m_i32TexSize = 128;
 	public float m_fTexelOffset;
 
 	public BitmapFont font;
@@ -619,7 +619,11 @@ public class Resources {
 
 		// BLOOOOOOMMMM from powervr examples
 		// Blur render target size (power-of-two)
-		m_i32TexSize = 128;
+		if(Gdx.graphics.getWidth()<=1000) {
+			m_i32TexSize = 128;
+		} else {
+			m_i32TexSize = 256;
+		}
 
 		// Texel offset for blur filter kernle
 		m_fTexelOffset = 1.0f / (float) m_i32TexSize / 4.f;
@@ -647,8 +651,8 @@ public class Resources {
 		quadModel.dispose();
 		wireCubeModel.dispose();
 
-//		music.dispose();
-//		move.dispose();
+		music.stop();
+		move.stop();
 
 		transShader.dispose();
 		bloomShader.dispose();

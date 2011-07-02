@@ -72,6 +72,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	FrameBuffer frameBufferVert;
 
 	Vector3 position = new Vector3();
+	private boolean exit = false;
 
 	public MainMenuScreen(Game game) {
 		super(game);
@@ -126,6 +127,8 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		button2.set(new Vector3(470, 230, 0), new Vector3(770, 180, 0));
 		button3.set(new Vector3(470, 320, 0), new Vector3(770, 260, 0));
 		button4.set(new Vector3(470, 400, 0), new Vector3(770, 350, 0));
+		
+		exit = false;
 	}
 
 	public void initRender() {
@@ -288,7 +291,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		batch.end();
 
 		if (!finished && fade > 0) {
-			fade = Math.max(fade - (delta / 2.f), 0);
+			fade = Math.max(fade - (delta), 0);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -296,7 +299,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (finished) {
-			fade = Math.min(fade + (delta / 1.f), 1);
+			fade = Math.min(fade + (delta), 1);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -322,6 +325,12 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 
+		
+		if(exit == true) {
+			
+			Resources.getInstance().dispose();
+			Gdx.app.exit();
+		}
 	}
 
 	private void sortScene() {
@@ -714,11 +723,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			return false;
 		
 		if(keycode == Input.Keys.BACK) {
-			Gdx.app.exit();
+			exit = true;
 		}
 
 		if (keycode == Input.Keys.ESCAPE) {
-			Gdx.app.exit();
+			exit  = true;
 		}
 		if (keycode == Input.Keys.ENTER && selectedMenuItem != -1) {
 			finished = true;

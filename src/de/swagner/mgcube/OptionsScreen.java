@@ -296,7 +296,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 		batch.end();
 
 		if (!finished && fade > 0) {
-			fade = Math.max(fade - (delta / 2.f), 0);
+			fade = Math.max(fade - (delta), 0);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -304,7 +304,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (finished) {
-			fade = Math.min(fade + (delta / 2.f), 1);
+			fade = Math.min(fade + (delta), 1);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);

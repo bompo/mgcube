@@ -364,7 +364,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		
 		//GUI
-		//fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
 		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 100);
 		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
@@ -385,7 +385,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		//FadeInOut
 		if (!finished && fade > 0) {
-			fade = Math.max(fade - (delta / 2.f), 0);
+			fade = Math.max(fade - (delta), 0);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
@@ -393,7 +393,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (finished) {
-			fade = Math.min(fade + (delta / 2.f), 1);
+			fade = Math.min(fade + (delta), 1);
 			fadeBatch.begin();
 			blackFade.setColor(blackFade.getColor().r, blackFade.getColor().g, blackFade.getColor().b, fade);
 			blackFade.draw(fadeBatch);
