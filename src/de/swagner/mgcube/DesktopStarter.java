@@ -8,7 +8,7 @@ public class DesktopStarter extends Game {
 
 	public static void main(String[] args) {
 		JoglApplicationConfiguration config = new JoglApplicationConfiguration();
-		config.title = "MG Cube";
+		config.title = "qb";
 
 		config.fullscreen = false;
 		config.setFromDisplayMode(JoglApplicationConfiguration.getDesktopDisplayMode());
