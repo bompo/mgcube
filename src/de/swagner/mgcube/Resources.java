@@ -598,6 +598,9 @@ public class Resources {
 		wireCubeModel.setVertices(vertices2);
 		wireCubeModel.setIndices(indices2);
 
+		if(music!=null) music.stop();
+		if(move!=null) move.stop();
+		
 		music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 		move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
 		
@@ -611,12 +614,13 @@ public class Resources {
 		musicOnOff = !prefs.getBoolean("music");
 		
 		if(musicOnOff) { 
+			music.stop();
 			music.play();
 			music.setLooping(true);
 		} 
 	}
 
-	private void initShader() {
+	public void initShader() {
 		transShader = new ShaderProgram(TransShader.mVertexShader, TransShader.mFragmentShader);
 		if (transShader.isCompiled() == false) {
 			Gdx.app.log("ShaderTest", transShader.getLog());
