@@ -446,7 +446,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 		
-		if(Resources.getInstance().timeAttackTime <= 0.5) {
+		
+		if(Resources.getInstance().timeAttackTime <= 0.5 && mode ==1) {
 			finished = true;
 			HighScoreManager.getInstance().newTimeAttackHighScore(0, Resources.getInstance().levelcount);
 		}
