@@ -11,7 +11,7 @@ public class DesktopStarter extends Game {
 		config.title = "MG Cube";
 		config.setFromDisplayMode(JoglApplicationConfiguration.getDesktopDisplayMode());
 		config.samples = 4;
-		config.fullscreen = true;
+		config.fullscreen = false;
 		config.useGL20 = true;
 		config.r = 5;
 		config.g = 6;
