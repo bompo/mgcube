@@ -11,7 +11,7 @@ public class DesktopStarter extends Game {
 		config.title = "qb";
 
 		config.fullscreen = false;
-		config.setFromDisplayMode(JoglApplicationConfiguration.getDesktopDisplayMode());
+		//config.setFromDisplayMode(JoglApplicationConfiguration.getDesktopDisplayMode());
 		config.samples = 4;
 		config.useGL20 = true;
 		config.r = 5;
