@@ -35,6 +35,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	Mesh quadModel;
 	Mesh wireCubeModel;
 	Mesh sphereModel;
+	Mesh sphereSliceModel;
 	float angleX = 0;
 	float angleY = 0;
 
@@ -133,6 +134,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		quadModel = Resources.getInstance().quadModel;
 		wireCubeModel = Resources.getInstance().wireCubeModel;
 		sphereModel = Resources.getInstance().sphereModel;
+		sphereSliceModel = Resources.getInstance().sphereSliceModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 16f);
@@ -556,6 +558,32 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				if(renderable.collideAnimation == 0.0f) renderable.isCollidedAnimation = false;
 			}
 			
+			//render switchblock fade out/in
+			if( renderable instanceof SwitchableBlock) {
+				if(((SwitchableBlock) renderable).isSwitchAnimation == true && ((SwitchableBlock) renderable).isSwitched == true && ((SwitchableBlock) renderable).switchAnimation == 0) {
+					((SwitchableBlock) renderable).switchAnimation = 0.0f;
+				}
+				if(((SwitchableBlock) renderable).isSwitchAnimation == true && ((SwitchableBlock) renderable).isSwitched == false && ((SwitchableBlock) renderable).switchAnimation == 1) {
+					((SwitchableBlock) renderable).switchAnimation = 1.0f;
+				}
+				if (((SwitchableBlock) renderable).isSwitchAnimation == true) {
+					if (!((SwitchableBlock) renderable).isSwitched) {
+						((SwitchableBlock) renderable).switchAnimation -= delta * 1.f;
+						((SwitchableBlock) renderable).switchAnimation = Math.max(0.0f, ((SwitchableBlock) renderable).switchAnimation);
+						if (((SwitchableBlock) renderable).switchAnimation == 0.0f)
+							((SwitchableBlock) renderable).isSwitchAnimation = false;
+					} else {
+						((SwitchableBlock) renderable).switchAnimation += delta * 1.f;
+						((SwitchableBlock) renderable).switchAnimation = Math.min(1.0f, ((SwitchableBlock) renderable).switchAnimation);
+						if (((SwitchableBlock) renderable).switchAnimation == 1.0f)
+							((SwitchableBlock) renderable).isSwitchAnimation = false;
+					}
+					
+					Gdx.app.log("", ((SwitchableBlock) renderable).switchAnimation + "");
+				}
+
+			}
+			
 			
 			if(renderable instanceof Block) {
 				model.set(renderable.model);
@@ -584,15 +612,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			
 			// render switchableblocks
 			if(renderable instanceof SwitchableBlock) {
-				if(!((SwitchableBlock) renderable).isSwitched) {	
+				if(!((SwitchableBlock) renderable).isSwitched || ((SwitchableBlock) renderable).isSwitchAnimation == true) {	
 					model.set(renderable.model);
 		
 					transShader.setUniformMatrix("MMatrix", model);
 		
-					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((SwitchableBlock)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((SwitchableBlock)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
 					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 		
-					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
 					blockModel.render(transShader, GL20.GL_TRIANGLES);
 				}
 			}
@@ -640,6 +668,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				transShader.setUniformMatrix("MMatrix", model);
 				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]  + renderable.collideAnimation);
 				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+				
+//				//render direction indicator
+//				model.set(renderable.model);
+//				((Player) renderable).setDirection();
+//				tmp.setToTranslation(((Player) renderable).direction);
+//				model.mul(tmp);
+//				transShader.setUniformMatrix("MMatrix", model);
+//				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]  + renderable.collideAnimation);
+//				sphereSliceModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 			
 			// render Portals
@@ -1303,6 +1340,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 	public void setCorrespondingSwitchBlocks(Switch s) {
 		for(SwitchableBlock sw : s.sBlocks) {
+			if(s.isSwitched != sw.isSwitched) {
+				sw.isSwitchAnimation = true;
+			}
 			sw.isSwitched = s.isSwitched;
 		}
 	}

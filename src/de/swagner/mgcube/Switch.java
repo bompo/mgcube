@@ -5,7 +5,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class Switch extends Renderable{
 
-	boolean isSwitched = false;
+	public boolean isSwitched = false;
+	public float switchAnimation = 0.0f;
+	
 	int id = 0;
 	Array<SwitchableBlock> sBlocks = new Array<SwitchableBlock>();
 	

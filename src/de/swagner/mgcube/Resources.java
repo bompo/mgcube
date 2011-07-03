@@ -479,6 +479,7 @@ public class Resources {
 	public Mesh quadModel;
 	public Mesh wireCubeModel;
 	public Mesh sphereModel;
+	public Mesh sphereSliceModel;
 
 	public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 	public Sound move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
@@ -543,7 +544,10 @@ public class Resources {
 
 		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
 		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
+		
+		sphereSliceModel= ObjLoader.loadObj(Gdx.files.internal("data/sphere_slice.obj").read());
+		sphereSliceModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+		
 		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_vertex"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
 		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
 				0.0f, 0.0f, // TexCoord 0

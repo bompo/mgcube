@@ -12,6 +12,7 @@ public abstract class DefaultScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		Resources.getInstance().reInit();
 	}
 
 	@Override

@@ -72,4 +72,5 @@ public class Player extends Renderable {
 			}
 		}
 	}
+	
 }
