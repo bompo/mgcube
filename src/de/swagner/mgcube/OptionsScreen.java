@@ -76,6 +76,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 	public OptionsScreen(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
+		Gdx.input.setCatchBackKey( true );
 
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 

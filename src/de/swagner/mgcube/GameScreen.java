@@ -1093,17 +1093,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 				
 				for(MovableBlock mm : movableBlocks) {
-					
-					boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
-					float dst = intersection.dst(m.position);
-					if (dst < 1.0f && intersect) {
-						m.stop();
-						if(box.contains(mm.position)) 
-							mm.move(m.direction);
-						else
-							player.stop();
-						mm.isCollidedAnimation = true;
-						break;
+					if(m.id!=mm.id) {
+						boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
+						float dst = intersection.dst(m.position);
+						if (dst < 1.0f && intersect) {
+							m.stop();
+							if(box.contains(mm.position)) 
+								mm.move(m.direction);
+							else
+								player.stop();
+							mm.isCollidedAnimation = true;
+							break;
+						}
 					}
 				}
 				

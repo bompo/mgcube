@@ -5,12 +5,18 @@ import com.badlogic.gdx.math.Vector3;
 
 public class MovableBlock extends Renderable{
 
+	public static int idCnt = 0;
+
+	public int id= 0;
+	
 	public Vector3 direction = new Vector3(0,0,-1);
 	
 	public boolean isMoving = false;
 	
 	public MovableBlock(Vector3 position) {
 		this.position = position;
+		this.id = idCnt;
+		idCnt++;
 	}
 	
 	public void move(Vector3 dir) {

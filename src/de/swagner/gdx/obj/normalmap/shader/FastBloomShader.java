@@ -25,7 +25,7 @@ public class FastBloomShader {
     
     public static final String mFragmentShader =   
         "#ifdef GL_ES\n" +
-        "precision highp float;\n" +
+        "precision mediump float;\n" +
         "#endif\n" +
         "uniform sampler2D  sTexture;\n" +
         "uniform float bloomFactor;\n" +
