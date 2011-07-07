@@ -213,22 +213,31 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public void show() {
-	}
-
+	}	
+	
+//	@Override
+//	public void render(float deltaTime) {
+//		accumulator += Gdx.graphics.getDeltaTime();
+//		while(accumulator > 1.0f / 60.0f) { 
+//		fixedTimeStepRender();
+//		accumulator -= 1.0f / 60.0f;
+//		}
+//		
+//	}
+	
 	@Override
 	public void render(float deltaTime) {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-		delta = Math.min(0.02f, deltaTime);
 		
+		delta = Math.min(0.02f, deltaTime);
 		startTime += delta;
 
-		angleXBack += MathUtils.sin(startTime) / 10f;
-		angleYBack += MathUtils.cos(startTime) / 5f;
+		angleXBack += MathUtils.sin(startTime) * delta* 10f;
+		angleYBack += MathUtils.cos(startTime) *delta* 5f;
 
-		angleX += MathUtils.sin(startTime) / 10f;
-		angleY += MathUtils.cos(startTime) / 5f;
+		angleX += MathUtils.sin(startTime) *delta* 10f;
+		angleY += MathUtils.cos(startTime) *delta* 5f;
 
 		cam.update();
 

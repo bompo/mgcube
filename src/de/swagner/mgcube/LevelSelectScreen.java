@@ -273,11 +273,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		startTime += delta;
 
-		angleXBack += MathUtils.sin(startTime) / 10f;
-		angleYBack += MathUtils.cos(startTime) / 5f;
+		angleXBack += MathUtils.sin(startTime) * delta* 10f;
+		angleYBack += MathUtils.cos(startTime) *delta* 5f;
 
-		angleX += MathUtils.sin(startTime) / 10f;
-		angleY += MathUtils.cos(startTime) / 5f;
+		angleX += MathUtils.sin(startTime) *delta* 10f;
+		angleY += MathUtils.cos(startTime) *delta* 5f;
 		
 		cam.update();		
 		

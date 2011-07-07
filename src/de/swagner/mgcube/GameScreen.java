@@ -314,12 +314,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		startTime += delta;
 		
-		angleXBack += MathUtils.sin(startTime)/10f;
-		angleYBack += MathUtils.cos(startTime)/5f;
-		
-		angleXFront += MathUtils.sin(startTime);
-		angleYFront += MathUtils.cos(startTime);
-		
+		angleXBack += MathUtils.sin(startTime) * delta* 10f;
+		angleYBack += MathUtils.cos(startTime) *delta* 5f;
+
+		angleXFront += MathUtils.sin(startTime) *delta* 10f;
+		angleYFront += MathUtils.cos(startTime) *delta* 5f;
+			
 		cam.update();
 		
 		if(player.isMoving) {
