@@ -209,43 +209,43 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
 					if (level[z][y][x] == 1) {
-						blocks.add(new Block(new Vector3(-10f + (x * 2), -10f + (y * 2), -10f + (z * 2))));
+						blocks.add(new Block(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2))));
 					}
 					if (level[z][y][x] == 2) {
-						player.position.x = -10f + (x * 2);
+						player.position.x = 10f - (x * 2);
 						player.position.y = -10f + (y * 2);
 						player.position.z = -10f + (z * 2);
 					}
 					if (level[z][y][x] == 3) {
-						target.position.x = -10f + (x * 2);
+						target.position.x = 10f - (x * 2);
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
 					}
 					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
 						Portal temp = new Portal(level[z][y][x]);
-						temp.position.x = -10f + (x * 2);
+						temp.position.x = 10f - (x * 2);
 						temp.position.y = -10f + (y * 2);
 						temp.position.z = -10f + (z * 2);
 						portals.add(temp);
 						}
 					if (level[z][y][x] >=-8 && level[z][y][x] <=-4){
 						Portal temp = new Portal(level[z][y][x]);
-						temp.position.x = -10f + (x * 2);
+						temp.position.x = 10f - (x * 2);
 						temp.position.y = -10f + (y * 2);
 						temp.position.z = -10f + (z * 2);
 						portals.add(temp);
 						}
 					if (level[z][y][x] == 9){
-						MovableBlock temp = new MovableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						MovableBlock temp = new MovableBlock(new Vector3(10f - (x * 2),-10f + (y * 2),-10f + (z * 2)));
 						movableBlocks.add(temp);
 						}
 					if (level[z][y][x] <= -10){
-						Switch temp = new Switch(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						Switch temp = new Switch(new Vector3(10f - (x * 2),-10f + (y * 2),-10f + (z * 2)));
 						temp.id = level[z][y][x];
 						switches.add(temp);
 						}
 					if (level[z][y][x] >= 10){
-						SwitchableBlock temp = new SwitchableBlock(new Vector3(-10f + (x * 2),-10f + (y * 2),-10f + (z * 2)));
+						SwitchableBlock temp = new SwitchableBlock(new Vector3(10f - (x * 2),-10f + (y * 2),-10f + (z * 2)));
 						temp.id = level[z][y][x];
 						switchblocks.add(temp);
 						}

@@ -170,7 +170,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			for (y = 0; y < 10; y++) {
 				for (x = 0; x < 10; x++) {
 					if (level[z][y][x] == 1) {
-						blocks.add(new Block(new Vector3(-10f + (x * 2), -10f + (y * 2), -10f + (z * 2))));
+						blocks.add(new Block(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2))));
 					}
 //					if (level[z][y][x] == 2) {
 //						player.position.x = -10f + (x * 2);
