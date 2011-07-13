@@ -1,10 +1,13 @@
 package de.swagner.mgcube;
 
+import org.lwjgl.LWJGLException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -199,6 +202,16 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 
 		if (keycode == Input.Keys.SPACE) {
 			finished = true;
+		}
+		
+		if (keycode == Input.Keys.F) {
+			if(Gdx.app.getType() == ApplicationType.Desktop) {
+				try {
+					org.lwjgl.opengl.Display.setFullscreen(!org.lwjgl.opengl.Display.isFullscreen());
+				} catch (LWJGLException e) {	
+					e.printStackTrace();
+				}
+			}
 		}
 		return false;
 	}

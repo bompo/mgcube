@@ -1,10 +1,13 @@
 package de.swagner.mgcube;
 
+import org.lwjgl.LWJGLException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -156,6 +159,11 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(5.0f, 0, 16f);
+		cam.direction.set(0, 0, -1);
+		cam.up.set(0, 1, 0);
+		cam.near = 1f;
+		cam.far = 1000;
 		initRender();
 	}
 
@@ -724,6 +732,16 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 		}
 		if (keycode == Input.Keys.ENTER && selectedMenuItem != -1) {
 			processOption(selectedMenuItem);
+		}
+		
+		if (keycode == Input.Keys.F) {
+			if(Gdx.app.getType() == ApplicationType.Desktop) {
+				try {
+					org.lwjgl.opengl.Display.setFullscreen(!org.lwjgl.opengl.Display.isFullscreen());
+				} catch (LWJGLException e) {	
+					e.printStackTrace();
+				}
+			}
 		}
 
 		if (keycode == Input.Keys.DOWN) {
