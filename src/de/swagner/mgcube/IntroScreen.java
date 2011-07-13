@@ -206,10 +206,10 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
-				try {
-					org.lwjgl.opengl.Display.setFullscreen(!org.lwjgl.opengl.Display.isFullscreen());
-				} catch (LWJGLException e) {	
-					e.printStackTrace();
+				if(!org.lwjgl.opengl.Display.isFullscreen()) {
+					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);		
+				} else {
+					Gdx.graphics.setDisplayMode(800,480, false);		
 				}
 			}
 		}

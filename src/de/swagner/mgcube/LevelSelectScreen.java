@@ -185,7 +185,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam = new PerspectiveCamera(40, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(12.0f, -3.5f, 35f);
 		cam.direction.set(0, 0, -1);
 		cam.up.set(0, 1, 0);
@@ -813,10 +813,10 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
-				try {
-					org.lwjgl.opengl.Display.setFullscreen(!org.lwjgl.opengl.Display.isFullscreen());
-				} catch (LWJGLException e) {	
-					e.printStackTrace();
+				if(!org.lwjgl.opengl.Display.isFullscreen()) {
+					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);		
+				} else {
+					Gdx.graphics.setDisplayMode(800,480, false);		
 				}
 			}
 		}
