@@ -20,7 +20,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
-import com.sun.opengl.impl.packrect.Level;
 
 import de.swagner.mgcube.Block;
 import de.swagner.mgcube.DefaultScreen;
