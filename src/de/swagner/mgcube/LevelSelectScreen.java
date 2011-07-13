@@ -182,6 +182,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 	public void resize(int width, int height) {
 		super.resize(width, height);
+		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		initRender();
 	}
 	

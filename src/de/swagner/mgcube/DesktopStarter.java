@@ -10,12 +10,12 @@ public class DesktopStarter extends Game {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "qb";
 
-//		config.width = 800;
-//		config.height = 480;
-		config.setFromDisplayMode(LwjglApplicationConfiguration.getDesktopDisplayMode());
+		config.width = 800;
+		config.height = 480;
+//		config.setFromDisplayMode(LwjglApplicationConfiguration.getDesktopDisplayMode());
 		
 
-		config.fullscreen = true;
+//		config.fullscreen = true;
 		config.samples = 4;
 		config.useGL20 = true;
 		config.r = 5;
