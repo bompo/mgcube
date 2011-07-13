@@ -307,9 +307,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		float y = 365;
 		for (String s : menuItems) {
 			if (selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
-				selectedFont.draw(batch, s, 500, y);
+				selectedFont.draw(batch, s, 480, y);
 			else
-				font.draw(batch, s, 500, y);
+				font.draw(batch, s, 480, y);
 			y -= 80;
 		}
 		batch.end();
