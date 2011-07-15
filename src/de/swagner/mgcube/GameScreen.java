@@ -736,7 +736,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
 					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
-					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
 					break;
 				case 12:
 
@@ -753,7 +753,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
 					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
-					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
 					break;
 				case 13:
 
@@ -770,7 +770,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
 					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
-					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
 					break;
 				default:
 
@@ -787,7 +787,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
 					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
-					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
 					break;
 				}
 				
