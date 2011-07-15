@@ -219,16 +219,16 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 					if (level[z][y][x] == 1) {
 						blocks.add(new Block(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2))));
 					}
-					if (level[z][y][x] == 2) {
-						player.position.x = 10f - (x * 2);
-						player.position.y = -10f + (y * 2);
-						player.position.z = -10f + (z * 2);
-					}
-					if (level[z][y][x] == 3) {
-						target.position.x = 10f - (x * 2);
-						target.position.y = -10f + (y * 2);
-						target.position.z = -10f + (z * 2);
-					}
+//					if (level[z][y][x] == 2) {
+//						player.position.x = 10f - (x * 2);
+//						player.position.y = -10f + (y * 2);
+//						player.position.z = -10f + (z * 2);
+//					}
+//					if (level[z][y][x] == 3) {
+//						target.position.x = 10f - (x * 2);
+//						target.position.y = -10f + (y * 2);
+//						target.position.z = -10f + (z * 2);
+//					}
 					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
 						Portal temp = new Portal(level[z][y][x]);
 						temp.position.x = 10f - (x * 2);
@@ -261,8 +261,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}
 		}
 		
-		renderObjects.add(player);
-		renderObjects.add(target);
+//		renderObjects.add(player);
+//		renderObjects.add(target);
 		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
 		renderObjects.addAll(movableBlocks);
