@@ -1,5 +1,6 @@
 package de.swagner.mgcube;
 
+import java.awt.geom.CubicCurve2D;
 import java.util.HashMap;
 
 import org.lwjgl.LWJGLException;
@@ -35,6 +36,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	PerspectiveCamera cam;
 	Mesh blockModel;
 	Mesh playerModel;
+	Mesh coneModel;
 	Mesh targetModel;
 	Mesh quadModel;
 	Mesh wireCubeModel;
@@ -134,6 +136,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		blockModel = Resources.getInstance().blockModel;
 		playerModel = Resources.getInstance().playerModel;
+		coneModel = Resources.getInstance().coneModel;
 		targetModel = Resources.getInstance().targetModel;
 		quadModel = Resources.getInstance().quadModel;
 		wireCubeModel = Resources.getInstance().wireCubeModel;
@@ -629,6 +632,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					switch (Math.abs(tmpSwitchb.id)) {
 					case 10:
 
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);
+		
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						tmp.setToScaling(3f, 3f, 3f);
+						model.mul(tmp);
+						
 						transShader.setUniformMatrix("MMatrix", model);
 						
 						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2], Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
@@ -639,9 +652,19 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						break;
 					case 12:
 
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);
+		
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						tmp.setToScaling(3f, 3f, 3f);
+						model.mul(tmp);
+						
 						transShader.setUniformMatrix("MMatrix", model);
 						
-						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor2[0],Resources.getInstance().switchBlockColor2[1], Resources.getInstance().switchBlockColor2[2], Resources.getInstance().switchBlockColor2[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2], Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 						transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
@@ -649,9 +672,19 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						break;
 					case 13:
 
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);
+		
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						coneModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						tmp.setToScaling(3f, 3f, 3f);
+						model.mul(tmp);
+						
 						transShader.setUniformMatrix("MMatrix", model);
 						
-						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor3[0],Resources.getInstance().switchBlockColor3[1], Resources.getInstance().switchBlockColor3[2], Resources.getInstance().switchBlockColor3[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2], Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
 						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 						transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
@@ -659,6 +692,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						break;
 					default:
 
+						tmp.setToScaling(0.3f, 0.3f, 0.3f);
+						model.mul(tmp);
+		
+						transShader.setUniformMatrix("MMatrix", model);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						playerModel.render(transShader, GL20.GL_TRIANGLES);
+						
+						tmp.setToScaling(3f, 3f, 3f);
+						model.mul(tmp);
+						
 						transShader.setUniformMatrix("MMatrix", model);
 						
 						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2], Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
@@ -692,7 +735,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
-					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
 					playerModel.render(transShader, GL20.GL_LINE_STRIP);
 					break;
 				case 12:
@@ -701,15 +744,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					model.mul(tmp);
 	
 					transShader.setUniformMatrix("MMatrix", model);
-					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor2[0] ,Resources.getInstance().switchBlockColor2[1], Resources.getInstance().switchBlockColor2[2] , Resources.getInstance().switchBlockColor2[3]+ renderable.collideAnimation);
-					playerModel.render(transShader, GL20.GL_TRIANGLES);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] ,Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+					blockModel.render(transShader, GL20.GL_TRIANGLES);
 					
 					tmp.setToScaling(2.0f, 2.0f, 2.0f);
 					model.mul(tmp);
 	
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
-					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
 					playerModel.render(transShader, GL20.GL_LINE_STRIP);
 					break;
 				case 13:
@@ -718,15 +761,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					model.mul(tmp);
 	
 					transShader.setUniformMatrix("MMatrix", model);
-					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor3[0],Resources.getInstance().switchBlockColor3[1], Resources.getInstance().switchBlockColor3[2] , Resources.getInstance().switchBlockColor3[3]+ renderable.collideAnimation);
-					playerModel.render(transShader, GL20.GL_TRIANGLES);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+					coneModel.render(transShader, GL20.GL_TRIANGLES);
 					
 					tmp.setToScaling(2.0f, 2.0f, 2.0f);
 					model.mul(tmp);
 	
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
-					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
 					playerModel.render(transShader, GL20.GL_LINE_STRIP);
 					break;
 				default:
@@ -743,7 +786,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 					//render hull			
 					transShader.setUniformMatrix("MMatrix", model);
-					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0],Resources.getInstance().switchBlockEdgeColor[1], Resources.getInstance().switchBlockEdgeColor[2] , Resources.getInstance().switchBlockEdgeColor[3]+ renderable.collideAnimation);
 					playerModel.render(transShader, GL20.GL_LINE_STRIP);
 					break;
 				}
