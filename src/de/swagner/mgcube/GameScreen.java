@@ -624,34 +624,130 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				if(!((SwitchableBlock) renderable).isSwitched || ((SwitchableBlock) renderable).isSwitchAnimation == true) {	
 					model.set(renderable.model);
 		
-					transShader.setUniformMatrix("MMatrix", model);
-		
-					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((SwitchableBlock)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
-					wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-		
-					transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
-					blockModel.render(transShader, GL20.GL_TRIANGLES);
+					SwitchableBlock tmpSwitchb = (SwitchableBlock) renderable;
+					
+					switch (Math.abs(tmpSwitchb.id)) {
+					case 10:
+
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2], Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+			
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						break;
+					case 12:
+
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor2[0],Resources.getInstance().switchBlockColor2[1], Resources.getInstance().switchBlockColor2[2], Resources.getInstance().switchBlockColor2[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+			
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						break;
+					case 13:
+
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor3[0],Resources.getInstance().switchBlockColor3[1], Resources.getInstance().switchBlockColor3[2], Resources.getInstance().switchBlockColor3[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+			
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						break;
+					default:
+
+						transShader.setUniformMatrix("MMatrix", model);
+						
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2], Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
+						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+			
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((SwitchableBlock)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation - ((SwitchableBlock) renderable).switchAnimation);
+						blockModel.render(transShader, GL20.GL_TRIANGLES);
+						break;
+					}
 				}
 			}
 			
 			// render switches
 			if(renderable instanceof Switch) {
 				model.set(renderable.model);	
-
-				tmp.setToScaling(0.3f, 0.3f, 0.3f);
-				model.mul(tmp);
-
-				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0] * (Math.abs(((Switch)renderable).id)),Resources.getInstance().switchBlockColor[1]* (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockColor[2] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
-				playerModel.render(transShader, GL20.GL_TRIANGLES);
 				
-				tmp.setToScaling(2.0f, 2.0f, 2.0f);
-				model.mul(tmp);
+				Switch tmpSwitch = (Switch) renderable;
+				
+				switch (Math.abs(tmpSwitch.id)) {
+				case 10:
 
-				//render hull			
-				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color", Resources.getInstance().switchBlockEdgeColor[0] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[1]* (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[2] * (Math.abs(((Switch)renderable).id)), Resources.getInstance().switchBlockEdgeColor[3] + renderable.collideAnimation);
-				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					tmp.setToScaling(0.3f, 0.3f, 0.3f);
+					model.mul(tmp);
+	
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
+					
+					tmp.setToScaling(2.0f, 2.0f, 2.0f);
+					model.mul(tmp);
+	
+					//render hull			
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					break;
+				case 12:
+
+					tmp.setToScaling(0.3f, 0.3f, 0.3f);
+					model.mul(tmp);
+	
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor2[0] ,Resources.getInstance().switchBlockColor2[1], Resources.getInstance().switchBlockColor2[2] , Resources.getInstance().switchBlockColor2[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
+					
+					tmp.setToScaling(2.0f, 2.0f, 2.0f);
+					model.mul(tmp);
+	
+					//render hull			
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					break;
+				case 13:
+
+					tmp.setToScaling(0.3f, 0.3f, 0.3f);
+					model.mul(tmp);
+	
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor3[0],Resources.getInstance().switchBlockColor3[1], Resources.getInstance().switchBlockColor3[2] , Resources.getInstance().switchBlockColor3[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
+					
+					tmp.setToScaling(2.0f, 2.0f, 2.0f);
+					model.mul(tmp);
+	
+					//render hull			
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					break;
+				default:
+
+					tmp.setToScaling(0.3f, 0.3f, 0.3f);
+					model.mul(tmp);
+		
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2], Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_TRIANGLES);
+						
+					tmp.setToScaling(2.0f, 2.0f, 2.0f);
+					model.mul(tmp);
+		
+					//render hull			
+					transShader.setUniformMatrix("MMatrix", model);
+					transShader.setUniformf("a_color", Resources.getInstance().switchEdgeColor[0],Resources.getInstance().switchEdgeColor[1], Resources.getInstance().switchEdgeColor[2] , Resources.getInstance().switchEdgeColor[3]+ renderable.collideAnimation);
+					playerModel.render(transShader, GL20.GL_LINE_STRIP);
+					break;
+				}
+				
 			}
 			
 			// render Player

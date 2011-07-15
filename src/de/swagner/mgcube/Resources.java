@@ -480,8 +480,11 @@ public class Resources {
 	public float[] blockEdgeColor = { 1.0f, 0.1f, 0.1f, 0.8f };
 	public float[] movableBlockColor = { 1.0f, 0.8f, 0.1f, 0.8f };
 	public float[] movableBlockEdgeColor = { 1.0f, 0.8f, 0.1f, 0.2f };
-	public float[] switchBlockColor = { 0.2f, 0.2f, 0.2f, 0.8f };
-	public float[] switchBlockEdgeColor = { 0.2f, 0.2f, 0.2f, 0.2f };
+	public float[] switchBlockColor = { 1f, 1f, 1f, 1f };
+	public float[] switchBlockColor2 = { 0.6f, 0.6f, 0.6f, 1f };
+	public float[] switchBlockColor3 = {  0.3f, 0.3f, 0.3f, 1f };
+	public float[] switchBlockEdgeColor = { 1f, 1f, 1f, 0.2f };
+	public float[] switchEdgeColor = { 0.5f, 0.5f, 0.5f, 0.2f };
 	public float[] playerColor = { 1.0f, 1.0f, 0.0f, 0.4f };
 	public float[] playerEdgeColor = { 1.0f, 1.0f, 0.0f, 0.4f };
 	public float[] portalColor = { 1f, 1f, 0f, 0.3f };
