@@ -676,7 +676,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				//render hull			
 				transShader.setUniformMatrix("MMatrix", model);
 				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]  + renderable.collideAnimation);
+				
 				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+				
+				//TODO add animations
+				//playerModel.render(transShader, GL20.GL_LINE_STRIP, 0, (int) (playerModel.getNumVertices()-(renderable.collideAnimation*playerModel.getNumVertices())));
 				
 //				//render direction indicator
 //				model.set(renderable.model);
