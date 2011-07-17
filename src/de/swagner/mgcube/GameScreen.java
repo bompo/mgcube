@@ -289,6 +289,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void reset() {
+		player.collideAnimation = 1;
 		animateWorld = false;
 		player.stop();
 		for(MovableBlock m : movableBlocks) {
@@ -590,8 +591,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						if (((SwitchableBlock) renderable).switchAnimation == 1.0f)
 							((SwitchableBlock) renderable).isSwitchAnimation = false;
 					}
-					
-					Gdx.app.log("", ((SwitchableBlock) renderable).switchAnimation + "");
 				}
 
 			}
@@ -819,7 +818,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				playerModel.render(transShader, GL20.GL_LINE_STRIP);
 				
 				//TODO add animations
-				//playerModel.render(transShader, GL20.GL_LINE_STRIP, 0, (int) (playerModel.getNumVertices()-(renderable.collideAnimation*playerModel.getNumVertices())));
+				playerModel.render(transShader, GL20.GL_LINE_STRIP, 0, (int) (playerModel.getNumVertices()-(renderable.collideAnimation*playerModel.getNumVertices())));
 				
 //				//render direction indicator
 //				model.set(renderable.model);
