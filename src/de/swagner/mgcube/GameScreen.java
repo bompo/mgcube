@@ -307,14 +307,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		port=new Portal();
 		
 		initLevel(Resources.getInstance().currentlevel);
-		if(Resources.getInstance().lives < 1)
-		{
-			Resources.getInstance().lives = 3;
-			Resources.getInstance().currentlevel = 1;
-			initLevel(Resources.getInstance().currentlevel);
-			Resources.getInstance().time = 0;
-			game.setScreen(new MainMenuScreen(game));			
-		}
+//		if(Resources.getInstance().lives < 1)
+//		{
+//			Resources.getInstance().lives = 3;
+//			Resources.getInstance().currentlevel = 1;
+//			initLevel(Resources.getInstance().currentlevel);
+//			Resources.getInstance().time = 0;
+//			game.setScreen(new MainMenuScreen(game));			
+//		}
 	}
 
 	@Override
@@ -404,7 +404,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);	
 //		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
 		if(mode == 0) {
-		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 100);
+//		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 100);
 		}	
 		
 		Resources.getInstance().time += delta;
@@ -1131,7 +1131,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if (!box.contains(player.position)) {
 				player.stop();
 				if(mode==0) {
-					Resources.getInstance().lives--;
+					//Resources.getInstance().lives--;
 				}
 				reset();
 			}

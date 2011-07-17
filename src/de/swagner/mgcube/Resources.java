@@ -458,7 +458,7 @@ public class Resources {
 	public int currentlevel = 0;
 	public int[][][][] levels = {level1,level2,level3,level4,level5,level6,level7,level8,level9,level10,level11,level12,level13,level14,level15,level16,level17,level18,level19};
 
-	public int lives = 3;
+	//public int lives = 3;
 	public float time = 0;
 	public float timeAttackTime = 120;
 
