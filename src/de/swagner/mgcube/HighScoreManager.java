@@ -83,4 +83,22 @@ public class HighScoreManager {
 		Resources.getInstance().prefs.flush();
 	}
 	
+	public String formatHighscore(int score) {
+		int seconds = score % 60;
+		int minutes = score / 60;
+		
+		String s = "";
+		
+		if(seconds > 9 && minutes > 9)
+			s = minutes + ":" + seconds;
+		else if(seconds > 9 && minutes < 10)
+			s = "0" + minutes + ":" + seconds;
+		else if(seconds < 10 && minutes > 9)
+			s = minutes + ":0" + seconds;
+		else
+			s = "0" + minutes + ":0" + seconds;
+		
+		return s;
+	}
+	
 }

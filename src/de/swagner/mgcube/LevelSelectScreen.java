@@ -347,17 +347,17 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if (currentHighScore.first == 0) {
 			font.draw(batch, "1. -", 50, 110);
 		} else {
-			font.draw(batch, "1. " + currentHighScore.first, 50, 110);
+			font.draw(batch, "1. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.first), 50, 110);
 		}
 		if (currentHighScore.second == 0) {
 			font.draw(batch, "2. -", 50, 80);
 		} else {
-			font.draw(batch, "2. " + currentHighScore.second, 50, 80);
+			font.draw(batch, "2. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.second), 50, 80);
 		}
 		if (currentHighScore.third == 0) {
 			font.draw(batch, "3. -", 50, 50);
 		} else {
-			font.draw(batch, "3. " + currentHighScore.third, 50, 50);
+			font.draw(batch, "3. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.third), 50, 50);
 		}
 
 		//render level description
