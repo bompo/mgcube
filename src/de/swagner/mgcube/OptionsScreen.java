@@ -609,12 +609,10 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 
 				transShader.setUniformMatrix("MMatrix", model);
 
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0], Resources.getInstance().blockColor[1],
-						Resources.getInstance().blockColor[2], Resources.getInstance().blockColor[3] + renderable.collideAnimation);
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0]- (Helper.map(renderable.sortPosition,10,25,0,0.4f)), Resources.getInstance().blockColor[1], Resources.getInstance().blockColor[2] + (Helper.map(renderable.sortPosition,10,25,0,0.15f)), Resources.getInstance().blockColor[3]+ renderable.collideAnimation + (Helper.map(renderable.sortPosition,10,25,0.15f,-0.25f)));
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
-
-				transShader.setUniformf("a_color", Resources.getInstance().blockEdgeColor[0], Resources.getInstance().blockEdgeColor[1],
-						Resources.getInstance().blockEdgeColor[2], Resources.getInstance().blockEdgeColor[3] + renderable.collideAnimation);
+				
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0] - (Helper.map(renderable.sortPosition,10,25,0,0.4f)), Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2] + (Helper.map(renderable.sortPosition,10,25,0,0.15f)), Resources.getInstance().blockEdgeColor[3] + renderable.collideAnimation + (Helper.map(renderable.sortPosition,10,25,0.15f,-0.25f)));
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 
