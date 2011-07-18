@@ -780,6 +780,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				} else {
 					Gdx.graphics.setDisplayMode(800,480, false);		
 				}
+				Resources.getInstance().prefs.putBoolean("fullscreen", !Resources.getInstance().prefs.getBoolean("fullscreen"));
+				Resources.getInstance().fullscreenOnOff = !Resources.getInstance().prefs.getBoolean("fullscreen");
+				Resources.getInstance().prefs.flush();
 			}
 		}
 		

@@ -786,9 +786,14 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
 				if(!org.lwjgl.opengl.Display.isFullscreen()) {
 					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);		
+					menuItems.set(2, "Windowed");
 				} else {
 					Gdx.graphics.setDisplayMode(800,480, false);		
+					menuItems.set(2, "Fullscreen");
 				}
+				Resources.getInstance().prefs.putBoolean("fullscreen", !Resources.getInstance().prefs.getBoolean("fullscreen"));
+				Resources.getInstance().fullscreenOnOff = !Resources.getInstance().prefs.getBoolean("fullscreen");
+				Resources.getInstance().prefs.flush();
 			}
 		}
 
