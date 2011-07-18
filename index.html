@@ -99,7 +99,7 @@
 	var angleY;
 	var deltaTime = 0;
 	var level = [2.0, -6.0, -8.0,
-		2.0, -4.0, -8.0,
+		 2.0, -4.0, -8.0,
 		 2.0, -2.0, -8.0,
 		 2.0, -6.0, -6.0,
 		 2.0, -2.0, -6.0,
@@ -350,6 +350,8 @@
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
  		mat4.translate(mvMatrix, [0.0, -0.0, -15.0]);
 		
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rttFramebuffer);
+
 		//draw Blocks		
 		mvPushMatrix();		
 		mat4.scale(mvMatrix, [0.5, 0.5, 0.5]);
@@ -370,6 +372,10 @@
 			mvPopMatrix();
 		}
 		mvPopMatrix();
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindTexture(gl.TEXTURE_2D, rttTexture);
+        
     }
  
  
@@ -440,7 +446,32 @@
  
  
 <body onload="webGLStart();" style="background:#000000;"> 
-    <canvas id="canvas" style="border: none;" width="500" height="500"></canvas>  
+    
+    <div>    
+        <canvas id="canvas" style="border: none;" width="500" height="500"></canvas> 
+        <img src="qb_logo.png" alt="logo1" />
+<a href="http://market.android.com/search?q=pub:Stefan+Wagner">
+      <img src="http://www.android.com/images/brand/60_avail_market_logo1.png"
+           alt="Available in Android Market" />
+    </a>
+    </div>    
+
+
+    <div>  
+    <img src="screen1.png" alt="Screenshot1" />
+    </div>  
+    <br/>
+    <div>    
+    <img src="screen2.png" alt="Screenshot2" />
+    </div> 
+    <br/>
+    <div> 
+    <img src="screen3.png" alt="Screenshot3" />
+    </div>    
+    <br/>
+    <div> 
+    <img src="screen3.png" alt="Screenshot4" />
+    </div>    
 </body> 
  
 </html> 
