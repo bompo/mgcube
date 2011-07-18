@@ -51,6 +51,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 
 	BoundingBox button1 = new BoundingBox();
 	BoundingBox button2 = new BoundingBox();
+	BoundingBox button3 = new BoundingBox();
 	BoundingBox button4 = new BoundingBox();
 
 	Array<Block> blocks = new Array<Block>();
@@ -125,7 +126,15 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 		} else {
 			menuItems.add("Bloom Off");
 		}
-		menuItems.add("");
+		if(Gdx.app.getType() == ApplicationType.Desktop) {
+			if(!org.lwjgl.opengl.Display.isFullscreen()) {
+				menuItems.add("Fullscreen");		
+			} else {
+				menuItems.add("Windowed");			
+			}
+		}
+		else
+			menuItems.add("");
 		menuItems.add("Back");
 
 		initRender();
@@ -136,6 +145,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 
 		button1.set(new Vector3(470, 150, 0), new Vector3(770, 100, 0));
 		button2.set(new Vector3(470, 230, 0), new Vector3(770, 180, 0));
+		button3.set(new Vector3(470, 320, 0), new Vector3(770, 260, 0));
 		button4.set(new Vector3(470, 400, 0), new Vector3(770, 350, 0));
 	}
 
@@ -437,6 +447,40 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 
 				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0], Resources.getInstance().blockColor[1],
 						Resources.getInstance().blockColor[2], Resources.getInstance().blockColor[3] - 0.1f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+		
+		if(Gdx.app.getType() == ApplicationType.Desktop)
+		{
+			// render Button 3
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(3.5f, 0.6f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, (angleXBack / 40.f));
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
+			model.mul(tmp);
+
+			tmp.setToTranslation(3.3f, -2.0f, 12);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==2) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.1f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.1f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 		}
@@ -746,7 +790,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 
 		if (keycode == Input.Keys.DOWN) {
 			selectedMenuItem++;
-			if(selectedMenuItem == 2) {
+			if(selectedMenuItem == 2 && Gdx.app.getType() != ApplicationType.Desktop) {
 				selectedMenuItem++;
 				selectedMenuItem %= 4;
 			}
@@ -794,6 +838,16 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 				menuItems.set(1, "Bloom Off");
 			}
 		}
+		else if (selectedMenuItem2 == 2) {
+			if(!org.lwjgl.opengl.Display.isFullscreen()) {
+				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
+				menuItems.set(2, "Windowed");
+			}
+			else {
+				Gdx.graphics.setDisplayMode(800,480, false);
+				menuItems.set(2, "Fullscreen");
+			}
+		}
 
 	}
 
@@ -821,7 +875,10 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 			} else if (button2.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 1;
 				processOption(selectedMenuItem);
-			} else if (button4.contains(new Vector3(x, y, 0))) {
+			} else if (button3.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 2;
+				processOption(selectedMenuItem);
+		    } else if (button4.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 3;
 				processOption(selectedMenuItem);
 			} else {
@@ -858,6 +915,8 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 				selectedMenuItem = 0;
 			} else if (button2.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 1;
+			} else if (button3.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 2;
 			} else if (button4.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 3;
 			} else {
