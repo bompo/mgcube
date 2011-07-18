@@ -649,7 +649,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	
 				transShader.setUniformf("a_color", Resources.getInstance().movableBlockEdgeColor[0], Resources.getInstance().movableBlockEdgeColor[1],Resources.getInstance().movableBlockEdgeColor[2], Resources.getInstance().movableBlockEdgeColor[3] + renderable.collideAnimation);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			}
+			} 
 			
 			// render switchableblocks
 			if(renderable instanceof SwitchableBlock) {

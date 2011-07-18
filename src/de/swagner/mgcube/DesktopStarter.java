@@ -6,6 +6,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Pixmap;
 
 public class DesktopStarter extends Game {
 
@@ -43,7 +44,6 @@ public class DesktopStarter extends Game {
 		config.height = 480;
 		config.title = "qb";
 
-		
 		config.fullscreen = false;
 		config.samples = 4;
 		config.useGL20 = true;
@@ -53,6 +53,7 @@ public class DesktopStarter extends Game {
 	@Override
 	public void create() {
 		setScreen(new IntroScreen(this));
+		Gdx.graphics.setIcon(new Pixmap(Gdx.files.internal("data/icon.png")));		
 	}
 
 }
