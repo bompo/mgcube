@@ -427,7 +427,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		else
 			font.draw(fontbatch, "time: 0" + minutes + ":0" + seconds, 620, 60);
 		fontbatch.end();
-		
+
 		
 		//FadeInOut
 		if (!finished && fade > 0) {

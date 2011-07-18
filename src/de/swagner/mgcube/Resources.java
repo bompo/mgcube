@@ -510,6 +510,7 @@ public class Resources {
 	public Preferences prefs = Gdx.app.getPreferences("qb");
 	public boolean bloomOnOff = true;
 	public boolean musicOnOff = true;
+	public boolean fullscreenOnOff = true;
 
 	public static Resources instance;
 
@@ -607,6 +608,7 @@ public class Resources {
 		
 		bloomOnOff = !prefs.getBoolean("bloom");
 		musicOnOff = !prefs.getBoolean("music");
+		fullscreenOnOff = !prefs.getBoolean("fullscreen");
 		
 		if(musicOnOff) { 
 			music.stop();

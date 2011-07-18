@@ -837,6 +837,9 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 		else if (selectedMenuItem2 == 2) {
+			Resources.getInstance().prefs.putBoolean("fullscreen", !Resources.getInstance().prefs.getBoolean("fullscreen"));
+			Resources.getInstance().fullscreenOnOff = !Resources.getInstance().prefs.getBoolean("fullscreen");
+			Resources.getInstance().prefs.flush();
 			if(!org.lwjgl.opengl.Display.isFullscreen()) {
 				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 				menuItems.set(2, "Windowed");
