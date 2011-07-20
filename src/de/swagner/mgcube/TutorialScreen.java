@@ -290,6 +290,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			}
 		}	
 	
+		currentAction = 0;
 		
 	}
 
@@ -312,6 +313,12 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		port=new Portal();
 		
 		initLevel(Resources.getInstance().currentlevel);
+		
+		if(Resources.getInstance().currentlevel == 3) {
+			if(currentAction == 0) {
+				++currentAction;
+			}
+		}
 	}
 
 	@Override
@@ -406,6 +413,20 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 					font.drawMultiLine(fontbatch, "Touch the screen\nto move the player", 40, 120);
 				}  else if ( currentAction == 3) {
 					font.drawMultiLine(fontbatch, "Reach the exit\n", 40, 120);
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 2) {
+				if(currentAction == 0) {
+					font.drawMultiLine(fontbatch, "Those are Portals\nuse them to\nreach the exit", 40, 120);
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 3) {
+				if(currentAction == 0) {
+					font.drawMultiLine(fontbatch, "Multiple Portals\nhave different colors", 40, 120);
+				} else if ( currentAction == 1) {
+					font.drawMultiLine(fontbatch, "To hard?\nUse blue,\nthen light blue", 40, 120);
 				}
 			}
 			
@@ -1127,10 +1148,16 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 				} 
 			}
 
-			if (warp) {
+			if (warp) {			
 				player.position = port.correspondingPortal.position.cpy();
 				warplock = true;
 				port.correspondingPortal.isCollidedAnimation = true;
+				
+				if(Resources.getInstance().currentlevel == 2) {
+					if(currentAction == 0) {
+						++currentAction;
+					}
+				}
 			}
 		}
 		else
@@ -1403,8 +1430,6 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 				initialDistance = v2.dst(pointers.get(finger_one_pointer));
 			}
 		}
-		
-
 
 		return false;
 	}
