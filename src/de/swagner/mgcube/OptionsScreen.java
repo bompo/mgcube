@@ -117,14 +117,14 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 		bloomShader = Resources.getInstance().bloomShader;
 
 		if(Resources.getInstance().musicOnOff) {
-			menuItems.add("Sound On");
-		} else {
 			menuItems.add("Sound Off");
+		} else {
+			menuItems.add("Sound On");
 		}
 		if(Resources.getInstance().bloomOnOff) {
-			menuItems.add("Bloom On");
-		} else {
 			menuItems.add("Bloom Off");
+		} else {
+			menuItems.add("Bloom On");
 		}
 		if(Gdx.app.getType() == ApplicationType.Desktop) {
 			if(!org.lwjgl.opengl.Display.isFullscreen()) {
@@ -831,20 +831,20 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 				if (!Resources.getInstance().music.isPlaying()) {
 					Resources.getInstance().music.play();
 					Resources.getInstance().music.setLooping(true);
-					menuItems.set(0, "Sound On");
+					menuItems.set(0, "Sound Off");
 				}
 			} else {
 				Resources.getInstance().music.stop();
-				menuItems.set(0, "Sound Off");
+				menuItems.set(0, "Sound On");
 			}
 		} else if (selectedMenuItem2 == 1) {
 			Resources.getInstance().prefs.putBoolean("bloom", !Resources.getInstance().prefs.getBoolean("bloom"));
 			Resources.getInstance().bloomOnOff = !Resources.getInstance().prefs.getBoolean("bloom");
 			Resources.getInstance().prefs.flush();
 			if (Resources.getInstance().bloomOnOff) {
-				menuItems.set(1, "Bloom On");
-			} else {
 				menuItems.set(1, "Bloom Off");
+			} else {
+				menuItems.set(1, "Bloom On");
 			}
 		}
 		else if (selectedMenuItem2 == 2) {
