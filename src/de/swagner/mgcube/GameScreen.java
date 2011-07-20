@@ -52,6 +52,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	SpriteBatch batch;
 	SpriteBatch fontbatch;
 	BitmapFont font;
+	BitmapFont timeAttackFont; //used only for drawing the +45 notification
 	Player player = new Player();
 	Target target = new Target();
 
@@ -160,6 +161,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		font = Resources.getInstance().font;
 		font.setScale(1);
+		
+		timeAttackFont = Resources.getInstance().timeAttackFont;
+		timeAttackFont.setScale(1);
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
@@ -205,6 +209,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		movableBlocks.clear();
 		switchblocks.clear();
 		switches.clear();
+		timeAttackFont.setColor(1,1,1,1);
 		int[][][] level = Resources.getInstance().level1;
 		try {
 		level = Resources.getInstance().levels[levelnumber-1];
@@ -456,6 +461,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		if (changeLevel) {
 			changeLevelEffect = Math.min(changeLevelEffect + (delta * 15.f), 5);
+			if(mode == 1) {
+				fontbatch.begin();
+				timeAttackFont.draw(fontbatch, "+45", 740, 40 - changeLevelEffect * 4);
+				timeAttackFont.setColor(1, 1, 1, 1 / changeLevelEffect);
+				fontbatch.end();
+			}
 			if (changeLevelEffect >= 5) {				
 				nextLevel();
 			}
@@ -1145,6 +1156,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if (win) {
 				HighScoreManager.getInstance().newHighScore( (int) Resources.getInstance().time,Resources.getInstance().currentlevel);
 				player.stop();
+
 				Resources.getInstance().time = 0;
 				Resources.getInstance().timeAttackTime += 45;
 				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {

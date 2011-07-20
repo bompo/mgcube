@@ -511,6 +511,7 @@ public class Resources {
 
 	public BitmapFont font;
 	public BitmapFont selectedFont;
+	public BitmapFont timeAttackFont;
 
 	public float[] clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	public float[] backgroundWireColor = { 1.0f, 0.8f, 0.8f, 0.07f };
@@ -631,6 +632,7 @@ public class Resources {
 		initShader();
 
 		font = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
+		timeAttackFont = new BitmapFont(Gdx.files.internal("data/scorefont.fnt"), false);
 		// font.setColor(1, 1, 1, 0.8f);
 		selectedFont = new BitmapFont(Gdx.files.internal("data/selected.fnt"), false);
 		
