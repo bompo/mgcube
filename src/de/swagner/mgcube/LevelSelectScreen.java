@@ -100,10 +100,15 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 	HighScore currentHighScore;
 	
-	public LevelSelectScreen(Game game) {
+	//0 = level select
+	//1 = tutorial select
+	int mode = 0;
+	public LevelSelectScreen(Game game, int mode) {
 		super(game);
 		Gdx.input.setCatchBackKey( true );
 		Gdx.input.setInputProcessor(this);
+		
+		this.mode = mode;
 		
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 
@@ -144,17 +149,33 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		int y = 0;
 		int x = 0;
 
-		for (int i = 0; i < Resources.getInstance().levelcount; i++) {
-			LevelButton temp = new LevelButton(i+1);
-			buttons.add(temp);
-			temp.box = new BoundingBox(new Vector3(350+ (distX * x), 350 - (distY * y) ,0), new Vector3(450 + (distX * x),450  - (distY * y) ,0));
-			++x;
-			if(x%4 == 0) {
-				++y;
-				x=0;
-				if(y%3 == 0)
-					y=0;
-			}			
+		if(mode == 0) {
+			for (int i = 0; i < Resources.getInstance().levelcount; i++) {
+				LevelButton temp = new LevelButton(i+1);
+				buttons.add(temp);
+				temp.box = new BoundingBox(new Vector3(350+ (distX * x), 350 - (distY * y) ,0), new Vector3(450 + (distX * x),450  - (distY * y) ,0));
+				++x;
+				if(x%4 == 0) {
+					++y;
+					x=0;
+					if(y%3 == 0)
+						y=0;
+				}			
+			}
+		}
+		else if(mode==1) {
+			for (int i = 0; i < Resources.getInstance().tutorialcount; i++) {
+				LevelButton temp = new LevelButton(i+1);
+				buttons.add(temp);
+				temp.box = new BoundingBox(new Vector3(350+ (distX * x), 350 - (distY * y) ,0), new Vector3(450 + (distX * x),450  - (distY * y) ,0));
+				++x;
+				if(x%4 == 0) {
+					++y;
+					x=0;
+					if(y%3 == 0)
+						y=0;
+				}			
+			}
 		}
 		
 		collisionLevelBack.set(new Vector3(370 , 25, 0),new Vector3(430, 85, 0));
@@ -202,14 +223,20 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		switchblocks.clear();
 		switches.clear();
 		int[][][] level = Resources.getInstance().locked;
-//		try {
+		if(mode==1) {
+			level = Resources.getInstance().tut1;
+		}
+		if(mode == 0){
 			if(levelnumber ==1 || HighScoreManager.getInstance().getHighScore(levelnumber-1).first != 0)
 				level = Resources.getInstance().levels[levelnumber-1];
-//		} catch(ArrayIndexOutOfBoundsException e) {
-			
-//		}
+		}
+		else if(mode == 1) {
+			level = Resources.getInstance().tutorials[levelnumber-1];
+		}
 		
 		Resources.getInstance().currentlevel = levelnumber;
+		
+		
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;
@@ -343,21 +370,53 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 
 		batch.begin();
 		// render highscore
-		selectedFont.draw(batch, "Highscore", 50, 150);
-		if (currentHighScore.first == 0) {
-			font.draw(batch, "1. -", 50, 110);
-		} else {
-			font.draw(batch, "1. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.first), 50, 110);
+		if(mode == 0) {
+			selectedFont.draw(batch, "Highscore", 50, 150);
+			if (currentHighScore.first == 0) {
+				font.draw(batch, "1. -", 50, 110);
+			} else {
+				font.draw(batch, "1. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.first), 50, 110);
+			}
+			if (currentHighScore.second == 0) {
+				font.draw(batch, "2. -", 50, 80);
+			} else {
+				font.draw(batch, "2. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.second), 50, 80);
+			}
+			if (currentHighScore.third == 0) {
+				font.draw(batch, "3. -", 50, 50);
+			} else {
+				font.draw(batch, "3. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.third), 50, 50);
+			}
 		}
-		if (currentHighScore.second == 0) {
-			font.draw(batch, "2. -", 50, 80);
-		} else {
-			font.draw(batch, "2. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.second), 50, 80);
-		}
-		if (currentHighScore.third == 0) {
-			font.draw(batch, "3. -", 50, 50);
-		} else {
-			font.draw(batch, "3. " + HighScoreManager.getInstance().formatHighscore(currentHighScore.third), 50, 50);
+		else if (mode == 1) {
+			selectedFont.draw(batch, "Description", 50, 150);
+			switch(Resources.getInstance().currentlevel) {
+			case 1: 
+				font.drawMultiLine(batch, "Learn the basics\nof Qb gameplay", 50, 110);
+				break;
+			case 2:
+				font.drawMultiLine(batch, "Learn all about\nPortals", 50, 110);
+				break;
+			case 3:
+				font.drawMultiLine(batch, "Learn about\nmultiple Portals", 50, 110);
+				break;
+			case 4:
+				font.drawMultiLine(batch, "Learn all about\nMovable Blocks", 50, 110);
+				break;
+			case 5:
+				font.drawMultiLine(batch, "Learn how to\nhandle multiple\nMovable Blocks", 50, 110);
+				break;
+			case 6:
+				font.drawMultiLine(batch, "Learn about\nMovable Blocks\nand Portals", 50, 110);
+				break;
+			case 7:
+				font.drawMultiLine(batch, "Learn all about\nSwitches", 50, 110);
+				break;
+			default:
+				font.drawMultiLine(batch, "Learn the basics\nof Qb gameplay", 50, 110);
+				break;
+			}
+			
 		}
 
 		//render level description
@@ -377,12 +436,23 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		}
 		if(next>0)
 			font.draw(batch, "<", 377, 55);
-		if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
-			font.draw(batch, ">", 480, 55);
-		if(Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)
+		if(mode == 0 && Resources.getInstance().levelcount > 12) {
+			if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
+				font.draw(batch, ">", 480, 55);
+		}
+		else if(mode == 1 && Resources.getInstance().tutorialcount > 12) {
+			if((next == 0 && Resources.getInstance().tutorialcount > 12) || (Resources.getInstance().tutorialcount / (12*next) > 1))
+				font.draw(batch, ">", 480, 55);
+		}
+		if(mode == 0) {
+			if(Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)
+				font.draw(batch, "Start", 578, 55);
+			else
+				font.draw(batch, "Locked", 578, 55);
+		}
+		else if (mode == 1) {
 			font.draw(batch, "Start", 578, 55);
-		else
-			font.draw(batch, "Locked", 578, 55);
+		}
 		batch.end();
 		
 		
@@ -503,6 +573,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 		}
 		//render forward button
+		if (mode == 0 && Resources.getInstance().levelcount > 12)
 		{ if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1)) {
 				tmp.idt();
 				model.idt();
@@ -524,7 +595,29 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
-	
+		}
+		else if(mode == 1 && Resources.getInstance().tutorialcount > 12)
+		{ if((next == 0 && Resources.getInstance().tutorialcount > 12) || (Resources.getInstance().tutorialcount / (12*next) > 1)) {
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToTranslation(500 , 55, 0);
+			model.mul(tmp);
+			
+			tmp.setToScaling(30.0f, 30.0f, 10.0f);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
+		}
 		}
 		
 		//render start button
@@ -791,15 +884,27 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if(keycode == Input.Keys.RIGHT) {
 			int lvl = Resources.getInstance().currentlevel;
 			lvl++;
-			if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().levelcount)
-				initLevel(lvl);
+			if(mode == 0) {
+				if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().levelcount)
+					initLevel(lvl);
+			}
+			else if (mode == 1) {
+				if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().tutorialcount)
+					initLevel(lvl);
+			}
 		}
 		
 		if(keycode==Input.Keys.DOWN) {
 			int lvl = Resources.getInstance().currentlevel;
 			lvl+=4;
-			if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().levelcount)
-				initLevel(lvl);
+			if(mode == 0) {
+				if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().levelcount)
+					initLevel(lvl);
+			}
+			else if (mode==1) {
+				if(lvl <= 12*(next+1) && lvl <= Resources.getInstance().tutorialcount)
+					initLevel(lvl);
+			}
 		}
 		
 		if(keycode==Input.Keys.UP) {
@@ -860,9 +965,17 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel,0));
 		}
 		
-		if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))) {
-			next++;
-			initLevel(12*next +1);
+		if(mode == 0 && Resources.getInstance().levelcount > 12) {
+			if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))) {
+				next++;
+				initLevel(12*next +1);
+			}
+		}
+		else if (mode == 1 &&  Resources.getInstance().tutorialcount > 12) {
+			if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().tutorialcount > 12) || (Resources.getInstance().tutorialcount / (12*next) > 1))) {
+				next++;
+				initLevel(12*next +1);
+			}
 		}
 		
 		if(collisionLevelBack.contains(new Vector3(x,y,0)) && next > 0) {

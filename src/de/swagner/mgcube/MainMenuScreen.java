@@ -349,13 +349,13 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					}
 					break;
 				case 1:
-					game.setScreen(new LevelSelectScreen(game));
+					game.setScreen(new LevelSelectScreen(game,0));
 					break;
 				case 2:
 					game.setScreen(new GameScreen(game,1,1));
 					break;
 				case 3:
-					//game.setScreen(new OptionsScreen(game));
+					game.setScreen(new LevelSelectScreen(game,1));
 					break;
 				case 4:
 					game.setScreen(new OptionsScreen(game));
