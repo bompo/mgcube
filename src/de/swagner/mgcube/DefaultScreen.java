@@ -21,11 +21,11 @@ public abstract class DefaultScreen implements Screen {
 
 	@Override
 	public void resume() {
-		Resources.getInstance().reInit();
+//		Resources.getInstance().reInit();
 	}
 
 	@Override
 	public void dispose() {
-		Resources.getInstance().dispose();
+//		Resources.getInstance().dispose();
 	}
 }

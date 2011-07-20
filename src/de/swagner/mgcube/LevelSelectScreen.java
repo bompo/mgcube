@@ -191,15 +191,6 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	public void initRender() {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		// //antiAliasing for Desktop - no support in Android
-		// Gdx.graphics.getGL20().glEnable (GL10.GL_LINE_SMOOTH);
-		// Gdx.graphics.getGL20().glEnable (GL10.GL_BLEND);
-		// Gdx.graphics.getGL20().glBlendFunc (GL10.GL_SRC_ALPHA,GL10.
-		// GL_ONE_MINUS_SRC_ALPHA);
-		// Gdx.graphics.getGL20().glHint (GL10.GL_LINE_SMOOTH_HINT,
-		// GL10.GL_FASTEST);
-		// Gdx.graphics.getGL20().glLineWidth (1.5f);
-
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
@@ -234,9 +225,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			level = Resources.getInstance().tutorials[levelnumber-1];
 		}
 		
-		Resources.getInstance().currentlevel = levelnumber;
-		
-		
+		Resources.getInstance().currentlevel = levelnumber;	
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;
@@ -471,7 +460,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			blackFade.draw(fadeBatch);
 			fadeBatch.end();
 			if (fade >= 1) {
-				game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel,0));
+				if(mode == 0) {
+					game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel,0));
+				} else if(mode == 1) {
+					game.setScreen(new TutorialScreen(game, Resources.getInstance().currentlevel));
+				}
 			}
 		}
 		
@@ -622,26 +615,25 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 		//render start button
 		{
-				tmp.idt();
-				model.idt();
+			tmp.idt();
+			model.idt();
 
-				tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
-				model.mul(tmp);
-				
-				tmp.setToTranslation(650 , 55, 0);
-				model.mul(tmp);
-				
-				tmp.setToScaling(80.0f, 30.0f, 10.0f);
-				model.mul(tmp);
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToTranslation(650 , 55, 0);
+			model.mul(tmp);
+			
+			tmp.setToScaling(80.0f, 30.0f, 10.0f);
+			model.mul(tmp);
 
-				transShader.setUniformMatrix("MMatrix", model);
+			transShader.setUniformMatrix("MMatrix", model);
 
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-	
+			transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 		transShader.end();		
 	}
@@ -962,7 +954,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}
 		}
 		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) {
-			game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel,0));
+			finished = true;
 		}
 		
 		if(mode == 0 && Resources.getInstance().levelcount > 12) {

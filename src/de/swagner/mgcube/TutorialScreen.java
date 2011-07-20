@@ -1,6 +1,7 @@
 package de.swagner.mgcube;
 
 import java.awt.geom.CubicCurve2D;
+import java.util.Currency;
 import java.util.HashMap;
 
 import org.lwjgl.LWJGLException;
@@ -30,7 +31,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
-public class GameScreen extends DefaultScreen implements InputProcessor {
+public class TutorialScreen extends DefaultScreen implements InputProcessor {
 
 	float startTime = 0;
 	PerspectiveCamera cam;
@@ -120,16 +121,14 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	float initialDistance = 0f;
 	float distance = 0f;
 	
-	//0 = puzzle
-	//1 = time attack
-	int mode = 0;
+	int currentAction = 0;
+	
 
-	public GameScreen(Game game, int level, int mode) {
+	public TutorialScreen(Game game, int level) {
 		super(game);
 		Gdx.input.setCatchBackKey( true );
 		Gdx.input.setInputProcessor(this);
 
-		this.mode = mode;
 		Resources.getInstance().time = 0;
 		Resources.getInstance().timeAttackTime = 120;
 		
@@ -161,6 +160,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		font = Resources.getInstance().font;
 		font.setScale(1);
+		font.scale(0.5f);
 		
 		timeAttackFont = Resources.getInstance().timeAttackFont;
 		timeAttackFont.setScale(1);
@@ -177,6 +177,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 	public void initRender() {
 		Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+//		//antiAliasing for Desktop - no support in Android
+//		Gdx.gl20.glEnable (GL10.GL_LINE_SMOOTH);
+//		Gdx.gl20.glEnable (GL10.GL_BLEND);
+//		Gdx.gl20.glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
+//		Gdx.gl20.glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
+//		Gdx.gl20.glLineWidth (1.5f);		
 		
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
@@ -195,7 +202,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		initRender();
 	}
 	
-	private void initLevel(int levelnumber) {
+	private void initLevel(int levelnumber) {		
 		renderObjects.clear();
 		blocks.clear();
 		portals.clear();
@@ -203,9 +210,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		switchblocks.clear();
 		switches.clear();
 		timeAttackFont.setColor(1,1,1,1);
-		int[][][] level = Resources.getInstance().level1;
+		int[][][] level = Resources.getInstance().tut1;
 		try {
-		level = Resources.getInstance().levels[levelnumber-1];
+			level = Resources.getInstance().tutorials[levelnumber-1];
 		} catch(ArrayIndexOutOfBoundsException e) {
 			
 		}
@@ -305,14 +312,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		port=new Portal();
 		
 		initLevel(Resources.getInstance().currentlevel);
-//		if(Resources.getInstance().lives < 1)
-//		{
-//			Resources.getInstance().lives = 3;
-//			Resources.getInstance().currentlevel = 1;
-//			initLevel(Resources.getInstance().currentlevel);
-//			Resources.getInstance().time = 0;
-//			game.setScreen(new MainMenuScreen(game));			
-//		}
 	}
 
 	@Override
@@ -387,43 +386,29 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 				
 		if(Resources.getInstance().bloomOnOff) {
-		batch.enableBlending();
-		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
-		batch.begin();
-		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
-		batch.end();
+			batch.enableBlending();
+			batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
+			batch.begin();
+			batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
+			batch.end();
 		}
 
 		
 		//GUI
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
-		
-		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);	
-//		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
-		if(mode == 0) {
-//		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 100);
-		}	
-		
-		Resources.getInstance().time += delta;
-		Resources.getInstance().timeAttackTime -= delta;
-		
-		if(mode == 0) {			
-			seconds = (int) Resources.getInstance().time % 60;
-			minutes = (int)Resources.getInstance().time / 60;
-		} else if ( mode == 1) {			
-			seconds = (int) Resources.getInstance().timeAttackTime % 60;
-			minutes = (int)Resources.getInstance().timeAttackTime / 60;
-		}
-
-		if(seconds > 9 && minutes > 9)
-			font.draw(fontbatch, "time: " + minutes + ":" + seconds, 620, 60);
-		else if(seconds > 9 && minutes < 10)
-			font.draw(fontbatch, "time: 0" + minutes + ":" + seconds, 620, 60);
-		else if(seconds < 10 && minutes > 9)
-			font.draw(fontbatch, "time: " + minutes + ":0" + seconds, 620, 60);
-		else
-			font.draw(fontbatch, "time: 0" + minutes + ":0" + seconds, 620, 60);
+			if(Resources.getInstance().currentlevel == 1) {
+				if(currentAction == 0) {
+					font.drawMultiLine(fontbatch, "Touch and hold the Screen\nto move the camera", 40, 120);
+				} else if ( currentAction == 1) {
+					font.drawMultiLine(fontbatch, "Use two fingers\nto zoom", 40, 120);
+				} else if ( currentAction == 2) {
+					font.drawMultiLine(fontbatch, "Touch the screen\nto move the player", 40, 120);
+				}  else if ( currentAction == 3) {
+					font.drawMultiLine(fontbatch, "Reach the exit\n", 40, 120);
+				}
+			}
+			
 		fontbatch.end();
 
 		
@@ -443,7 +428,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			blackFade.draw(fadeBatch);
 			fadeBatch.end();
 			if (fade >= 1) {
-				game.setScreen(new MainMenuScreen(game));
+				game.setScreen(new LevelSelectScreen(game,1));
 			}
 		}
 		
@@ -454,21 +439,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		if (changeLevel) {
 			changeLevelEffect = Math.min(changeLevelEffect + (delta * 15.f), 5);
-			if(mode == 1) {
-				fontbatch.begin();
-				timeAttackFont.draw(fontbatch, "+45", 740, 40 - changeLevelEffect * 4);
-				timeAttackFont.setColor(1, 1, 1, 1 / changeLevelEffect);
-				fontbatch.end();
-			}
 			if (changeLevelEffect >= 5) {				
 				nextLevel();
 			}
-		}
-		
-		
-		if(Resources.getInstance().timeAttackTime <= 0.5 && mode ==1) {
-			finished = true;
-			HighScoreManager.getInstance().newTimeAttackHighScore(0, Resources.getInstance().levelcount);
 		}
 
 	}
@@ -1140,9 +1113,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// player out of bound?
 			if (!box.contains(player.position)) {
 				player.stop();
-				if(mode==0) {
-					//Resources.getInstance().lives--;
-				}
 				reset();
 			}
 
@@ -1154,12 +1124,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				Resources.getInstance().timeAttackTime += 45;
 				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
 					changeLevel = true;
-				} else {
-					//game completed
-					if(mode==1) {
-						HighScoreManager.getInstance().newTimeAttackHighScore((int) Resources.getInstance().timeAttackTime, Resources.getInstance().levelcount);
-					}
-				}
+				} 
 			}
 
 			if (warp) {
@@ -1370,7 +1335,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
 			player.move();
-			
+		}
+		
+		if(Resources.getInstance().currentlevel == 1) {
+			if(currentAction == 2) {
+				++currentAction;
+			}
 		}
 	}
 
@@ -1410,29 +1380,31 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		touchStartX = x;
 		touchStartY = y;
+
+		if (pointers.size() == 0) {
+			// no fingers down so assign v1
+			finger_one_pointer = pointer;
+			v1 = new Vector2(x, y);
+			pointers.put(pointer, v1);
+		} else if (pointers.size() == 1) {
+			// figure out which finger is down
+			if (finger_one_pointer == -1) {
+				// finger two is still down
+				finger_one_pointer = pointer;
+				v1 = new Vector2(x, y);
+				pointers.put(pointer, v1);
+				initialDistance = v1.dst(pointers.get(finger_two_pointer));
+
+			} else {
+				// finger one is still down
+				finger_two_pointer = pointer;
+				v2 = new Vector2(x, y);
+				pointers.put(pointer, v2);
+				initialDistance = v2.dst(pointers.get(finger_one_pointer));
+			}
+		}
 		
-	     if(pointers.size() == 0) {
-	         // no fingers down so assign v1
-	         finger_one_pointer = pointer;
-	         v1 = new Vector2(x,y);
-	         pointers.put(pointer, v1);
-	      } else if (pointers.size() == 1) {
-	         // figure out which finger is down
-	         if (finger_one_pointer == -1) {
-	            //finger two is still down
-	            finger_one_pointer = pointer;
-	            v1 = new Vector2(x,y);
-	            pointers.put(pointer,v1);
-	            initialDistance = v1.dst(pointers.get(finger_two_pointer));
-	       
-	         } else {
-	            //finger one is still down
-	            finger_two_pointer = pointer;
-	            v2 = new Vector2(x,y);
-	            pointers.put(pointer, v2);
-	            initialDistance = v2.dst(pointers.get(finger_one_pointer));
-	         }
-	      }
+
 
 		return false;
 	}
@@ -1466,35 +1438,49 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 		
 		
-		if(pointers.size() == 2) {
-         // two finger pinch (zoom)
-         // now fingers are being dragged so measure the distance and apply zoom
-         if (pointer == finger_one_pointer) {
-            v1 = new Vector2(x,y);
-            v2 = pointers.get(finger_two_pointer);
-            pointers.put(pointer,v1);
-         } else if (pointer == finger_one_pointer) {
-            v2 = new Vector2(x,y);
-            v1 = pointers.get(finger_one_pointer);
-            pointers.put(pointer,v2);
-         }
-         distance = v2.dst(v1);
-         cam.position.z = ((int) Helper.map((initialDistance - distance),-200,200,2,20));
-         if(cam.position.z < 2) {
-        	 cam.position.z = 2;
-         } else if (cam.position.z > 20) {
-        	 cam.position.z = 20;
-         }
+		if (pointers.size() == 2) {
+			// two finger pinch (zoom)
+			// now fingers are being dragged so measure the distance and apply
+			// zoom
+			if (pointer == finger_one_pointer) {
+				v1 = new Vector2(x, y);
+				v2 = pointers.get(finger_two_pointer);
+				pointers.put(pointer, v1);
+			} else if (pointer == finger_one_pointer) {
+				v2 = new Vector2(x, y);
+				v1 = pointers.get(finger_one_pointer);
+				pointers.put(pointer, v2);
+			}
+			distance = v2.dst(v1);
+			cam.position.z = ((int) Helper.map((initialDistance - distance), -200, 200, 2, 20));
+			if (cam.position.z < 2) {
+				cam.position.z = 2;
+			} else if (cam.position.z > 20) {
+				cam.position.z = 20;
+			}
+			
+			if(Resources.getInstance().currentlevel == 1) {
+				if(currentAction == 1) {
+					++currentAction;
+				}
+			}
+			
 		} else {
 
-		angleY += ((x - touchStartX) / 5.f);
-		angleX += ((y - touchStartY) / 5.f);
+			angleY += ((x - touchStartX) / 5.f);
+			angleX += ((y - touchStartY) / 5.f);
 
-		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
-		touchTime += Gdx.graphics.getDeltaTime();
+			touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
+			touchTime += Gdx.graphics.getDeltaTime();
 
-		touchStartX = x;
-		touchStartY = y;
+			touchStartX = x;
+			touchStartY = y;
+			
+			if(Resources.getInstance().currentlevel == 1) {
+				if(currentAction == 0) {
+					++currentAction;
+				}
+			}
 		}
 
 		return false;
@@ -1511,6 +1497,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			cam.translate(0, 0, 1 * amount);
 		if((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
 			cam.translate(0, 0, 1 * -amount);
+		
+		if(Resources.getInstance().currentlevel == 1) {
+			if(currentAction == 1) {
+				++currentAction;
+			}
+		}
 		return false;
 	}
 	
