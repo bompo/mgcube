@@ -53,6 +53,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	BoundingBox button2 = new BoundingBox();
 	BoundingBox button3 = new BoundingBox();
 	BoundingBox button4 = new BoundingBox();
+	BoundingBox button5 = new BoundingBox();
 
 	Array<Block> blocks = new Array<Block>();
 	Array<Renderable> renderObjects = new Array<Renderable>();
@@ -124,6 +125,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		}
 		menuItems.add("select level");
 		menuItems.add("time attack");
+		menuItems.add("tutorial");
 		menuItems.add("options");
 
 		initRender();
@@ -132,10 +134,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		angleY = -70;
 		angleX = -10;
 		
-		button1.set(new Vector3(470, 150, 0), new Vector3(770, 100, 0));
-		button2.set(new Vector3(470, 230, 0), new Vector3(770, 180, 0));
-		button3.set(new Vector3(470, 320, 0), new Vector3(770, 260, 0));
-		button4.set(new Vector3(470, 400, 0), new Vector3(770, 350, 0));
+		button1.set(new Vector3(470, 110, 0), new Vector3(770, 50, 0));
+		button2.set(new Vector3(470, 200, 0), new Vector3(770, 140, 0));
+		button3.set(new Vector3(470, 290, 0), new Vector3(770, 220, 0));
+		button4.set(new Vector3(470, 360, 0), new Vector3(770, 310, 0));
+		button5.set(new Vector3(470, 440, 0), new Vector3(770, 380, 0));
 		
 		exit = false;
 	}
@@ -304,7 +307,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		batch.begin();
-		float y = 365;
+		float y = 405;
 		for (String s : menuItems) {
 			if (selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
 				selectedFont.draw(batch, s, 480, y);
@@ -352,6 +355,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					game.setScreen(new GameScreen(game,1,1));
 					break;
 				case 3:
+					//game.setScreen(new OptionsScreen(game));
+					break;
+				case 4:
 					game.setScreen(new OptionsScreen(game));
 					break;
 
@@ -424,7 +430,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
 			model.mul(tmp);
 
-			tmp.setToTranslation(3.3f, 4.5f, 12);
+			tmp.setToTranslation(3.3f, 6.0f, 12);
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
@@ -457,7 +463,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
 			model.mul(tmp);
 
-			tmp.setToTranslation(3.3f, 1.3f, 12);
+			tmp.setToTranslation(3.3f, 2.9f, 12);
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
@@ -490,7 +496,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
 			model.mul(tmp);
 
-			tmp.setToTranslation(3.3f, -2.0f, 12);
+			tmp.setToTranslation(3.3f, -0.3f, 12);
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
@@ -523,12 +529,45 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
 			model.mul(tmp);
 
-			tmp.setToTranslation(3.3f, -5.0f, 12);
+			tmp.setToTranslation(3.3f, -3.5f, 12);
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
 
 			if(selectedMenuItem==3) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.1f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.1f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+		
+		{
+			// render Button 5
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(3.5f, 0.6f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, (angleXBack / 40.f));
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, (angleYBack / 100.f) - 2.f);
+			model.mul(tmp);
+
+			tmp.setToTranslation(3.3f, -6.6f, 12);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==4) {
 				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 	
@@ -834,6 +873,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			} else if (button4.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 3;
 				finished = true;
+			} 
+			else if (button5.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 4;
+				finished = true;
 			} else {
 				selectedMenuItem = -1;
 			}
@@ -872,6 +915,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				selectedMenuItem = 2;
 			} else if (button4.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 3;
+			} 
+			else if (button5.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 4;
 			} else {
 				selectedMenuItem = -1;
 			}
