@@ -68,6 +68,8 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 	boolean warplock = false;
 	boolean movwarplock = false;
 	
+	boolean lockInput = false;
+	
 	//fade
 	SpriteBatch fadeBatch;
 	Sprite blackFade;
@@ -405,28 +407,50 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
 			if(Resources.getInstance().currentlevel == 1) {
-				if(currentAction == 0) {
-					font.drawMultiLine(fontbatch, "Touch and hold the Screen\nto move the camera", 40, 120);
-				} else if ( currentAction == 1) {
-					font.drawMultiLine(fontbatch, "Use two fingers\nto zoom", 40, 120);
-				} else if ( currentAction == 2) {
-					font.drawMultiLine(fontbatch, "Touch the screen\nto move the player", 40, 120);
-				}  else if ( currentAction == 3) {
-					font.drawMultiLine(fontbatch, "Reach the exit\n", 40, 120);
+				if(startTime < 3) {
+					lockInput = true;
+					font.drawMultiLine(fontbatch, "Welcome to the Qb tutorial!", 40, 100);
+				} else if(startTime >= 3 && startTime < 6) {
+					font.drawMultiLine(fontbatch, "See this yellow sphere?\nThat's you, the player!", 40, 100);
+				} else if(startTime >= 6 && startTime < 9) {
+					font.drawMultiLine(fontbatch, "Now your goal is to\nreach the green cylinder", 40, 100);
+				}
+				else
+				{
+					if (currentAction == 0 || startTime < 12) {
+						font.drawMultiLine(fontbatch, "You can rotate the level\nby touching the screen", 40, 100);
+					} else if ( currentAction == 1 && Gdx.app.getType() == ApplicationType.Android) {
+						font.drawMultiLine(fontbatch, "Use two fingers\nto zoom", 40, 100);
+					} else if ( currentAction == 1 && Gdx.app.getType() == ApplicationType.Desktop) {
+						font.drawMultiLine(fontbatch, "You can zoom by\nscrolling", 40, 100);
+					} else if ( currentAction == 2 && Gdx.app.getType() == ApplicationType.Android) {
+						font.drawMultiLine(fontbatch, "If you tap the screen\nthe player will fly away\nfrom the camera", 40, 100);
+					}  else if ( currentAction == 2 && Gdx.app.getType() == ApplicationType.Desktop && startTime < 18) {
+						font.drawMultiLine(fontbatch, "If you click the mouse or\nhit space, the player will\nfly into the screen", 40, 100);
+					}  else if ( currentAction == 2 && startTime < 21) {
+						font.drawMultiLine(fontbatch, "Now try to reach that block\nright ahead of you", 40, 100);
+					}  else if ( currentAction == 2 && startTime < 25) {
+						font.drawMultiLine(fontbatch, "Just don't fly off the screen,\nokay? Then you'd have to\nstart all over again!", 40, 100);
+					}  else if ( currentAction == 2 && startTime > 25) {
+						font.drawMultiLine(fontbatch, "Just don't fly off the screen,\nokay? Then you'd have to\nstart all over again!", 40, 100);
+						lockInput = false;
+					}  else if ( currentAction == 3) {
+						font.drawMultiLine(fontbatch, "Go ahead and try to\nreach the exit", 40, 100);
+					}
 				}
 			}
 			
 			if(Resources.getInstance().currentlevel == 2) {
 				if(currentAction == 0) {
-					font.drawMultiLine(fontbatch, "Those are Portals\nuse them to\nreach the exit", 40, 120);
+					font.drawMultiLine(fontbatch, "Those are Portals\nuse them to\nreach the exit", 40, 100);
 				}
 			}
 			
 			if(Resources.getInstance().currentlevel == 3) {
 				if(currentAction == 0) {
-					font.drawMultiLine(fontbatch, "Multiple Portals\nhave different colors", 40, 120);
+					font.drawMultiLine(fontbatch, "Multiple Portals\nhave different colors", 40, 100);
 				} else if ( currentAction == 1) {
-					font.drawMultiLine(fontbatch, "To hard?\nUse blue,\nthen light blue", 40, 120);
+					font.drawMultiLine(fontbatch, "To hard?\nUse blue,\nthen light blue", 40, 100);
 				}
 			}
 			
@@ -459,6 +483,9 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (changeLevel) {
+			fontbatch.begin();
+			font.drawMultiLine(fontbatch, "That's it!", 40, 100);
+			fontbatch.end();
 			changeLevelEffect = Math.min(changeLevelEffect + (delta * 15.f), 5);
 			if (changeLevelEffect >= 5) {				
 				nextLevel();
@@ -1306,7 +1333,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		if (Gdx.input.isTouched())
 			return false;
 		if (keycode == Input.Keys.ESCAPE) {
-			game.setScreen(new MainMenuScreen(game));
+			game.setScreen(new LevelSelectScreen(game,1));
 		}
 
 		if (keycode == Input.Keys.SPACE) {
@@ -1357,21 +1384,24 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void movePlayer() {
-		if (!player.isMoving) {
-			player.direction.set(0, 0, -1);
-			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
-			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
-			player.move();
-		}
-		
-		if(Resources.getInstance().currentlevel == 1) {
-			if(currentAction == 2) {
-				++currentAction;
+		if(!lockInput) {
+			if (!player.isMoving) {
+				player.direction.set(0, 0, -1);
+				player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
+				player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
+				player.move();
+			}
+			
+			if(Resources.getInstance().currentlevel == 1) {
+				if(currentAction == 2) {
+					++currentAction;
+				}
 			}
 		}
 	}
 
 	private void nextLevel() {
+		
 		Resources.getInstance().currentlevel++;
 		Resources.getInstance().time = 0;
 		initLevel(Resources.getInstance().currentlevel);
@@ -1502,7 +1532,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			touchStartY = y;
 			
 			if(Resources.getInstance().currentlevel == 1) {
-				if(currentAction == 0) {
+				if(currentAction == 0 && touchTime > 0.3) {
 					++currentAction;
 				}
 			}
