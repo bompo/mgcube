@@ -698,7 +698,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						model.mul(tmp);
 		
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
 						playerModel.render(transShader, GL20.GL_TRIANGLES);
 						
 						tmp.setToScaling(3f, 3f, 3f);
@@ -718,7 +718,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						model.mul(tmp);
 		
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
 						blockModel.render(transShader, GL20.GL_TRIANGLES);
 						
 						tmp.setToScaling(3f, 3f, 3f);
@@ -738,7 +738,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						model.mul(tmp);
 		
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
 						coneModel.render(transShader, GL20.GL_TRIANGLES);
 						
 						tmp.setToScaling(3f, 3f, 3f);
@@ -758,7 +758,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						model.mul(tmp);
 		
 						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation);
+						transShader.setUniformf("a_color", Resources.getInstance().switchBlockColor[0],Resources.getInstance().switchBlockColor[1], Resources.getInstance().switchBlockColor[2] , Resources.getInstance().switchBlockColor[3]+ renderable.collideAnimation  - ((SwitchableBlock) renderable).switchAnimation);
 						playerModel.render(transShader, GL20.GL_TRIANGLES);
 						
 						tmp.setToScaling(3f, 3f, 3f);

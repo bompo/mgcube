@@ -861,8 +861,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if (keycode == Input.Keys.ESCAPE) {
 			game.setScreen(new MainMenuScreen(game));
 		}
-		if (keycode == Input.Keys.ENTER && Resources.getInstance().currentlevel != 0) {
-			game.setScreen(new GameScreen(game, Resources.getInstance().currentlevel,0));
+		if (keycode == Input.Keys.ENTER && (((Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) || mode == 1)) {
+			finished = true;
 		}
 		if(keycode == Input.Keys.LEFT) {
 			int lvl = Resources.getInstance().currentlevel;
@@ -953,7 +953,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				}
 			}
 		}
-		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) {
+		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (((Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) || mode == 1)) {
 			finished = true;
 		}
 		
