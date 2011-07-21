@@ -430,6 +430,38 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 				}
 			}
 			
+			if(Resources.getInstance().currentlevel == 4) {
+				if(currentAction == 0) {
+					font.drawMultiLine(fontbatch, "This yellow Block is\na movable Block", 40, 120);
+				} else if ( currentAction == 1) {
+					font.drawMultiLine(fontbatch, "Push him to reach\nthe exit", 40, 120);
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 5) {
+				if(currentAction == 0) {
+					font.drawMultiLine(fontbatch, "Movable blocks can\ncollide with each other", 40, 120);
+				} else if ( currentAction == 1) {
+					font.drawMultiLine(fontbatch, "Use this to your advantage", 40, 120);
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 6) {
+				if(currentAction == 0) {
+					font.drawMultiLine(fontbatch, "Like the player movable blocks can\ntravel through portals", 40, 120);
+				} else if ( currentAction == 1) {
+					font.drawMultiLine(fontbatch, "Push the movable block\ninto the portal", 40, 120);
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 7) {
+				if(currentAction == 0) {
+					font.drawMultiLine(fontbatch, "The white spheres are switches", 40, 120);
+				} else if ( currentAction == 1) {
+					font.drawMultiLine(fontbatch, "Activate them with a movable block\nto reach the exit", 40, 120);
+				}
+			}
+			
 		fontbatch.end();
 
 		
@@ -1063,10 +1095,23 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 					player.stop();
 					m.move(player.direction.cpy());
 					m.isCollidedAnimation = true;
+					
+					if(Resources.getInstance().currentlevel == 4) {
+						if(currentAction == 1) {
+							++currentAction;
+						}
+					}
+					
 				}
 				else if(movdst <1.0f && !box.contains(m.position) && intersect) {
 					player.stop();
 					m.isCollidedAnimation = true;
+					
+					if(Resources.getInstance().currentlevel == 4) {
+						if(currentAction == 1) {
+							++currentAction;
+						}
+					}
 				}
 				
 				//recursiveCollisionCheck(m);
@@ -1229,6 +1274,13 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 							port = portal;
 							portal.isCollidedAnimation = true;
 							m.isCollidedAnimation = true;
+							
+							if(Resources.getInstance().currentlevel == 6) {
+								if(currentAction == 1) {
+									++currentAction;
+								}
+							}
+							
 							break;
 						}
 					}
@@ -1251,6 +1303,12 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
 						float dst = intersection.dst(m.position);
 						if (dst < 1.0f && intersect) {
+							if(Resources.getInstance().currentlevel == 5) {
+								if(currentAction == 1) {
+									++currentAction;
+								}
+							}
+							
 							m.stop();
 							if(box.contains(mm.position)) 
 								mm.move(m.direction);
@@ -1281,6 +1339,11 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			for(MovableBlock m : movableBlocks) {
 				if(m.position.equals(s.position)) {
 					s.isSwitched = true;
+					if(Resources.getInstance().currentlevel == 7) {
+						if(currentAction == 1) {
+							++currentAction;
+						}
+					}
 				}
 			}
 			if(s.position.equals(player.position)) {
@@ -1502,6 +1565,30 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			touchStartY = y;
 			
 			if(Resources.getInstance().currentlevel == 1) {
+				if(currentAction == 0) {
+					++currentAction;
+				}
+			}
+						
+			if(Resources.getInstance().currentlevel == 4) {
+				if(currentAction == 0) {
+					++currentAction;
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 5) {
+				if(currentAction == 0) {
+					++currentAction;
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 6) {
+				if(currentAction == 0) {
+					++currentAction;
+				}
+			}
+			
+			if(Resources.getInstance().currentlevel == 7) {
 				if(currentAction == 0) {
 					++currentAction;
 				}
