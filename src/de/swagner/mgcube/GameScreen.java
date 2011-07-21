@@ -287,6 +287,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void reset() {
+		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().tutorialcount) {
+			finished = true;
+			return;
+		}
+		
 		player.collideAnimation = 1;
 		animateWorld = false;
 		player.stop();

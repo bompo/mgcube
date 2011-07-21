@@ -182,13 +182,6 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 	public void initRender() {
 		Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-//		//antiAliasing for Desktop - no support in Android
-//		Gdx.gl20.glEnable (GL10.GL_LINE_SMOOTH);
-//		Gdx.gl20.glEnable (GL10.GL_BLEND);
-//		Gdx.gl20.glBlendFunc (GL10.GL_SRC_ALPHA,GL10. GL_ONE_MINUS_SRC_ALPHA);
-//		Gdx.gl20.glHint (GL10.GL_LINE_SMOOTH_HINT, GL10.GL_FASTEST);
-//		Gdx.gl20.glLineWidth (1.5f);		
-		
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		Gdx.gl20.glDepthMask(true);
@@ -299,6 +292,11 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void reset() {
+		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().tutorialcount) {
+			finished = true;
+			return;
+		}
+		
 		player.collideAnimation = 1;
 		animateWorld = false;
 		player.stop();
