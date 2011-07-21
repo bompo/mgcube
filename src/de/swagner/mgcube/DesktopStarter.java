@@ -42,7 +42,7 @@ public class DesktopStarter extends Game {
 		
 		config.width = 800;
 		config.height = 480;
-		config.title = "qb";
+		config.title = "Qb";
 
 		config.fullscreen = false;
 		config.samples = 4;
