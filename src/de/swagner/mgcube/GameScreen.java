@@ -287,7 +287,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void reset() {
-		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().tutorialcount) {
+		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().levelcount) {
 			finished = true;
 			return;
 		}

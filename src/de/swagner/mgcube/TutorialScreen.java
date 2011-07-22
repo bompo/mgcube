@@ -206,6 +206,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		movableBlocks.clear();
 		switchblocks.clear();
 		switches.clear();
+		startTime = 0;
 		timeAttackFont.setColor(1,1,1,1);
 		int[][][] level = Resources.getInstance().tut1;
 		try {
@@ -467,7 +468,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						actionTime -= delta;
 						font.drawMultiLine(fontbatch, "Now go ahead and try to\nsolve this level", 40, 100);
 					}
-					else if (currentAction == 1 && actionTime <= 0 && startTime > 1)
+					else if (currentAction == 0 && actionTime <= 0 && startTime > 1)
 						lockInput = false;
 				}
 			}
@@ -488,7 +489,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
 						actionTime -= delta;
 						font.drawMultiLine(fontbatch, "Now try to solve this one!", 40, 100);
-					} else if (currentAction == 1 && actionTime <= 0 && startTime > 1){
+					} else if (currentAction == 0 && actionTime <= 0 && startTime > 1){
 						lockInput = false;
 					} 
 					if (currentAction == 1) {
@@ -513,7 +514,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
 						actionTime -= delta;
 						font.drawMultiLine(fontbatch, "Go ahead and push the\nMovable Block", 40, 100);
-					} else if (currentAction == 1 && actionTime <= 0 && startTime > 1){
+					} else if (currentAction == 0 && actionTime <= 0 && startTime > 1){
 						lockInput = false;
 					}	
 					if ( currentAction == 1 && actionTime <= 0 && startTime > 1 && actionTime > -6) {

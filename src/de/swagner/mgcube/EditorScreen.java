@@ -197,6 +197,20 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		initRender();
 	}
 	
+	
+	private void alterLevel() {
+		renderObjects.clear();
+		
+		renderObjects.add(editorBlock);
+		renderObjects.add(player);
+		renderObjects.add(target);
+		renderObjects.addAll(blocks);		
+		renderObjects.addAll(portals);
+		renderObjects.addAll(movableBlocks);
+		renderObjects.addAll(switches);
+		renderObjects.addAll(switchblocks);
+	}
+	
 	private void initLevel(int levelnumber) {
 		renderObjects.clear();
 		blocks.clear();
@@ -1415,7 +1429,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			for(Renderable renderable:renderObjects) {
 				if(editorBlock.position.x  == renderable.position.x 
 					&& editorBlock.position.y  == renderable.position.y
-					&& editorBlock.position.z  == renderable.position.z) {
+					&& editorBlock.position.z  == renderable.position.z
+					&& !(renderable instanceof EditorBlock)) {
 					castObject = renderable;
 					if(renderable instanceof Block) castTo = 1;
 					if(renderable instanceof Portal) castTo = 2;
@@ -1425,28 +1440,32 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				}
 			}
 			if(castTo == 0) {
-				renderObjects.add(new Block(new Vector3(editorBlock.position)));
+				blocks.add(new Block(new Vector3(editorBlock.position)));
 				Gdx.app.log("", "add new block");
 			} else {
 				castTo++;
-				castTo = castTo%4;
-				renderObjects.removeValue(castObject, true);
+				castTo = castTo%5;
 				if (castTo == 1) {
-					renderObjects.add(new Block(new Vector3(editorBlock.position)));
+					blocks.add(new Block(new Vector3(editorBlock.position)));
 				} else if (castTo == 2) {
+					blocks.removeValue((Block) castObject,true);
 					Portal portal = new Portal(1);
-					renderObjects.add(portal);
 					portal.position.set(editorBlock.position);
+					portals.add(portal);
 				} else if (castTo == 3) {
+					portals.removeValue((Portal) castObject,true);
 					SwitchableBlock switchBlock = new SwitchableBlock(new Vector3(editorBlock.position));
-					renderObjects.add(switchBlock);
+					switchblocks.add(switchBlock);
 				} else if (castTo == 4) {
+					switchblocks.removeValue((SwitchableBlock) castObject,true);
 					Switch switchBlock = new Switch(new Vector3(editorBlock.position));
-					renderObjects.add(switchBlock);
+					switches.add(switchBlock);
+				} else if(castTo == 0) {
+					switches.removeValue((Switch) castObject,true);
 				}
 				Gdx.app.log("", castTo+"");
 			}
-			
+			alterLevel();
 		}
 		
 		
