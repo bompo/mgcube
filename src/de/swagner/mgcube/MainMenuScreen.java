@@ -812,6 +812,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			exit  = true;
 		}
 		
+		if (keycode == Input.Keys.E) {
+			game.setScreen(new EditorScreen(game, 1, 0));
+		}
+		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
 				if(!org.lwjgl.opengl.Display.isFullscreen()) {
