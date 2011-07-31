@@ -602,13 +602,19 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			
 			
 			//render impact
-			if(renderable.isCollidedAnimation == true && renderable.collideAnimation == 0) {
+			if(renderable.isCollidedAnimation == true && renderable.collideAnimation == 0 || (renderable instanceof EditorBlock && renderable.collideAnimation==0)) {
 				renderable.collideAnimation = 1.0f;
 			}
 			if(renderable.collideAnimation>0.0f) {
-				renderable.collideAnimation -= delta*1.f;
-				renderable.collideAnimation = Math.max(0.0f, renderable.collideAnimation);
-				if(renderable.collideAnimation == 0.0f) renderable.isCollidedAnimation = false;
+				if(renderable instanceof EditorBlock) {
+					renderable.collideAnimation -= delta/5.f;
+					renderable.collideAnimation = Math.max(0.0f, renderable.collideAnimation);
+					if(renderable.collideAnimation == 0.0f) renderable.isCollidedAnimation = false;
+				} else {
+					renderable.collideAnimation -= delta*1.f;
+					renderable.collideAnimation = Math.max(0.0f, renderable.collideAnimation);
+					if(renderable.collideAnimation == 0.0f) renderable.isCollidedAnimation = false;
+				}
 			}
 			
 			//render switchblock fade out/in
@@ -1397,19 +1403,31 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		if (keycode == Input.Keys.W) {
-			editorBlock.position.y += 2;
+			editorBlock.up.set(0, 1, 0);
+			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			editorBlock.moveUp();
 		}
 
 		if (keycode == Input.Keys.S) {
-			editorBlock.position.y -= 2;
+			editorBlock.up.set(0, -1, 0);
+			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			editorBlock.moveDown();
 		}
 		
 		if (keycode == Input.Keys.A) {
-			editorBlock.position.x += 2;
+			editorBlock.direction.set(0, 0, -1);
+			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			editorBlock.moveLeft();
 		}
 		
 		if (keycode == Input.Keys.D) {
-			editorBlock.position.x -= 2;
+			editorBlock.direction.set(0, 0, -1);
+			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			editorBlock.moveRight();
 		}
 		
 		if(keycode == Input.Keys.Q) {
@@ -1430,9 +1448,11 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					&& !(renderable instanceof EditorBlock)) {
 					castObject = renderable;
 					if(renderable instanceof Block) castTo = 1;
-					if(renderable instanceof Portal) castTo = 2;
-					if(renderable instanceof Switch) castTo = 3;
-					if(renderable instanceof SwitchableBlock) castTo = 4;
+
+					if(renderable instanceof MovableBlock) castTo = 2;
+					if(renderable instanceof Portal) castTo = 3;
+					if(renderable instanceof Switch) castTo = 4;
+					if(renderable instanceof SwitchableBlock) castTo = 5;
 					break;
 				}
 			}
@@ -1441,13 +1461,17 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				Gdx.app.log("", "add new block");
 			} else {
 				castTo++;
-				castTo = castTo%5;
+				castTo = castTo%6;
 				
 				int deleteObject = castTo-1;
 				if (castTo == 1) {
 					blocks.add(new Block(new Vector3(editorBlock.position)));
 				} 
 				if (castTo == 2) {
+					deleteObject(castObject, deleteObject);					
+					movableBlocks.add(new MovableBlock(new Vector3(editorBlock.position)));
+				} 				
+				if (castTo == 3) {
 					deleteObject(castObject, deleteObject);
 					
 					//other portals placed?
@@ -1466,8 +1490,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						Gdx.app.log("", "new Portal(4)");
 					} else if(portalT.correspondingPortal != null && portalT.correspondingPortal.id==-8) {
 						//max reached skip this
-						castTo = 3;
-						deleteObject = 1;
+						castTo = 4;
+						deleteObject = 2;
 					} else if(portalT.correspondingPortal == null || !portals.contains(portalT.correspondingPortal, true)) {
 						portalT.correspondingPortal = new Portal(-portalT.id);
 						portalT.correspondingPortal.position.set(editorBlock.position);
@@ -1481,7 +1505,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						Gdx.app.log("", "new Portal(" + portal.id + ")");
 					}
 				} 
-				if (castTo == 3) {
+				if (castTo == 4) {
 					deleteObject(castObject, deleteObject);
 					
 					//other switches placed?
@@ -1500,8 +1524,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						Gdx.app.log("", "new Switch(10)");
 					} else if(switchT.id==13) {
 						//max reached skip this
-						castTo = 4;
-						deleteObject = 2;
+						castTo = 5;
+						deleteObject = 3;
 					} else {
 						Switch switchBlock = new Switch(new Vector3(editorBlock.position));
 						if(Math.abs(switchT.id) == 10) {
@@ -1513,7 +1537,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						Gdx.app.log("", "new Switch(" + switchBlock.id + ")");
 					}
 				}
-				if (castTo == 4) {
+				if (castTo == 5) {
 					deleteObject(castObject, deleteObject);
 					
 					//cast to last used switch
@@ -1548,14 +1572,15 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 
 	private void deleteObject(Renderable castObject, int deleteObject) {
 		if (deleteObject == 1) {
-			blocks.removeValue((Block) castObject, true);
+			blocks.removeValue((Block) castObject, true);			
 		} else if (deleteObject == 2) {
-			portals.removeValue((Portal) castObject, true);
+			movableBlocks.removeValue((MovableBlock) castObject, true);
 		} else if (deleteObject == 3) {
+			portals.removeValue((Portal) castObject, true);
+		} else if (deleteObject == 4) {
 			switches.removeValue((Switch) castObject, true);
 		} else if (deleteObject == -1) {
-			switchblocks
-					.removeValue((SwitchableBlock) castObject, true);
+			switchblocks.removeValue((SwitchableBlock) castObject, true);
 		}
 	}
 
