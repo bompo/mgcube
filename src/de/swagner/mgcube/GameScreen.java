@@ -405,10 +405,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		fontbatch.begin();
 		
 		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);	
-//		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
-		if(mode == 0) {
-//		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 100);
-		}	
 		
 		Resources.getInstance().time += delta;
 		Resources.getInstance().timeAttackTime -= delta;
@@ -514,8 +510,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClearColor(Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 				
+		Gdx.app.log("", Gdx.graphics.getBufferFormat().coverageSampling + "");
+		
 		transShader.begin();
 		transShader.setUniformMatrix("VPMatrix", cam.combined);
 		{

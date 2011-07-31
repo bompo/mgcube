@@ -1,9 +1,6 @@
 package de.swagner.mgcube;
 
-import java.awt.geom.CubicCurve2D;
 import java.util.HashMap;
-
-import org.lwjgl.LWJGLException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -1449,9 +1446,32 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					blocks.add(new Block(new Vector3(editorBlock.position)));
 				} else if (castTo == 2) {
 					blocks.removeValue((Block) castObject,true);
-					Portal portal = new Portal(1);
-					portal.position.set(editorBlock.position);
-					portals.add(portal);
+					//other portals placed?
+					int portalIDT = 0;
+					Portal portalT = null;
+					for(Portal portal:portals) {
+						if(Math.abs(portal.id)>Math.abs(portalIDT)) {
+							portalIDT = portal.id;
+							portalT = portal;
+						}
+					}
+					if(portalT==null) {
+						Portal portal = new Portal(4);
+						portal.position.set(editorBlock.position);
+						portals.add(portal);
+						Gdx.app.log("", "new Portal(4)");
+					}else if(portalT.correspondingPortal == null || !portals.contains(portalT.correspondingPortal, true)) {
+						portalT.correspondingPortal = new Portal(-portalT.id);
+						portalT.correspondingPortal.position.set(editorBlock.position);
+						portalT.correspondingPortal.correspondingPortal = portalT;
+						portals.add(portalT.correspondingPortal);
+						Gdx.app.log("", "Portal in Portal(" + portalT.id + ")");
+					} else {
+						Portal portal = new Portal(portalIDT+1);
+						portal.position.set(editorBlock.position);
+						portals.add(portal);
+						Gdx.app.log("", "new Portal(" + portal.id + ")");
+					}
 				} else if (castTo == 3) {
 					portals.removeValue((Portal) castObject,true);
 					SwitchableBlock switchBlock = new SwitchableBlock(new Vector3(editorBlock.position));

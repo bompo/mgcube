@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -146,15 +147,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	public void initRender() {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		// //antiAliasing for Desktop - no support in Android
-		// Gdx.graphics.getGL20().glEnable (GL10.GL_LINE_SMOOTH);
-		// Gdx.graphics.getGL20().glEnable (GL10.GL_BLEND);
-		// Gdx.graphics.getGL20().glBlendFunc (GL10.GL_SRC_ALPHA,GL10.
-		// GL_ONE_MINUS_SRC_ALPHA);
-		// Gdx.graphics.getGL20().glHint (GL10.GL_LINE_SMOOTH_HINT,
-		// GL10.GL_FASTEST);
-		// Gdx.graphics.getGL20().glLineWidth (1.5f);
-
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
@@ -240,8 +232,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	
 	@Override
 	public void render(float deltaTime) {
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		
 		delta = Math.min(0.02f, deltaTime);
 		startTime += delta;
@@ -408,7 +398,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	private void renderMenu() {
 
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -587,12 +576,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 	private void renderScene() {		
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glClearColor(Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 				
 		transShader.begin();
 		transShader.setUniformMatrix("VPMatrix", cam.combined);
