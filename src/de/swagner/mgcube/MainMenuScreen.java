@@ -55,6 +55,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	BoundingBox button3 = new BoundingBox();
 	BoundingBox button4 = new BoundingBox();
 	BoundingBox button5 = new BoundingBox();
+	BoundingBox button6 = new BoundingBox();
 
 	Array<Block> blocks = new Array<Block>();
 	Array<Renderable> renderObjects = new Array<Renderable>();
@@ -127,7 +128,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		menuItems.add("select level");
 		menuItems.add("time attack");
 		menuItems.add("tutorial");
-		menuItems.add("options");
+		menuItems.add("level editor");
 
 		initRender();
 
@@ -140,6 +141,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		button3.set(new Vector3(470, 290, 0), new Vector3(770, 220, 0));
 		button4.set(new Vector3(470, 360, 0), new Vector3(770, 310, 0));
 		button5.set(new Vector3(470, 440, 0), new Vector3(770, 380, 0));
+		button6.set(new Vector3(040, 440, 0), new Vector3(250, 380, 0));
 		
 		exit = false;
 	}
@@ -299,12 +301,18 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		batch.begin();
 		float y = 405;
 		for (String s : menuItems) {
-			if (selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
+			if (selectedMenuItem<5 && selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
 				selectedFont.draw(batch, s, 480, y);
 			else
 				font.draw(batch, s, 480, y);
 			y -= 80;
 		}
+		
+		if (selectedMenuItem == 5)
+			selectedFont.draw(batch, "Options", 50, 80);
+		else
+			font.draw(batch, "Options",50, 80);
+		
 		batch.end();
 
 		if (!finished && fade > 0) {
@@ -348,6 +356,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					game.setScreen(new LevelSelectScreen(game,1));
 					break;
 				case 4:
+					game.setScreen(new EditorScreen(game,1,0));
+					break;
+				case 5:
 					game.setScreen(new OptionsScreen(game));
 					break;
 
@@ -567,6 +578,39 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 	
 				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.1f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+		
+		{
+			// render Button 6
+			tmp.idt();
+			model.idt();
+
+			tmp.setToScaling(2.5f, 0.6f, 0.5f);
+			model.mul(tmp);
+
+			tmp.setToRotation(xAxis, (angleXBack / 40.f));
+			model.mul(tmp);
+			tmp.setToRotation(yAxis, (angleYBack / 100.f) + 8.f);
+			model.mul(tmp);
+
+			tmp.setToTranslation(-2.2f, -6.6f, 12);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==5) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 		}
@@ -823,7 +867,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		if (keycode == Input.Keys.DOWN) {
 			selectedMenuItem++;
-			selectedMenuItem %= 4;
+			selectedMenuItem %= 6;
 		}
 
 		if (keycode == Input.Keys.UP) {
@@ -865,11 +909,13 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			} else if (button4.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 3;
 				finished = true;
-			} 
-			else if (button5.contains(new Vector3(x, y, 0))) {
+			} else if (button5.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 4;
 				finished = true;
-			} else {
+			} else if (button6.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 5;
+				finished = true;
+			}  else {
 				selectedMenuItem = -1;
 			}
 		}
@@ -907,9 +953,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				selectedMenuItem = 2;
 			} else if (button4.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 3;
-			} 
-			else if (button5.contains(new Vector3(x, y, 0))) {
+			} else if (button5.contains(new Vector3(x, y, 0))) {
 				selectedMenuItem = 4;
+			} else if (button6.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 5;
 			} else {
 				selectedMenuItem = -1;
 			}
