@@ -9,6 +9,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,6 +34,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	
 	float startTime = 0;
 	PerspectiveCamera cam;
+	OrthographicCamera camMenu;
 	Mesh blockModel;
 	Mesh playerModel;
 	Mesh coneModel;
@@ -42,7 +44,16 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	Mesh sphereModel;
 	Mesh sphereSliceModel;
 	float angleX = 0;
-	float angleY = 0;
+	float angleY = 0;	
+
+	int selectedMenuItem = -1;
+	
+	BoundingBox button1 = new BoundingBox();
+	BoundingBox button2 = new BoundingBox();
+	BoundingBox button3 = new BoundingBox();
+	BoundingBox button4 = new BoundingBox();
+	BoundingBox button5 = new BoundingBox();
+	BoundingBox button6 = new BoundingBox();
 
 	float angleXBack = 0;
 	float angleYBack = 0;
@@ -151,6 +162,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
 		cam.far = 1000;
+		
+		camMenu = new OrthographicCamera(800,480);
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
@@ -161,10 +174,10 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		font = Resources.getInstance().font;
-		font.setScale(1);
+		font.setScale(2f);
 		
 		timeAttackFont = Resources.getInstance().timeAttackFont;
-		timeAttackFont.setScale(1);
+		timeAttackFont.setScale(2f);
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
@@ -172,6 +185,13 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		initRender();
 		angleY = 160;
 		angleX = 0;
+		
+		button1.set(new Vector3(30, 450, 0), new Vector3(90, 390, 0));
+		button2.set(new Vector3(100, 450, 0), new Vector3(160, 390, 0));
+		button3.set(new Vector3(180, 450, 0), new Vector3(240, 390, 0));
+		button4.set(new Vector3(100, 375, 0), new Vector3(160, 315, 0));
+		button5.set(new Vector3(610, 450, 0), new Vector3(780, 390, 0));
+		button6.set(new Vector3(30, 90, 0), new Vector3(190, 30, 0));
 		
 		initLevel(level);
 		alterLevel();
@@ -376,6 +396,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		if(Resources.getInstance().bloomOnOff) {
 			frameBuffer.begin();
 			renderScene();
+			renderButtons();
 			frameBuffer.end();
 	
 			//PostProcessing
@@ -408,49 +429,63 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		
 		//render scene again
 		renderScene();
-			
+		renderButtons();
+		
 		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 				
 		if(Resources.getInstance().bloomOnOff) {
-		batch.enableBlending();
-		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
-		batch.begin();
-		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
-		batch.end();
+			batch.enableBlending();
+			batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
+			batch.begin();
+			batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
+			batch.end();
 		}
-
 		
 		//GUI
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
 		
-		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);	
-//		font.draw(fontbatch, "fps: " + Gdx.graphics.getFramesPerSecond(), 620, 40);
-		if(mode == 0) {
-//		font.draw(fontbatch, "lives: " + Resources.getInstance().lives, 620, 100);
-		}	
-		
-		Resources.getInstance().time += delta;
-		Resources.getInstance().timeAttackTime -= delta;
-		
-		if(mode == 0) {			
-			seconds = (int) Resources.getInstance().time % 60;
-			minutes = (int)Resources.getInstance().time / 60;
-		} else if ( mode == 1) {			
-			seconds = (int) Resources.getInstance().timeAttackTime % 60;
-			minutes = (int)Resources.getInstance().timeAttackTime / 60;
+		if(selectedMenuItem==1) {
+			timeAttackFont.draw(fontbatch, "a", 35, 80);
+		} else {
+			font.draw(fontbatch, "a", 35, 80);
+		}
+		if(selectedMenuItem==2) {
+			timeAttackFont.draw(fontbatch, "s", 115, 80);
+		} else {
+			font.draw(fontbatch, "s", 115, 80);
+		}
+		if(selectedMenuItem==3) {
+			timeAttackFont.draw(fontbatch, "d", 190, 80);
+		} else {
+			font.draw(fontbatch, "d", 190, 80);
+		}
+		if(selectedMenuItem==4) {
+			timeAttackFont.draw(fontbatch, "w", 115, 160);
+		} else {
+			font.draw(fontbatch, "w", 115, 160);
+		}
+		if(selectedMenuItem==5) {
+			timeAttackFont.draw(fontbatch, "block", 620, 80);
+		} else {
+			font.draw(fontbatch, "block", 620, 80);
+		}
+		if(selectedMenuItem==6) {
+			if(mode==1) {
+				timeAttackFont.draw(fontbatch, "play", 40, 440);
+			} else {
+				font.draw(fontbatch, "edit", 40, 440);
+			}
+		} else {
+			if (mode == 1) {
+				timeAttackFont.draw(fontbatch, "play", 40, 440);
+			} else {
+				font.draw(fontbatch, "edit", 40, 440);
+			}
 		}
 
-		if(seconds > 9 && minutes > 9)
-			font.draw(fontbatch, "time: " + minutes + ":" + seconds, 620, 60);
-		else if(seconds > 9 && minutes < 10)
-			font.draw(fontbatch, "time: 0" + minutes + ":" + seconds, 620, 60);
-		else if(seconds < 10 && minutes > 9)
-			font.draw(fontbatch, "time: " + minutes + ":0" + seconds, 620, 60);
-		else
-			font.draw(fontbatch, "time: 0" + minutes + ":0" + seconds, 620, 60);
 		fontbatch.end();
 
 		
@@ -529,6 +564,206 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			renderable.sortPosition = cam.position.dst(position);
 		}
 		renderObjects.sort();
+	}
+	
+	private void renderButtons() {
+
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		transShader.begin();
+		transShader.setUniformMatrix("VPMatrix", camMenu.combined);
+
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		{
+			// render Button 1
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToScaling(30f, 30, 1);
+			model.mul(tmp);
+
+			tmp.setToTranslation(2f, 2f, -1);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==0) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+
+		{
+			// render Button 2
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToScaling(30f, 30, 1);
+			model.mul(tmp);
+
+			tmp.setToTranslation(4.5f, 2f, -1);
+			model.mul(tmp);
+			
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==1) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+
+		{
+			// render Button 3
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToScaling(30f, 30, 1);
+			model.mul(tmp);
+
+			tmp.setToTranslation(7.0f, 2f, -1);
+			model.mul(tmp);
+			
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==2) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+
+		{
+			// render Button 4
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToScaling(30f, 30, 1);
+			model.mul(tmp);
+
+			tmp.setToTranslation(4.5f, 4.5f, -1);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==3) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+		
+		{
+			// render Button 5
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToScaling(85f, 30, 1);
+			model.mul(tmp);
+
+			tmp.setToTranslation(8.2f, 2f, -1);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==4) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+		
+		{
+			// render Button 6
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToScaling(80f, 30, 1);
+			model.mul(tmp);
+
+			tmp.setToTranslation(1.4f, 14f, -1);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			if(selectedMenuItem==5) {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			} else {
+				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+	
+				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
+				blockModel.render(transShader, GL20.GL_TRIANGLES);
+			}
+		}
+
+		transShader.end();
 	}
 
 	private void renderScene() {		
@@ -1450,162 +1685,166 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		}		
 		
 		if(keycode == Input.Keys.R) {
-			int castTo = 0;
-			Renderable castObject = null;
-			for(Renderable renderable:renderObjects) {
-				if((Math.abs(editorBlock.position.x  - renderable.position.x) < EPSILON)
-					&& (Math.abs(editorBlock.position.y  - renderable.position.y) < EPSILON)
-					&& (Math.abs(editorBlock.position.z  - renderable.position.z) < EPSILON)
-					&& !(renderable instanceof EditorBlock)) {
-					castObject = renderable;
-					if(renderable instanceof Player) castTo = 1;
-					if(renderable instanceof Target) castTo = 2;
-					if(renderable instanceof Block) castTo = 3;
-					if(renderable instanceof MovableBlock) castTo = 4;
-					if(renderable instanceof Portal) castTo = 5;
-					if(renderable instanceof Switch) castTo = 6;
-					if(renderable instanceof SwitchableBlock) castTo = 7;
-					break;
-				}
-			}
-			if(castTo == 0) {
-				if(player == null) {
-					player = new Player();
-					player.position.set(editorBlock.position);
-				} else if (target == null){
-					target = new Target();
-					target.position.set(editorBlock.position);
-				} else {
-					blocks.add(new Block(new Vector3(editorBlock.position)));
-					Gdx.app.log("", "add new block");
-				}
-			} else {
-				castTo++;
-				castTo = castTo%8;
-				
-				int deleteObject = castTo-1;
-				if (castTo == 1) {
-					if(player!=null) {
-						player = new Player();
-						player.position.set(editorBlock.position);
-					} else {
-						castTo = 2;
-					}
-				} 
-				if (castTo == 2) {
-					deleteObject(castObject, deleteObject);
-					if(target!=null) {
-						target = new Target();
-						target.position.set(editorBlock.position);
-					} else {
-						castTo = 3;
-					}
-				} 
-				if (castTo == 3) {
-					deleteObject(castObject, deleteObject);
-					blocks.add(new Block(new Vector3(editorBlock.position)));
-				} 
-				if (castTo == 4) {
-					deleteObject(castObject, deleteObject);					
-					movableBlocks.add(new MovableBlock(new Vector3(editorBlock.position)));
-				} 				
-				if (castTo == 5) {
-					deleteObject(castObject, deleteObject);
-					
-					//other portals placed?
-					int portalIDT = 0;
-					Portal portalT = null;
-					for(Portal portal:portals) {
-						if(Math.abs(portal.id)>Math.abs(portalIDT)) {
-							portalIDT = portal.id;
-							portalT = portal;
-						}
-					}
-					if(portalT==null) {
-						Portal portal = new Portal(4);
-						portal.position.set(editorBlock.position);
-						portals.add(portal);
-						Gdx.app.log("", "new Portal(4)");
-					} else if(portalT.correspondingPortal != null && portalT.correspondingPortal.id==-8) {
-						//max reached skip this
-						castTo = 6;
-						deleteObject = 4;
-					} else if(portalT.correspondingPortal == null || !portals.contains(portalT.correspondingPortal, true)) {
-						portalT.correspondingPortal = new Portal(-portalT.id);
-						portalT.correspondingPortal.position.set(editorBlock.position);
-						portalT.correspondingPortal.correspondingPortal = portalT;
-						portals.add(portalT.correspondingPortal);
-						Gdx.app.log("", "Portal in Portal(" + portalT.id + ")");
-					} else {
-						Portal portal = new Portal(portalIDT+1);
-						portal.position.set(editorBlock.position);
-						portals.add(portal);
-						Gdx.app.log("", "new Portal(" + portal.id + ")");
-					}
-				} 
-				if (castTo == 6) {
-					deleteObject(castObject, deleteObject);
-					
-					//other switches placed?
-					int switchIDT = 0;
-					Switch switchT = null;
-					for(Switch switch_:switches) {
-						if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
-							switchIDT = switch_.id;
-							switchT = switch_;
-						}
-					}
-					if(switchT==null) {
-						Switch switchBlock = new Switch(new Vector3(editorBlock.position));
-						switchBlock.id = 10;
-						switches.add(switchBlock);
-						Gdx.app.log("", "new Switch(10)");
-					} else if(switchT.id==13) {
-						//max reached skip this
-						castTo = 7;
-						deleteObject = 5;
-					} else {
-						Switch switchBlock = new Switch(new Vector3(editorBlock.position));
-						if(Math.abs(switchT.id) == 10) {
-							switchBlock.id = switchIDT+2;
-						} else {
-							switchBlock.id = switchIDT+1;
-						}
-						switches.add(switchBlock);
-						Gdx.app.log("", "new Switch(" + switchBlock.id + ")");
-					}
-				}
-				if (castTo == 7) {
-					deleteObject(castObject, deleteObject);
-					
-					//cast to last used switch
-					int switchIDT = 0;
-					Switch switchT = null;
-					for(Switch switch_:switches) {
-						if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
-							switchIDT = switch_.id;
-							switchT = switch_;
-						}
-					}			
-					if(switchT!=null) {
-						SwitchableBlock switchBlock = new SwitchableBlock(new Vector3(editorBlock.position));
-						switchBlock.id = -switchT.id;
-						switchblocks.add(switchBlock);
-						switchT.sBlocks.add(switchBlock);
-						Gdx.app.log("", "new SwitchBlock(" + switchBlock.id + ") in Switch(" + switchT.id + ")");
-					}
-				} 
-				if(castTo == 0) {
-					deleteObject(castObject, deleteObject);
-				}
-
-
-			}
-			alterLevel();
+			changeCurrentBlock();
 		}
 		
 		
 		return false;
+	}
+
+	private void changeCurrentBlock() {
+		int castTo = 0;
+		Renderable castObject = null;
+		for(Renderable renderable:renderObjects) {
+			if((Math.abs(editorBlock.position.x  - renderable.position.x) < EPSILON)
+				&& (Math.abs(editorBlock.position.y  - renderable.position.y) < EPSILON)
+				&& (Math.abs(editorBlock.position.z  - renderable.position.z) < EPSILON)
+				&& !(renderable instanceof EditorBlock)) {
+				castObject = renderable;
+				if(renderable instanceof Player) castTo = 1;
+				if(renderable instanceof Target) castTo = 2;
+				if(renderable instanceof Block) castTo = 3;
+				if(renderable instanceof MovableBlock) castTo = 4;
+				if(renderable instanceof Portal) castTo = 5;
+				if(renderable instanceof Switch) castTo = 6;
+				if(renderable instanceof SwitchableBlock) castTo = 7;
+				break;
+			}
+		}
+		if(castTo == 0) {
+			if(player == null) {
+				player = new Player();
+				player.position.set(editorBlock.position);
+			} else if (target == null){
+				target = new Target();
+				target.position.set(editorBlock.position);
+			} else {
+				blocks.add(new Block(new Vector3(editorBlock.position)));
+				Gdx.app.log("", "add new block");
+			}
+		} else {
+			castTo++;
+			castTo = castTo%8;
+			
+			int deleteObject = castTo-1;
+			if (castTo == 1) {
+				if(player!=null) {
+					player = new Player();
+					player.position.set(editorBlock.position);
+				} else {
+					castTo = 2;
+				}
+			} 
+			if (castTo == 2) {
+				deleteObject(castObject, deleteObject);
+				if(target!=null) {
+					target = new Target();
+					target.position.set(editorBlock.position);
+				} else {
+					castTo = 3;
+				}
+			} 
+			if (castTo == 3) {
+				deleteObject(castObject, deleteObject);
+				blocks.add(new Block(new Vector3(editorBlock.position)));
+			} 
+			if (castTo == 4) {
+				deleteObject(castObject, deleteObject);					
+				movableBlocks.add(new MovableBlock(new Vector3(editorBlock.position)));
+			} 				
+			if (castTo == 5) {
+				deleteObject(castObject, deleteObject);
+				
+				//other portals placed?
+				int portalIDT = 0;
+				Portal portalT = null;
+				for(Portal portal:portals) {
+					if(Math.abs(portal.id)>Math.abs(portalIDT)) {
+						portalIDT = portal.id;
+						portalT = portal;
+					}
+				}
+				if(portalT==null) {
+					Portal portal = new Portal(4);
+					portal.position.set(editorBlock.position);
+					portals.add(portal);
+					Gdx.app.log("", "new Portal(4)");
+				} else if(portalT.correspondingPortal != null && portalT.correspondingPortal.id==-8) {
+					//max reached skip this
+					castTo = 6;
+					deleteObject = 4;
+				} else if(portalT.correspondingPortal == null || !portals.contains(portalT.correspondingPortal, true)) {
+					portalT.correspondingPortal = new Portal(-portalT.id);
+					portalT.correspondingPortal.position.set(editorBlock.position);
+					portalT.correspondingPortal.correspondingPortal = portalT;
+					portals.add(portalT.correspondingPortal);
+					Gdx.app.log("", "Portal in Portal(" + portalT.id + ")");
+				} else {
+					Portal portal = new Portal(portalIDT+1);
+					portal.position.set(editorBlock.position);
+					portals.add(portal);
+					Gdx.app.log("", "new Portal(" + portal.id + ")");
+				}
+			} 
+			if (castTo == 6) {
+				deleteObject(castObject, deleteObject);
+				
+				//other switches placed?
+				int switchIDT = 0;
+				Switch switchT = null;
+				for(Switch switch_:switches) {
+					if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
+						switchIDT = switch_.id;
+						switchT = switch_;
+					}
+				}
+				if(switchT==null) {
+					Switch switchBlock = new Switch(new Vector3(editorBlock.position));
+					switchBlock.id = 10;
+					switches.add(switchBlock);
+					Gdx.app.log("", "new Switch(10)");
+				} else if(switchT.id==13) {
+					//max reached skip this
+					castTo = 7;
+					deleteObject = 5;
+				} else {
+					Switch switchBlock = new Switch(new Vector3(editorBlock.position));
+					if(Math.abs(switchT.id) == 10) {
+						switchBlock.id = switchIDT+2;
+					} else {
+						switchBlock.id = switchIDT+1;
+					}
+					switches.add(switchBlock);
+					Gdx.app.log("", "new Switch(" + switchBlock.id + ")");
+				}
+			}
+			if (castTo == 7) {
+				deleteObject(castObject, deleteObject);
+				
+				//cast to last used switch
+				int switchIDT = 0;
+				Switch switchT = null;
+				for(Switch switch_:switches) {
+					if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
+						switchIDT = switch_.id;
+						switchT = switch_;
+					}
+				}			
+				if(switchT!=null) {
+					SwitchableBlock switchBlock = new SwitchableBlock(new Vector3(editorBlock.position));
+					switchBlock.id = -switchT.id;
+					switchblocks.add(switchBlock);
+					switchT.sBlocks.add(switchBlock);
+					Gdx.app.log("", "new SwitchBlock(" + switchBlock.id + ") in Switch(" + switchT.id + ")");
+				}
+			} 
+			if(castTo == 0) {
+				deleteObject(castObject, deleteObject);
+			}
+
+
+		}
+		alterLevel();
 	}
 
 	private void deleteObject(Renderable castObject, int deleteObject) {
@@ -1669,7 +1908,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-
+				
 		touchStartX = x;
 		touchStartY = y;
 		
@@ -1695,7 +1934,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	            initialDistance = v2.dst(pointers.get(finger_one_pointer));
 	         }
 	      }
-
+		
 		return false;
 	}
 
@@ -1703,6 +1942,50 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
+		
+		
+		if (!finished) {
+			if (button1.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 0;
+				editorBlock.direction.set(0, 0, -1);
+				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+				editorBlock.moveLeft();
+				return true;
+			} else if (button2.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 1;
+				editorBlock.up.set(0, -1, 0);
+				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+				editorBlock.moveDown();
+				return true;
+			} else if (button3.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 2;
+				editorBlock.direction.set(0, 0, -1);
+				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+				editorBlock.moveRight();
+				return true;
+			} else if (button4.contains(new Vector3(x, y, 0))) {
+				selectedMenuItem = 3;
+				editorBlock.up.set(0, 1, 0);
+				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+				editorBlock.moveUp();
+				return true;
+			} else if (button5.contains(new Vector3(x, y, 0))) {
+				changeCurrentBlock();
+				selectedMenuItem = 4;
+				return true;
+			} else if (button6.contains(new Vector3(x, y, 0))) {
+				if(mode == 1) mode = 0;
+				else mode = 1;
+				selectedMenuItem = 5;
+				return true;
+			} else {
+				selectedMenuItem = -1;
+			}
+		}	
 
 		if (pointers.size() > 1) {
 			if (pointer == finger_one_pointer) {
@@ -1764,7 +2047,24 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean touchMoved(int x, int y) {
-		// TODO Auto-generated method stub
+		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
+		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
+		
+		if (button1.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 0;
+		} else if (button2.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 1;
+		} else if (button3.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 2;
+		} else if (button4.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 3;
+		} else if (button5.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 4;
+		} else if (button6.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 5;
+		} else {
+			selectedMenuItem = -1;
+		}
 		return false;
 	}
 
