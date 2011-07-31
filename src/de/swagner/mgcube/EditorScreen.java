@@ -1431,8 +1431,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					castObject = renderable;
 					if(renderable instanceof Block) castTo = 1;
 					if(renderable instanceof Portal) castTo = 2;
-					if(renderable instanceof SwitchableBlock) castTo = 3;
-					if(renderable instanceof Switch) castTo = 4;
+					if(renderable instanceof Switch) castTo = 3;
+					if(renderable instanceof SwitchableBlock) castTo = 4;
 					break;
 				}
 			}
@@ -1442,10 +1442,14 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			} else {
 				castTo++;
 				castTo = castTo%5;
+				
+				int deleteObject = castTo-1;
 				if (castTo == 1) {
 					blocks.add(new Block(new Vector3(editorBlock.position)));
-				} else if (castTo == 2) {
-					blocks.removeValue((Block) castObject,true);
+				} 
+				if (castTo == 2) {
+					deleteObject(castObject, deleteObject);
+					
 					//other portals placed?
 					int portalIDT = 0;
 					Portal portalT = null;
@@ -1460,7 +1464,11 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						portal.position.set(editorBlock.position);
 						portals.add(portal);
 						Gdx.app.log("", "new Portal(4)");
-					}else if(portalT.correspondingPortal == null || !portals.contains(portalT.correspondingPortal, true)) {
+					} else if(portalT.correspondingPortal != null && portalT.correspondingPortal.id==-8) {
+						//max reached skip this
+						castTo = 3;
+						deleteObject = 1;
+					} else if(portalT.correspondingPortal == null || !portals.contains(portalT.correspondingPortal, true)) {
 						portalT.correspondingPortal = new Portal(-portalT.id);
 						portalT.correspondingPortal.position.set(editorBlock.position);
 						portalT.correspondingPortal.correspondingPortal = portalT;
@@ -1472,24 +1480,83 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						portals.add(portal);
 						Gdx.app.log("", "new Portal(" + portal.id + ")");
 					}
-				} else if (castTo == 3) {
-					portals.removeValue((Portal) castObject,true);
-					SwitchableBlock switchBlock = new SwitchableBlock(new Vector3(editorBlock.position));
-					switchblocks.add(switchBlock);
-				} else if (castTo == 4) {
-					switchblocks.removeValue((SwitchableBlock) castObject,true);
-					Switch switchBlock = new Switch(new Vector3(editorBlock.position));
-					switches.add(switchBlock);
-				} else if(castTo == 0) {
-					switches.removeValue((Switch) castObject,true);
+				} 
+				if (castTo == 3) {
+					deleteObject(castObject, deleteObject);
+					
+					//other switches placed?
+					int switchIDT = 0;
+					Switch switchT = null;
+					for(Switch switch_:switches) {
+						if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
+							switchIDT = switch_.id;
+							switchT = switch_;
+						}
+					}
+					if(switchT==null) {
+						Switch switchBlock = new Switch(new Vector3(editorBlock.position));
+						switchBlock.id = 10;
+						switches.add(switchBlock);
+						Gdx.app.log("", "new Switch(10)");
+					} else if(switchT.id==13) {
+						//max reached skip this
+						castTo = 4;
+						deleteObject = 2;
+					} else {
+						Switch switchBlock = new Switch(new Vector3(editorBlock.position));
+						if(Math.abs(switchT.id) == 10) {
+							switchBlock.id = switchIDT+2;
+						} else {
+							switchBlock.id = switchIDT+1;
+						}
+						switches.add(switchBlock);
+						Gdx.app.log("", "new Switch(" + switchBlock.id + ")");
+					}
 				}
-				Gdx.app.log("", castTo+"");
+				if (castTo == 4) {
+					deleteObject(castObject, deleteObject);
+					
+					//cast to last used switch
+					int switchIDT = 0;
+					Switch switchT = null;
+					for(Switch switch_:switches) {
+						if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
+							switchIDT = switch_.id;
+							switchT = switch_;
+						}
+					}			
+					if(switchT!=null) {
+						SwitchableBlock switchBlock = new SwitchableBlock(new Vector3(editorBlock.position));
+						switchBlock.id = -switchT.id;
+						switchblocks.add(switchBlock);
+						switchT.sBlocks.add(switchBlock);
+						Gdx.app.log("", "new SwitchBlock(" + switchBlock.id + ") in Switch(" + switchT.id + ")");
+					}
+				} 
+				if(castTo == 0) {
+					deleteObject(castObject, deleteObject);
+				}
+
+
 			}
 			alterLevel();
 		}
 		
 		
 		return false;
+	}
+
+	private void deleteObject(Renderable castObject, int deleteObject) {
+		if (deleteObject == 1) {
+			blocks.removeValue((Block) castObject, true);
+		} else if (deleteObject == 2) {
+			portals.removeValue((Portal) castObject, true);
+		} else if (deleteObject == 3) {
+			switches.removeValue((Switch) castObject, true);
+		} else if (deleteObject == -1) {
+			switchblocks
+					.removeValue((SwitchableBlock) castObject, true);
+		}
 	}
 
 	private void movePlayer() {
