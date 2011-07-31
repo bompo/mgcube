@@ -474,15 +474,15 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			}
 			
 			if(Resources.getInstance().currentlevel == 3) {
-				if(startTime > 0.5 && startTime< 4) {
+				if(startTime > 0.5 && startTime< 4 && currentAction != 1) {
 					actionTime = 3;
 					lockInput = true;
 					font.drawMultiLine(fontbatch, "Welcome to the third tutorial!", 40, 100);
-				} else if(startTime >= 4 && startTime < 8) {
+				} else if(startTime >= 4 && startTime < 8 && currentAction != 1) {
 					font.drawMultiLine(fontbatch, "There are levels that feature\nmultiple Portals", 40, 100);
-				} else if(startTime >= 8 && startTime < 14) {
+				} else if(startTime >= 8 && startTime < 14 && currentAction != 1) {
 					font.drawMultiLine(fontbatch, "But how do you know which Portal\nleads where?", 40, 100);
-				} else if(startTime >= 14 && startTime < 20) {
+				} else if(startTime >= 14 && startTime < 20 && currentAction != 1) {
 					font.drawMultiLine(fontbatch, "Easy. Portals that belong\ntogether share the same color", 40, 100);
 				}
 				else {
