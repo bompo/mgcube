@@ -329,6 +329,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		delta = Math.min(0.02f, deltaTime);
 		
 		startTime += delta;
+		touchTime += Gdx.graphics.getDeltaTime();
 		
 		angleXBack += MathUtils.sin(startTime) * delta * 10f;
 		angleYBack += MathUtils.cos(startTime) * delta * 5f;
@@ -1494,7 +1495,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleX += ((y - touchStartY) / 5.f);
 
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
-		touchTime += Gdx.graphics.getDeltaTime();
 
 		touchStartX = x;
 		touchStartY = y;

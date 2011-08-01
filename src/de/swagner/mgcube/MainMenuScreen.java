@@ -582,38 +582,38 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 		
-		{
-			// render Button 6
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(2.5f, 0.6f, 0.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, (angleXBack / 40.f));
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, (angleYBack / 100.f) + 8.f);
-			model.mul(tmp);
-
-			tmp.setToTranslation(-2.2f, -6.6f, 12);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			if(selectedMenuItem==5) {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			} else {
-				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
-				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-	
-				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
-				blockModel.render(transShader, GL20.GL_TRIANGLES);
-			}
-		}
+//		{
+//			// render Button 6
+//			tmp.idt();
+//			model.idt();
+//
+//			tmp.setToScaling(2.5f, 0.6f, 0.5f);
+//			model.mul(tmp);
+//
+//			tmp.setToRotation(xAxis, (angleXBack / 40.f));
+//			model.mul(tmp);
+//			tmp.setToRotation(yAxis, (angleYBack / 100.f) + 8.f);
+//			model.mul(tmp);
+//
+//			tmp.setToTranslation(-2.2f, -6.6f, 12);
+//			model.mul(tmp);
+//
+//			transShader.setUniformMatrix("MMatrix", model);
+//
+//			if(selectedMenuItem==5) {
+//				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+//				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//	
+//				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+//				blockModel.render(transShader, GL20.GL_TRIANGLES);
+//			} else {
+//				transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]-0.3f);
+//				wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+//	
+//				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]-0.2f);
+//				blockModel.render(transShader, GL20.GL_TRIANGLES);
+//			}
+//		}
 
 		transShader.end();
 	}

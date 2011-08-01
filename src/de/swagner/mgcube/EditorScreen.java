@@ -178,7 +178,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		font = Resources.getInstance().font;
 		font.setScale(2f);
 		
-		timeAttackFont = Resources.getInstance().timeAttackFont;
+		timeAttackFont = Resources.getInstance().selectedFont;
 		timeAttackFont.setScale(2f);
 
 		transShader = Resources.getInstance().transShader;
@@ -192,7 +192,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		button2.set(new Vector3(100, 450, 0), new Vector3(160, 390, 0));
 		button3.set(new Vector3(180, 450, 0), new Vector3(240, 390, 0));
 		button4.set(new Vector3(100, 375, 0), new Vector3(160, 315, 0));
-		button5.set(new Vector3(610, 450, 0), new Vector3(780, 390, 0));
+		button5.set(new Vector3(590, 450, 0), new Vector3(790, 370, 0));
 		button6.set(new Vector3(30, 90, 0), new Vector3(190, 30, 0));
 		
 		initLevel(level);
@@ -241,23 +241,23 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	private void saveLevel() {
 		int[][][] levelArray = { { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } } };
 			
-		levelArray[((int) (Math.abs((Math.floor(player.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(player.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-player.position.x +10)/2))))] = 2; 
-		levelArray[((int) (Math.abs((Math.floor(target.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(target.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-target.position.x +10)/2))))] = 3;
+		levelArray[((int) (Math.abs((Math.round(player.position.z +10)/2))))][ ((int) (Math.abs((Math.round(player.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-player.position.x +10)/2))))] = 2; 
+		levelArray[((int) (Math.abs((Math.round(target.position.z +10)/2))))][ ((int) (Math.abs((Math.round(target.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-target.position.x +10)/2))))] = 3;
 		for(Block block:blocks) {
 //			Gdx.app.log("", (int) ((-block.position.x +10)/2)+" " + (int) ((block.position.y +10)/2)+" "+(int) ((block.position.z +10)/2));
-			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = 1;
+			levelArray[ ((int) (Math.abs((Math.round(block.position.z +10)/2))))][ ((int) (Math.abs((Math.round(block.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-block.position.x +10)/2))))] = 1;
 		}
 		for(MovableBlock block:movableBlocks) {
-			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = 9;
+			levelArray[ ((int) (Math.abs((Math.round(block.position.z +10)/2))))][ ((int) (Math.abs((Math.round(block.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-block.position.x +10)/2))))] = 9;
 		}
 		for(Portal block:portals) {
-			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = block.id;
+			levelArray[ ((int) (Math.abs((Math.round(block.position.z +10)/2))))][ ((int) (Math.abs((Math.round(block.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-block.position.x +10)/2))))] = block.id;
 		}
 		for(SwitchableBlock block:switchblocks) {
-			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = block.id;
+			levelArray[ ((int) (Math.abs((Math.round(block.position.z +10)/2))))][ ((int) (Math.abs((Math.round(block.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-block.position.x +10)/2))))] = block.id;
 		}
 		for(Switch block:switches) {
-			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = block.id;
+			levelArray[ ((int) (Math.abs((Math.round(block.position.z +10)/2))))][ ((int) (Math.abs((Math.round(block.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-block.position.x +10)/2))))] = block.id;
 		}
 		
 		levelCode = Resources.getInstance().encode(levelArray);
@@ -403,6 +403,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		delta = Math.min(0.02f, deltaTime);
 		
 		startTime += delta;
+		touchTime += Gdx.graphics.getDeltaTime();
 		
 		angleXBack += MathUtils.sin(startTime) * delta * 10f;
 		angleYBack += MathUtils.cos(startTime) * delta * 5f;
@@ -479,41 +480,41 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
 		if(mode==1) {
-		if(selectedMenuItem==1) {
+		if(selectedMenuItem==0) {
 			timeAttackFont.draw(fontbatch, "a", 35, 80);
 		} else {
 			font.draw(fontbatch, "a", 35, 80);
 		}
-		if(selectedMenuItem==2) {
+		if(selectedMenuItem==1) {
 			timeAttackFont.draw(fontbatch, "s", 115, 80);
 		} else {
 			font.draw(fontbatch, "s", 115, 80);
 		}
-		if(selectedMenuItem==3) {
+		if(selectedMenuItem==2) {
 			timeAttackFont.draw(fontbatch, "d", 190, 80);
 		} else {
 			font.draw(fontbatch, "d", 190, 80);
 		}
-		if(selectedMenuItem==4) {
+		if(selectedMenuItem==3) {
 			timeAttackFont.draw(fontbatch, "w", 115, 160);
 		} else {
 			font.draw(fontbatch, "w", 115, 160);
 		}
-		if(selectedMenuItem==5) {
-			timeAttackFont.draw(fontbatch, "block", 620, 80);
+		if(selectedMenuItem==4) {
+			timeAttackFont.drawMultiLine(fontbatch, "change\nblock", 600, 100);
 		} else {
-			font.draw(fontbatch, "block", 620, 80);
+			font.drawMultiLine(fontbatch, "change\nblock", 600, 100);
 		}
 		}
-		if(selectedMenuItem==6) {
+		if(selectedMenuItem==5) {
 			if(mode==1) {
 				timeAttackFont.draw(fontbatch, "play", 40, 440);
 			} else {
-				font.draw(fontbatch, "edit", 40, 440);
+				timeAttackFont.draw(fontbatch, "edit", 40, 440);
 			}
 		} else {
 			if (mode == 1) {
-				timeAttackFont.draw(fontbatch, "play", 40, 440);
+				font.draw(fontbatch, "play", 40, 440);
 			} else {
 				font.draw(fontbatch, "edit", 40, 440);
 			}
@@ -718,10 +719,10 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
 			model.mul(tmp);
 			
-			tmp.setToScaling(85f, 30, 1);
+			tmp.setToScaling(100f,40, 1);
 			model.mul(tmp);
 
-			tmp.setToTranslation(8.2f, 2f, -1);
+			tmp.setToTranslation(6.9f, 1.72f, -1);
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
@@ -1670,7 +1671,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		
 		if (keycode == Input.Keys.A) {
 			if(mode==1) {		
-			editorBlock.direction.set(0, 0, -1);
+			editorBlock.direction.set(0,0,-1);
 			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			editorBlock.moveLeft();
@@ -1944,7 +1945,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-				
+		
 		if (!finished) {
 			if(mode==1) {
 			if (button1.contains(new Vector3(x, y, 0))) {
@@ -2041,7 +2042,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		angleX += ((y - touchStartY) / 5.f);
 
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
-		touchTime += Gdx.graphics.getDeltaTime();
 
 		touchStartX = x;
 		touchStartY = y;
