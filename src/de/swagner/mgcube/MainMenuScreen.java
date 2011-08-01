@@ -356,7 +356,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					game.setScreen(new LevelSelectScreen(game,1));
 					break;
 				case 4:
-					game.setScreen(new EditorScreen(game,1,0));
+					game.setScreen(new EditorScreen(game,1,1));
 					break;
 				case 5:
 					game.setScreen(new OptionsScreen(game));
@@ -845,7 +845,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		if (keycode == Input.Keys.E) {
-			game.setScreen(new EditorScreen(game, 1, 0));
+			game.setScreen(new EditorScreen(game, 1, 1));
 		}
 		
 		if (keycode == Input.Keys.F) {

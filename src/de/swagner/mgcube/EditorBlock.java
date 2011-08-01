@@ -16,24 +16,37 @@ public class EditorBlock extends Renderable {
 		this.setDirection();
 		direction.rot(new Matrix4().setToRotation(Vector3.Y, -90));
 		position.add(direction.x*2, direction.y*2, direction.z*2);
+		checkOutOfBounds();
 	}	
 	
 	public void moveLeft() {
 		this.setDirection();
 		direction.rot(new Matrix4().setToRotation(Vector3.Y, 90));
 		position.add(direction.x*2, direction.y*2, direction.z*2);
+		checkOutOfBounds();
 	}	
 	
 	public void moveUp() {
 		this.setUp();
 		up.rot(new Matrix4().setToRotation(Vector3.Y, -90));
 		position.add(up.x*2, up.y*2, up.z*2);
+		checkOutOfBounds();
 	}	
 	
 	public void moveDown() {
 		this.setUp();
 		up.rot(new Matrix4().setToRotation(Vector3.Y, 90));
 		position.add(up.x*2, up.y*2, up.z*2);
+		checkOutOfBounds();
+	}
+
+	private void checkOutOfBounds() {
+		if(position.x>10) position.x = 10;
+		if(position.x<-10) position.x = -10;
+		if(position.y>10) position.y = 10;
+		if(position.y<-10) position.y = -10;
+		if(position.z>10) position.z = 10;
+		if(position.z<-10) position.z = -10;
 	}	
 	
 	public void setDirection() {

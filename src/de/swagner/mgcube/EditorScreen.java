@@ -132,6 +132,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	
 	EditorBlock editorBlock = new EditorBlock(new Vector3());
 	
+	String levelCode = "";
+	
 	//0 = edit
 	//1 = play
 	int mode = 0;
@@ -194,6 +196,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		button6.set(new Vector3(30, 90, 0), new Vector3(190, 30, 0));
 		
 		initLevel(level);
+		saveLevel();
 		alterLevel();
 	}
 	
@@ -235,6 +238,44 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		renderObjects.addAll(switchblocks);
 	}
 	
+	private void saveLevel() {
+		int[][][] levelArray = { { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } } };
+			
+		levelArray[((int) (Math.abs((Math.floor(player.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(player.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-player.position.x +10)/2))))] = 2; 
+		levelArray[((int) (Math.abs((Math.floor(target.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(target.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-target.position.x +10)/2))))] = 3;
+		for(Block block:blocks) {
+//			Gdx.app.log("", (int) ((-block.position.x +10)/2)+" " + (int) ((block.position.y +10)/2)+" "+(int) ((block.position.z +10)/2));
+			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = 1;
+		}
+		for(MovableBlock block:movableBlocks) {
+			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = 9;
+		}
+		for(Portal block:portals) {
+			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = block.id;
+		}
+		for(SwitchableBlock block:switchblocks) {
+			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = block.id;
+		}
+		for(Switch block:switches) {
+			levelArray[ ((int) (Math.abs((Math.floor(block.position.z +10)/2))))][ ((int) (Math.abs((Math.floor(block.position.y +10)/2))))][ ((int) (Math.abs((Math.floor(-block.position.x +10)/2))))] = block.id;
+		}
+		
+		levelCode = Resources.getInstance().encode(levelArray);
+		
+		Gdx.app.log("", levelCode);
+	}
+	
+	private void loadLevel() {
+		renderObjects.clear();
+		blocks.clear();
+		portals.clear();
+		movableBlocks.clear();
+		switchblocks.clear();
+		switches.clear();
+		
+		loadLevel(Resources.getInstance().decode(levelCode));
+	}
+	
 	private void initLevel(int levelnumber) {
 		renderObjects.clear();
 		blocks.clear();
@@ -250,11 +291,17 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			
 		}
 
-		// finde player pos
+		loadLevel(level);			
+	}
+
+	private void loadLevel(int[][][] level) {
+		
+		int MAX = level.length;
+		
 		int z = 0, y = 0, x = 0;
-		for (z = 0; z < 10; z++) {
-			for (y = 0; y < 10; y++) {
-				for (x = 0; x < 10; x++) {
+		for (z = 0; z < MAX; z++) {
+			for (y = 0; y < MAX; y++) {
+				for (x = 0; x < MAX; x++) {
 					if (level[z][y][x] == 1) {
 						blocks.add(new Block(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2))));
 					}
@@ -323,17 +370,10 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					portals.get(i).correspondingPortal = q;
 				}
 			}
-		}	
-	
-		
+		}
 	}
 
 	private void reset() {
-		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().tutorialcount) {
-			finished = true;
-			return;
-		}
-		
 		player.collideAnimation = 1;
 		animateWorld = false;
 		player.stop();
@@ -351,7 +391,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		movwarplock = false;
 		port=new Portal();
 
-		alterLevel();
+		loadLevel();
 	}
 
 	@Override
@@ -438,7 +478,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		//GUI
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
-		
+		if(mode==1) {
 		if(selectedMenuItem==1) {
 			timeAttackFont.draw(fontbatch, "a", 35, 80);
 		} else {
@@ -463,6 +503,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			timeAttackFont.draw(fontbatch, "block", 620, 80);
 		} else {
 			font.draw(fontbatch, "block", 620, 80);
+		}
 		}
 		if(selectedMenuItem==6) {
 			if(mode==1) {
@@ -500,31 +541,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				game.setScreen(new MainMenuScreen(game));
 			}
 		}
-		
-		//LevelChangeEffect
-		if (!changeLevel && changeLevelEffect > 0) {
-			changeLevelEffect = Math.max(changeLevelEffect - (delta * 15.f), 0);
-		}
-
-		if (changeLevel) {
-			changeLevelEffect = Math.min(changeLevelEffect + (delta * 15.f), 5);
-			if(mode == 1) {
-				fontbatch.begin();
-				timeAttackFont.draw(fontbatch, "+45", 740, 40 - changeLevelEffect * 4);
-				timeAttackFont.setColor(1, 1, 1, 1 / changeLevelEffect);
-				fontbatch.end();
-			}
-			if (changeLevelEffect >= 5) {				
-				nextLevel();
-			}
-		}
-		
-		
-		if(Resources.getInstance().timeAttackTime <= 0.5 && mode ==1) {
-			finished = true;
-			HighScoreManager.getInstance().newTimeAttackHighScore(0, Resources.getInstance().levelcount);
-		}
-
 	}
 
 	private void sortScene() {
@@ -569,6 +585,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		transShader.setUniformMatrix("VPMatrix", camMenu.combined);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		if(mode==1) {
 		{
 			// render Button 1
 			tmp.idt();
@@ -723,6 +740,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 		}
+		}
 		
 		{
 			// render Button 6
@@ -822,7 +840,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		for (Renderable renderable : renderObjects) {
 			
 			//render editor position
-			if( renderable instanceof EditorBlock) {
+			if(mode == 1 && renderable instanceof EditorBlock) {
 				model.set(renderable.model);
 	
 				transShader.setUniformMatrix("MMatrix", model);
@@ -1604,14 +1622,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			reset();
 			Resources.getInstance().time = 0;
 		}
-
-		if (keycode == Input.Keys.RIGHT) {
-			changeLevel = true;
-		}
-
-		if (keycode == Input.Keys.LEFT) {
-			prevLevel();
-		}
 		
 		if (keycode == Input.Keys.UP) {
 			Resources.getInstance().colorTheme++;
@@ -1641,43 +1651,57 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		if (keycode == Input.Keys.W) {
+			if(mode==1) {
 			editorBlock.up.set(0, 1, 0);
 			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			editorBlock.moveUp();
+			}
 		}
 
 		if (keycode == Input.Keys.S) {
+			if(mode==1) {
 			editorBlock.up.set(0, -1, 0);
 			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			editorBlock.moveDown();
+			}
 		}
 		
 		if (keycode == Input.Keys.A) {
+			if(mode==1) {		
 			editorBlock.direction.set(0, 0, -1);
 			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			editorBlock.moveLeft();
+			}
 		}
 		
 		if (keycode == Input.Keys.D) {
+			if(mode==1) {
 			editorBlock.direction.set(0, 0, -1);
 			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			editorBlock.moveRight();
+			}
 		}
 		
 		if(keycode == Input.Keys.Q) {
+			if(mode==1) {
 			editorBlock.position.z -= 2;
+			}
 		}
 		
 		if(keycode == Input.Keys.E) {
+			if(mode==1) {
 			editorBlock.position.z += 2;
+			}
 		}		
 		
 		if(keycode == Input.Keys.R) {
-			changeCurrentBlock();
+			if(mode==1) {
+				changeCurrentBlock();
+			}
 		}
 		
 		
@@ -1712,7 +1736,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				target.position.set(editorBlock.position);
 			} else {
 				blocks.add(new Block(new Vector3(editorBlock.position)));
-				Gdx.app.log("", "add new block");
+//				Gdx.app.log("", "add new block");
 			}
 		} else {
 			castTo++;
@@ -1760,7 +1784,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					Portal portal = new Portal(4);
 					portal.position.set(editorBlock.position);
 					portals.add(portal);
-					Gdx.app.log("", "new Portal(4)");
+//					Gdx.app.log("", "new Portal(4)");
 				} else if(portalT.correspondingPortal != null && portalT.correspondingPortal.id==-8) {
 					//max reached skip this
 					castTo = 6;
@@ -1770,12 +1794,12 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					portalT.correspondingPortal.position.set(editorBlock.position);
 					portalT.correspondingPortal.correspondingPortal = portalT;
 					portals.add(portalT.correspondingPortal);
-					Gdx.app.log("", "Portal in Portal(" + portalT.id + ")");
+//					Gdx.app.log("", "Portal in Portal(" + portalT.id + ")");
 				} else {
 					Portal portal = new Portal(portalIDT+1);
 					portal.position.set(editorBlock.position);
 					portals.add(portal);
-					Gdx.app.log("", "new Portal(" + portal.id + ")");
+//					Gdx.app.log("", "new Portal(" + portal.id + ")");
 				}
 			} 
 			if (castTo == 6) {
@@ -1794,7 +1818,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					Switch switchBlock = new Switch(new Vector3(editorBlock.position));
 					switchBlock.id = 10;
 					switches.add(switchBlock);
-					Gdx.app.log("", "new Switch(10)");
+//					Gdx.app.log("", "new Switch(10)");
 				} else if(switchT.id==13) {
 					//max reached skip this
 					castTo = 7;
@@ -1807,7 +1831,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						switchBlock.id = switchIDT+1;
 					}
 					switches.add(switchBlock);
-					Gdx.app.log("", "new Switch(" + switchBlock.id + ")");
+//					Gdx.app.log("", "new Switch(" + switchBlock.id + ")");
 				}
 			}
 			if (castTo == 7) {
@@ -1827,7 +1851,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					switchBlock.id = -switchT.id;
 					switchblocks.add(switchBlock);
 					switchT.sBlocks.add(switchBlock);
-					Gdx.app.log("", "new SwitchBlock(" + switchBlock.id + ") in Switch(" + switchT.id + ")");
+//					Gdx.app.log("", "new SwitchBlock(" + switchBlock.id + ") in Switch(" + switchT.id + ")");
 				}
 			} 
 			if(castTo == 0) {
@@ -1865,20 +1889,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			player.move();
 			
 		}
-	}
-
-	private void nextLevel() {
-		Resources.getInstance().currentlevel++;
-		Resources.getInstance().time = 0;
-		initLevel(Resources.getInstance().currentlevel);
-		changeLevel = false;
-	}
-
-	private void prevLevel() {
-		Resources.getInstance().currentlevel--;
-		Resources.getInstance().time = 0;
-		initLevel(Resources.getInstance().currentlevel);
-		changeLevel = false;
 	}
 
 	@Override
@@ -1934,32 +1944,28 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-		
-		
+				
 		if (!finished) {
+			if(mode==1) {
 			if (button1.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 0;
 				editorBlock.direction.set(0, 0, -1);
 				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 				editorBlock.moveLeft();
 				return true;
 			} else if (button2.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 1;
 				editorBlock.up.set(0, -1, 0);
 				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 				editorBlock.moveDown();
 				return true;
 			} else if (button3.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 2;
 				editorBlock.direction.set(0, 0, -1);
 				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 				editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 				editorBlock.moveRight();
 				return true;
 			} else if (button4.contains(new Vector3(x, y, 0))) {
-				selectedMenuItem = 3;
 				editorBlock.up.set(0, 1, 0);
 				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 				editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
@@ -1967,17 +1973,23 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				return true;
 			} else if (button5.contains(new Vector3(x, y, 0))) {
 				changeCurrentBlock();
-				selectedMenuItem = 4;
 				return true;
-			} else if (button6.contains(new Vector3(x, y, 0))) {
-				if(mode == 1) mode = 0;
-				else mode = 1;
-				selectedMenuItem = 5;
+			} 
+			}
+			if (button6.contains(new Vector3(x, y, 0))) {
+				if(mode == 1) {
+					saveLevel();
+					mode = 0;
+				} else {
+					loadLevel();										
+					mode = 1;
+				}
 				return true;
 			} else {
 				selectedMenuItem = -1;
 			}
 		}	
+		
 
 		if (pointers.size() > 1) {
 			if (pointer == finger_one_pointer) {
@@ -1987,10 +1999,11 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			}
 			
 		} else {
+			if(mode==0) {
 			if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f && startTime > 0.5) {
 				movePlayer();
 			}
-			
+			}			
 		}
 		pointers.remove(pointer);
 		
