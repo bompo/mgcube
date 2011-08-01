@@ -350,16 +350,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		warplock = false;
 		movwarplock = false;
 		port=new Portal();
-		
-		initLevel(Resources.getInstance().currentlevel);
-//		if(Resources.getInstance().lives < 1)
-//		{
-//			Resources.getInstance().lives = 3;
-//			Resources.getInstance().currentlevel = 1;
-//			initLevel(Resources.getInstance().currentlevel);
-//			Resources.getInstance().time = 0;
-//			game.setScreen(new MainMenuScreen(game));			
-//		}
+
+		alterLevel();
 	}
 
 	@Override
