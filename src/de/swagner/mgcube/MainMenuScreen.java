@@ -356,7 +356,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					game.setScreen(new LevelSelectScreen(game,1));
 					break;
 				case 4:
-					game.setScreen(new EditorScreen(game,1,1));
+					game.setScreen(new LevelSelectScreen(game,2));
 					break;
 				case 5:
 					game.setScreen(new OptionsScreen(game));
@@ -371,8 +371,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		
 		if(exit == true) {
-			
-			Resources.getInstance().dispose();
 			Gdx.app.exit();
 		}
 	}

@@ -102,6 +102,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 	
 	//0 = level select
 	//1 = tutorial select
+	//2 = editor select
 	int mode = 0;
 	public LevelSelectScreen(Game game, int mode) {
 		super(game);
@@ -162,9 +163,21 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 						y=0;
 				}			
 			}
-		}
-		else if(mode==1) {
+		} else if(mode==1) {
 			for (int i = 0; i < Resources.getInstance().tutorialcount; i++) {
+				LevelButton temp = new LevelButton(i+1);
+				buttons.add(temp);
+				temp.box = new BoundingBox(new Vector3(350+ (distX * x), 350 - (distY * y) ,0), new Vector3(450 + (distX * x),450  - (distY * y) ,0));
+				++x;
+				if(x%4 == 0) {
+					++y;
+					x=0;
+					if(y%3 == 0)
+						y=0;
+				}			
+			}
+		} else if(mode==2) {
+			for (int i = 0; i < Resources.getInstance().customLevels.size+1; i++) {
 				LevelButton temp = new LevelButton(i+1);
 				buttons.add(temp);
 				temp.box = new BoundingBox(new Vector3(350+ (distX * x), 350 - (distY * y) ,0), new Vector3(450 + (distX * x),450  - (distY * y) ,0));
@@ -220,31 +233,44 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if(mode == 0){
 			if(levelnumber ==1 || HighScoreManager.getInstance().getHighScore(levelnumber-1).first != 0)
 				level = Resources.getInstance().levels[levelnumber-1];
-		}
-		else if(mode == 1) {
+		} else if(mode == 1) {
 			level = Resources.getInstance().tutorials[levelnumber-1];
+		} else if(mode == 2) {
+			if(levelnumber <=  Resources.getInstance().customLevels.size) {
+				level = Resources.getInstance().decode(Resources.getInstance().customLevels.get(levelnumber-1));
+			} else {
+				level = Resources.getInstance().decode(Resources.getInstance().questionLevel);;
+			}
 		}
 		
 		Resources.getInstance().currentlevel = levelnumber;	
 
-		// finde player pos
+		loadLevel(level);
+			
+		currentHighScore = HighScoreManager.getInstance().getHighScore( Resources.getInstance().currentlevel);
+	}
+	
+	private void loadLevel(int[][][] level) {
+		
+		int MAX = level.length;
+		
 		int z = 0, y = 0, x = 0;
-		for (z = 0; z < 10; z++) {
-			for (y = 0; y < 10; y++) {
-				for (x = 0; x < 10; x++) {
+		for (z = 0; z < MAX; z++) {
+			for (y = 0; y < MAX; y++) {
+				for (x = 0; x < MAX; x++) {
 					if (level[z][y][x] == 1) {
 						blocks.add(new Block(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2))));
 					}
-//					if (level[z][y][x] == 2) {
-//						player.position.x = 10f - (x * 2);
-//						player.position.y = -10f + (y * 2);
-//						player.position.z = -10f + (z * 2);
-//					}
-//					if (level[z][y][x] == 3) {
-//						target.position.x = 10f - (x * 2);
-//						target.position.y = -10f + (y * 2);
-//						target.position.z = -10f + (z * 2);
-//					}
+					if (level[z][y][x] == 2) {
+						player.position.x = 10f - (x * 2);
+						player.position.y = -10f + (y * 2);
+						player.position.z = -10f + (z * 2);
+					}
+					if (level[z][y][x] == 3) {
+						target.position.x = 10f - (x * 2);
+						target.position.y = -10f + (y * 2);
+						target.position.z = -10f + (z * 2);
+					}
 					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
 						Portal temp = new Portal(level[z][y][x]);
 						temp.position.x = 10f - (x * 2);
@@ -277,15 +303,13 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}
 		}
 		
-//		renderObjects.add(player);
-//		renderObjects.add(target);
+		renderObjects.add(player);
+		renderObjects.add(target);
 		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
 		renderObjects.addAll(movableBlocks);
 		renderObjects.addAll(switches);
-		renderObjects.addAll(switchblocks);		
-		
-		currentHighScore = HighScoreManager.getInstance().getHighScore( Resources.getInstance().currentlevel);
+		renderObjects.addAll(switchblocks);
 	}
 
 	@Override
@@ -428,9 +452,11 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if(mode == 0 && Resources.getInstance().levelcount > 12) {
 			if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
 				font.draw(batch, ">", 480, 55);
-		}
-		else if(mode == 1 && Resources.getInstance().tutorialcount > 12) {
+		} else if(mode == 1 && Resources.getInstance().tutorialcount > 12) {
 			if((next == 0 && Resources.getInstance().tutorialcount > 12) || (Resources.getInstance().tutorialcount / (12*next) > 1))
+				font.draw(batch, ">", 480, 55);
+		} else if(mode == 2 && Resources.getInstance().customLevels.size+1 > 12) {
+			if((next == 0 && Resources.getInstance().customLevels.size+1 > 12) || ((Resources.getInstance().customLevels.size+1) / (12*next) > 1))
 				font.draw(batch, ">", 480, 55);
 		}
 		if(mode == 0) {
@@ -438,9 +464,14 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				font.draw(batch, "Start", 578, 55);
 			else
 				font.draw(batch, "Locked", 578, 55);
-		}
-		else if (mode == 1) {
+		} else if (mode == 1) {
 			font.draw(batch, "Start", 578, 55);
+		} else if (mode == 2) {
+			if(Resources.getInstance().currentlevel>Resources.getInstance().customLevels.size) {
+				font.draw(batch, "New", 578, 55);
+			} else {
+				font.draw(batch, "Edit", 578, 55);
+			}
 		}
 		batch.end();
 		
@@ -464,6 +495,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 					game.setScreen(new GameScreen(game,Resources.getInstance().currentlevel,0));
 				} else if(mode == 1) {
 					game.setScreen(new TutorialScreen(game, Resources.getInstance().currentlevel));
+				}  else if(mode == 2) {
+					game.setScreen(new EditorScreen(game, Resources.getInstance().currentlevel,1));
 				}
 			}
 		}
@@ -588,8 +621,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
-		}
-		else if(mode == 1 && Resources.getInstance().tutorialcount > 12)
+		} else if(mode == 1 && Resources.getInstance().tutorialcount > 12)
 		{ if((next == 0 && Resources.getInstance().tutorialcount > 12) || (Resources.getInstance().tutorialcount / (12*next) > 1)) {
 			tmp.idt();
 			model.idt();
@@ -611,7 +643,30 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
+		} else if(mode == 2 && Resources.getInstance().customLevels.size+1 > 12)
+		{ if((next == 0 && Resources.getInstance().customLevels.size+1 > 12) || ((Resources.getInstance().customLevels.size+1) / (12*next) > 1)) {
+			tmp.idt();
+			model.idt();
+
+			tmp.setToTranslation(-400.0f, -240.0f, 0.0f);
+			model.mul(tmp);
+			
+			tmp.setToTranslation(500 , 55, 0);
+			model.mul(tmp);
+			
+			tmp.setToScaling(30.0f, 30.0f, 10.0f);
+			model.mul(tmp);
+
+			transShader.setUniformMatrix("MMatrix", model);
+
+			transShader.setUniformf("a_color",Resources.getInstance().blockEdgeColor[0],Resources.getInstance().blockEdgeColor[1],Resources.getInstance().blockEdgeColor[2],Resources.getInstance().blockEdgeColor[3]+0.2f);
+			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+			transShader.setUniformf("a_color", Resources.getInstance().blockColor[0],Resources.getInstance().blockColor[1],Resources.getInstance().blockColor[2],Resources.getInstance().blockColor[3]+0.2f);
+			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
+		}
+		
 		
 		//render start button
 		{
@@ -861,7 +916,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if (keycode == Input.Keys.ESCAPE) {
 			game.setScreen(new MainMenuScreen(game));
 		}
-		if (keycode == Input.Keys.ENTER && (((Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) || mode == 1)) {
+		if (keycode == Input.Keys.ENTER && (((Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) || mode == 1  || mode == 2)) {
 			finished = true;
 		}
 		if(keycode == Input.Keys.LEFT) {
@@ -953,7 +1008,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				}
 			}
 		}
-		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (((Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) || mode == 1)) {
+		if(collisionLevelStart.contains(new Vector3(x,y,0)) && (((Resources.getInstance().currentlevel ==1 || HighScoreManager.getInstance().getHighScore(Resources.getInstance().currentlevel-1).first != 0)) || mode == 1  || mode == 2)) {
 			finished = true;
 		}
 		
@@ -962,9 +1017,13 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 				next++;
 				initLevel(12*next +1);
 			}
-		}
-		else if (mode == 1 &&  Resources.getInstance().tutorialcount > 12) {
+		} else if (mode == 1 &&  Resources.getInstance().tutorialcount > 12) {
 			if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().tutorialcount > 12) || (Resources.getInstance().tutorialcount / (12*next) > 1))) {
+				next++;
+				initLevel(12*next +1);
+			}
+		} else if (mode == 2 &&  Resources.getInstance().customLevels.size+1 > 12) {
+			if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().customLevels.size+1 > 12) || ((Resources.getInstance().customLevels.size+1) / (12*next) > 1))) {
 				next++;
 				initLevel(12*next +1);
 			}

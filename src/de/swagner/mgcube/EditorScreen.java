@@ -63,8 +63,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	SpriteBatch fontbatch;
 	BitmapFont font;
 	BitmapFont timeAttackFont; //used only for drawing the +45 notification
-	Player player = new Player();
-	Target target = new Target();
+	Player player;
+	Target target;
 
 	Array<Block> blocks = new Array<Block>();
 	Array<Portal> portals = new Array<Portal>();
@@ -88,6 +88,9 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	
 	float touchDistance = 0;
 	float touchTime = 0;
+	
+	float showError = 0;
+	int errorReason = 0;
 
 	Vector3 xAxis = new Vector3(1, 0, 0);
 	Vector3 yAxis = new Vector3(0, 1, 0);
@@ -133,6 +136,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	EditorBlock editorBlock = new EditorBlock(new Vector3());
 	
 	String levelCode = "";
+	boolean canSave = false;
 	
 	//0 = edit
 	//1 = play
@@ -176,10 +180,12 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		font = Resources.getInstance().font;
-		font.setScale(2f);
+		font.setScale(1);
+		font.scale(0.5f);
 		
 		timeAttackFont = Resources.getInstance().selectedFont;
-		timeAttackFont.setScale(2f);
+		timeAttackFont.setScale(1);
+		timeAttackFont.scale(0.5f);
 
 		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
@@ -238,11 +244,22 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		renderObjects.addAll(switchblocks);
 	}
 	
-	private void saveLevel() {
+	private boolean saveLevel() {
+		if(!canSaveCheck()) {
+			if(startTime>1) {
+				showError = 3;
+			}
+			return false;
+		}
+		
 		int[][][] levelArray = { { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } } };
 			
-		levelArray[((int) (Math.abs((Math.round(player.position.z +10)/2))))][ ((int) (Math.abs((Math.round(player.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-player.position.x +10)/2))))] = 2; 
-		levelArray[((int) (Math.abs((Math.round(target.position.z +10)/2))))][ ((int) (Math.abs((Math.round(target.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-target.position.x +10)/2))))] = 3;
+		if(player!=null) {
+			levelArray[((int) (Math.abs((Math.round(player.position.z +10)/2))))][ ((int) (Math.abs((Math.round(player.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-player.position.x +10)/2))))] = 2;
+		}
+		if(target!=null) {
+			levelArray[((int) (Math.abs((Math.round(target.position.z +10)/2))))][ ((int) (Math.abs((Math.round(target.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-target.position.x +10)/2))))] = 3;
+		}
 		for(Block block:blocks) {
 //			Gdx.app.log("", (int) ((-block.position.x +10)/2)+" " + (int) ((block.position.y +10)/2)+" "+(int) ((block.position.z +10)/2));
 			levelArray[ ((int) (Math.abs((Math.round(block.position.z +10)/2))))][ ((int) (Math.abs((Math.round(block.position.y +10)/2))))][ ((int) (Math.abs((Math.round(-block.position.x +10)/2))))] = 1;
@@ -261,8 +278,45 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		levelCode = Resources.getInstance().encode(levelArray);
+		if( Resources.getInstance().customLevels.size<Resources.getInstance().currentlevel) {
+			Resources.getInstance().customLevels.add(levelCode);
+		} else {
+			Resources.getInstance().customLevels.set(Resources.getInstance().currentlevel-1,levelCode);
+		}
+		int i = 1;
+		Resources.getInstance().prefs.putInteger("customLevel_count",Resources.getInstance().customLevels.size);
+		for(String s:Resources.getInstance().customLevels) {
+			Resources.getInstance().prefs.putString("customLevel_"+i,s);
+			++i;
+		}		
+		Resources.getInstance().prefs.flush();
+		return true;
+	}
+	
+	private boolean canSaveCheck() {
+		if(player == null) {
+			errorReason = 0;
+			return false;
+		}
+		if(target == null) {
+			errorReason = 1;
+			return false;
+		}
 		
-		Gdx.app.log("", levelCode);
+		for(Portal portal:portals) {
+			boolean found = false;
+			for(Portal portal2:portals) {
+				if(portal.id==-portal2.id) {
+					found = true;
+				}
+			}
+			if(found ==false) {
+				errorReason = 2;
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	private void loadLevel() {
@@ -285,10 +339,10 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		switches.clear();
 		timeAttackFont.setColor(1,1,1,1);
 		int[][][] level = Resources.getInstance().level1;
-		try {
-		level = Resources.getInstance().levels[levelnumber-1];
-		} catch(ArrayIndexOutOfBoundsException e) {
-			
+		if(levelnumber <=  Resources.getInstance().customLevels.size) {
+			level = Resources.getInstance().decode(Resources.getInstance().customLevels.get(levelnumber-1));
+		} else {
+			level = Resources.getInstance().decode(Resources.getInstance().blankLevel);
 		}
 
 		loadLevel(level);			
@@ -306,11 +360,13 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						blocks.add(new Block(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2))));
 					}
 					if (level[z][y][x] == 2) {
+						player = new Player();
 						player.position.x = 10f - (x * 2);
 						player.position.y = -10f + (y * 2);
 						player.position.z = -10f + (z * 2);
 					}
 					if (level[z][y][x] == 3) {
+						target = new Target();
 						target.position.x = 10f - (x * 2);
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
@@ -481,42 +537,53 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		fontbatch.begin();
 		if(mode==1) {
 		if(selectedMenuItem==0) {
-			timeAttackFont.draw(fontbatch, "a", 35, 80);
+			timeAttackFont.draw(fontbatch, "a", 40, 60);
 		} else {
-			font.draw(fontbatch, "a", 35, 80);
+			font.draw(fontbatch, "a", 40, 60);
 		}
 		if(selectedMenuItem==1) {
-			timeAttackFont.draw(fontbatch, "s", 115, 80);
+			timeAttackFont.draw(fontbatch, "s", 115, 60);
 		} else {
-			font.draw(fontbatch, "s", 115, 80);
+			font.draw(fontbatch, "s", 115, 60);
 		}
 		if(selectedMenuItem==2) {
-			timeAttackFont.draw(fontbatch, "d", 190, 80);
+			timeAttackFont.draw(fontbatch, "d", 190, 60);
 		} else {
-			font.draw(fontbatch, "d", 190, 80);
+			font.draw(fontbatch, "d", 190, 60);
 		}
 		if(selectedMenuItem==3) {
-			timeAttackFont.draw(fontbatch, "w", 115, 160);
+			timeAttackFont.draw(fontbatch, "w", 115, 135);
 		} else {
-			font.draw(fontbatch, "w", 115, 160);
+			font.draw(fontbatch, "w", 115, 135);
 		}
 		if(selectedMenuItem==4) {
-			timeAttackFont.drawMultiLine(fontbatch, "change\nblock", 600, 100);
+			timeAttackFont.drawMultiLine(fontbatch, "change\nblock", 600, 85);
 		} else {
-			font.drawMultiLine(fontbatch, "change\nblock", 600, 100);
+			font.drawMultiLine(fontbatch, "change\nblock", 600, 85);
 		}
 		}
 		if(selectedMenuItem==5) {
 			if(mode==1) {
-				timeAttackFont.draw(fontbatch, "play", 40, 440);
+				timeAttackFont.draw(fontbatch, "play", 42, 420);
 			} else {
-				timeAttackFont.draw(fontbatch, "edit", 40, 440);
+				timeAttackFont.draw(fontbatch, "edit", 42, 420);
 			}
 		} else {
 			if (mode == 1) {
-				font.draw(fontbatch, "play", 40, 440);
+				font.draw(fontbatch, "play", 42, 420);
 			} else {
-				font.draw(fontbatch, "edit", 40, 440);
+				font.draw(fontbatch, "edit", 42, 420);
+			}
+		}
+		
+		if (showError > 0) {
+			showError = Math.max(0, showError-delta);
+			if(errorReason==0) {
+				font.drawMultiLine(fontbatch, "Could't save\nNo player", 150, 270);
+			} else if(errorReason==1) {
+				font.drawMultiLine(fontbatch, "Could't save\nNo exit", 150,250);
+			} else if(errorReason==2) {
+				font.drawMultiLine(fontbatch, "Could't save\nNo portal exit", 150, 270);
 			}
 		}
 
@@ -1445,18 +1512,14 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			}
 
 			if (win) {
-				HighScoreManager.getInstance().newHighScore( (int) Resources.getInstance().time,Resources.getInstance().currentlevel);
 				player.stop();
-
-				Resources.getInstance().time = 0;
-				Resources.getInstance().timeAttackTime += 45;
-				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
-					changeLevel = true;
-				} else {
-					//game completed
-					if(mode==1) {
-						HighScoreManager.getInstance().newTimeAttackHighScore((int) Resources.getInstance().timeAttackTime, Resources.getInstance().levelcount);
+				if(mode == 1) {
+					if(saveLevel()) {
+						mode = 0;
 					}
+				} else {
+					loadLevel();										
+					mode = 1;
 				}
 			}
 
@@ -1612,7 +1675,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		if (Gdx.input.isTouched())
 			return false;
 		if (keycode == Input.Keys.ESCAPE) {
-			game.setScreen(new MainMenuScreen(game));
+			saveLevel();
+			game.setScreen(new LevelSelectScreen(game,2));
 		}
 
 		if (keycode == Input.Keys.SPACE) {
@@ -1635,7 +1699,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		if(keycode == Input.Keys.BACK) {
-			game.setScreen(new MainMenuScreen(game));
+			saveLevel();
+			game.setScreen(new LevelSelectScreen(game,2));
 		}		
 		
 		if (keycode == Input.Keys.F) {
@@ -1979,8 +2044,9 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			}
 			if (button6.contains(new Vector3(x, y, 0))) {
 				if(mode == 1) {
-					saveLevel();
-					mode = 0;
+					if(saveLevel()) {
+						mode = 0;
+					}
 				} else {
 					loadLevel();										
 					mode = 1;
