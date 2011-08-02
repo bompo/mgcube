@@ -1688,16 +1688,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			Resources.getInstance().time = 0;
 		}
 		
-		if (keycode == Input.Keys.UP) {
-			Resources.getInstance().colorTheme++;
-			Resources.getInstance().switchColorTheme();
-		}
-		
-		if (keycode == Input.Keys.DOWN) {
-			Resources.getInstance().colorTheme--;
-			Resources.getInstance().switchColorTheme();
-		}
-		
 		if(keycode == Input.Keys.BACK) {
 			saveLevel();
 			game.setScreen(new LevelSelectScreen(game,2));
@@ -1718,37 +1708,85 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		
 		if (keycode == Input.Keys.W) {
 			if(mode==1) {
-			editorBlock.up.set(0, 1, 0);
-			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-			editorBlock.moveUp();
+				if(angleX>45) {
+					editorBlock.direction.set(0, 0, 1);
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveRight();
+				} else if(angleX<-45) {
+					editorBlock.direction.set(0, 0, -1);
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveRight();
+				} else {
+					editorBlock.up.set(0, 1, 0);
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveUp();
+				}
 			}
 		}
 
 		if (keycode == Input.Keys.S) {
 			if(mode==1) {
-			editorBlock.up.set(0, -1, 0);
-			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-			editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-			editorBlock.moveDown();
+				if(angleX>45) {
+					editorBlock.direction.set(0,0,-1);
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveLeft();
+				} else if(angleX<-45) {
+					editorBlock.direction.set(0,0,1);
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveLeft();
+				} else {
+					editorBlock.up.set(0, -1, 0);
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveDown();
+				}
 			}
 		}
 		
 		if (keycode == Input.Keys.A) {
-			if(mode==1) {		
-			editorBlock.direction.set(0,0,-1);
-			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-			editorBlock.moveLeft();
+			if(mode==1) {	
+				if(angleX>45) {
+					editorBlock.up.set(0, 1, 0);
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveDown();
+				} else if(angleX<-45) {
+					editorBlock.up.set(0, -1, 0);
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveDown();
+				} else {
+					editorBlock.direction.set(0,0,-1);
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveLeft();
+				}
 			}
 		}
 		
 		if (keycode == Input.Keys.D) {
 			if(mode==1) {
-			editorBlock.direction.set(0, 0, -1);
-			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-			editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-			editorBlock.moveRight();
+				if(angleX>45) {
+					editorBlock.up.set(0, 1, 0);
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveUp();
+				} else if(angleX<-45) {
+					editorBlock.up.set(0, -1, 0);
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.up.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveUp();
+				} else {
+					editorBlock.direction.set(0, 0, -1);
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+					editorBlock.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+					editorBlock.moveRight();
+				}
 			}
 		}
 		
