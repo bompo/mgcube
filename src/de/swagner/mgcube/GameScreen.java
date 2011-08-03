@@ -1545,25 +1545,27 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void updatePlayerShadow() {
-		player.direction.set(0, 0, -1);
-		player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-		player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-		player.setDirection();
-		if(!player.direction.equals(playerShadow.direction)) {
-			playerShadow.position.set(player.position);
-			playerShadow.direction.set(0, 0, -1);
-			playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-			playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-			playerShadow.setDirection();
-			playerShadow.isMoving = true;
-			playerShadow.position.add(playerShadow.direction.x, playerShadow.direction.y, playerShadow.direction.z);
-			for(Renderable renderable:renderObjects) {				
-				if(!(renderable instanceof Player) && !(renderable instanceof PlayerShadow) && renderable.position.dst(playerShadow.position)<2.0f) {
-					playerShadow.isMoving = false;
-					break;
+		if(!player.isMoving) {
+			player.direction.set(0, 0, -1);
+			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			player.setDirection();
+			if(!player.direction.equals(playerShadow.direction)) {
+				playerShadow.position.set(player.position);
+				playerShadow.direction.set(0, 0, -1);
+				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+				playerShadow.setDirection();
+				playerShadow.isMoving = true;
+				playerShadow.position.add(playerShadow.direction.x, playerShadow.direction.y, playerShadow.direction.z);
+				for(Renderable renderable:renderObjects) {				
+					if(!(renderable instanceof Player) && !(renderable instanceof PlayerShadow) && renderable.position.dst(playerShadow.position)<2.0f) {
+						playerShadow.isMoving = false;
+						break;
+					}
 				}
+				playerShadow.position.set(player.position);
 			}
-			playerShadow.position.set(player.position);
 		}
 	}
 

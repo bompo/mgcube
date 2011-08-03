@@ -244,39 +244,39 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		sortScene();
 
-		if(Resources.getInstance().bloomOnOff) {
-		frameBuffer.begin();
-		renderScene();
-		renderMenu();
-		frameBuffer.end();
-
-		// PostProcessing
-		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-		Gdx.gl.glDisable(GL20.GL_BLEND);
-
-		frameBuffer.getColorBufferTexture().bind(0);
-
-		bloomShader.begin();
-		bloomShader.setUniformi("sTexture", 0);
-		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f));
-
-		frameBufferVert.begin();
-		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-		bloomShader.setUniformf("TexelOffsetY", 0.0f);
-		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		frameBufferVert.end();
-
-		frameBufferVert.getColorBufferTexture().bind(0);
-
-		frameBuffer.begin();
-		bloomShader.setUniformf("TexelOffsetX", 0.0f);
-		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
-		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-		frameBuffer.end();
-
-		bloomShader.end();
-		}
+//		if(Resources.getInstance().bloomOnOff) {
+//		frameBuffer.begin();
+//		renderScene();
+//		renderMenu();
+//		frameBuffer.end();
+//
+//		// PostProcessing
+//		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+//		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+//		Gdx.gl.glDisable(GL20.GL_BLEND);
+//
+//		frameBuffer.getColorBufferTexture().bind(0);
+//
+//		bloomShader.begin();
+//		bloomShader.setUniformi("sTexture", 0);
+//		bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f));
+//
+//		frameBufferVert.begin();
+//		bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
+//		bloomShader.setUniformf("TexelOffsetY", 0.0f);
+//		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+//		frameBufferVert.end();
+//
+//		frameBufferVert.getColorBufferTexture().bind(0);
+//
+//		frameBuffer.begin();
+//		bloomShader.setUniformf("TexelOffsetX", 0.0f);
+//		bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
+//		quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+//		frameBuffer.end();
+//
+//		bloomShader.end();
+//		}
 
 		// render scene again
 		renderScene();
@@ -286,13 +286,13 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
-		if(Resources.getInstance().bloomOnOff) {
-		batch.enableBlending();
-		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
-		batch.begin();
-		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
-		batch.end();
-		}
+//		if(Resources.getInstance().bloomOnOff) {
+//		batch.enableBlending();
+//		batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
+//		batch.begin();
+//		batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
+//		batch.end();
+//		}
 
 		batch.begin();
 		float y = 405;
