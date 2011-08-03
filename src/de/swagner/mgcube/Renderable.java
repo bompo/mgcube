@@ -16,7 +16,7 @@ public class Renderable implements Comparable<Renderable> {
 	@Override
 	public int compareTo(Renderable o) {
 		if(!(o instanceof Renderable)) return -1;
-		if(((Renderable)o).sortPosition<this.sortPosition) return -1;
+		if((o).sortPosition<this.sortPosition) return -1;
 		return 1;
 	}
 

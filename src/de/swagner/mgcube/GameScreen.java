@@ -1,9 +1,6 @@
 package de.swagner.mgcube;
 
-import java.awt.geom.CubicCurve2D;
 import java.util.HashMap;
-
-import org.lwjgl.LWJGLException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -15,7 +12,6 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,6 +50,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	BitmapFont font;
 	BitmapFont timeAttackFont; //used only for drawing the +45 notification
 	Player player = new Player();
+	PlayerShadow playerShadow = new PlayerShadow();
 	Target target = new Target();
 
 	Array<Block> blocks = new Array<Block>();
@@ -78,10 +75,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 	float touchDistance = 0;
 	float touchTime = 0;
-
-	Vector3 xAxis = new Vector3(1, 0, 0);
-	Vector3 yAxis = new Vector3(0, 1, 0);
-	Vector3 zAxis = new Vector3(0, 0, 1);
 
 	// GLES20
 	Matrix4 model = new Matrix4().idt();
@@ -261,6 +254,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 		
 		renderObjects.add(player);
+		
+		playerShadow.position.set(player.position);
+		renderObjects.add(playerShadow);
+		
 		renderObjects.add(target);
 		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
@@ -327,7 +324,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	@Override
 	public void render(float deltaTime) {
 		delta = Math.min(0.02f, deltaTime);
-		
+	
 		startTime += delta;
 		touchTime += Gdx.graphics.getDeltaTime();
 		
@@ -339,15 +336,22 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		cam.update();
 		
-		if(player.isMoving) {
+		if(player!= null && player.isMoving) {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 		}
+				
+		if(playerShadow!= null && playerShadow.isMoving) {
+			playerShadow.position.add(playerShadow.direction.x * delta, playerShadow.direction.y * delta, playerShadow.direction.z * delta);
+		}
+		playerShadow.distance = player.position.dst(playerShadow.position);
+		if(playerShadow.distance>3.f) playerShadow.position.set(player.position);
 		
 		for(MovableBlock m : movableBlocks) {
 			if(m.isMoving) {
 				m.position.add(m.direction.x * delta * 10f, m.direction.y * delta * 10f, m.direction.z * delta * 10f);
 			}
-		}		
+		}	
+		
 		collisionTest();
 		
 		sortScene();
@@ -484,9 +488,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToScaling(0.5f, 0.5f, 0.5f);
 			model.mul(tmp);
 
-			tmp.setToRotation(xAxis, angleX);
+			tmp.setToRotation(Vector3.X, angleX);
 			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
+			tmp.setToRotation(Vector3.Y, angleY);
 			model.mul(tmp);
 
 			tmp.setToTranslation(renderable.position.x, renderable.position.y, renderable.position.z);
@@ -513,7 +517,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glClearColor(Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
 				
-		Gdx.app.log("", Gdx.graphics.getBufferFormat().coverageSampling + "");
+//		Gdx.app.log("", Gdx.graphics.getBufferFormat().coverageSampling + "");
 		
 		transShader.begin();
 		transShader.setUniformMatrix("VPMatrix", cam.combined);
@@ -525,9 +529,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToScaling(20.5f, 20.5f, 20.5f);
 			model.mul(tmp);
 
-			tmp.setToRotation(xAxis, angleX + angleXBack);
+			tmp.setToRotation(Vector3.X, angleX + angleXBack);
 			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY + angleYBack);
+			tmp.setToRotation(Vector3.Y, angleY + angleYBack);
 			model.mul(tmp);
 
 			tmp.setToTranslation(0, 0, 0);
@@ -546,9 +550,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			tmp.setToScaling(5.5f, 5.5f, 5.5f);
 			model.mul(tmp);
 
-			tmp.setToRotation(xAxis, angleX);
+			tmp.setToRotation(Vector3.X, angleX);
 			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
+			tmp.setToRotation(Vector3.Y, angleY);
 			model.mul(tmp);
 
 			tmp.setToTranslation(0, 0, 0);
@@ -810,9 +814,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Player) {
 				model.set(renderable.model);	
 				
-				tmp.setToRotation(xAxis, angleXBack);
+				tmp.setToRotation(Vector3.X, angleXBack);
 				model.mul(tmp);
-				tmp.setToRotation(yAxis, angleYBack);
+				tmp.setToRotation(Vector3.Y, angleYBack);
 				model.mul(tmp);
 
 				tmp.setToScaling(0.5f, 0.5f, 0.5f);
@@ -844,6 +848,35 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //				sphereSliceModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 			
+			// render player shadow
+			if(renderable instanceof PlayerShadow) {
+				model.set(renderable.model);				
+				
+				tmp.setToRotation(Vector3.X, angleXBack);
+				model.mul(tmp);
+				tmp.setToRotation(Vector3.Y, angleYBack);
+				model.mul(tmp);
+
+				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+				model.mul(tmp);
+
+				transShader.setUniformMatrix("MMatrix", model);
+				transShader.setUniformf("a_color",Resources.getInstance().playerColor[0], Resources.getInstance().playerColor[1], Resources.getInstance().playerColor[2], Resources.getInstance().playerColor[3] - (playerShadow.distance/4.f));
+				playerModel.render(transShader, GL20.GL_TRIANGLES);
+				
+				tmp.setToScaling(2.0f - (renderable.collideAnimation), 2.0f - (renderable.collideAnimation), 2.0f  - (renderable.collideAnimation));
+				model.mul(tmp);
+
+				//render hull			
+				transShader.setUniformMatrix("MMatrix", model);
+				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]  - (playerShadow.distance/4.f));
+				
+				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+				
+				//TODO add animations
+				playerModel.render(transShader, GL20.GL_LINE_STRIP, 0, (int) (playerModel.getNumVertices()-(renderable.collideAnimation*playerModel.getNumVertices())));
+			}
+			
 			// render Portals
 			if(renderable instanceof Portal) {
 				if(renderable.position.x != -11) {
@@ -868,9 +901,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 //						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
-						tmp.setToRotation(xAxis, angleXFront);
+						tmp.setToRotation(Vector3.X, angleXFront);
 						model.mul(tmp);
-						tmp.setToRotation(yAxis, angleYFront);
+						tmp.setToRotation(Vector3.Y, angleYFront);
 						model.mul(tmp);
 						
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
@@ -897,9 +930,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 //						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
-						tmp.setToRotation(xAxis, angleXFront);
+						tmp.setToRotation(Vector3.X, angleXFront);
 						model.mul(tmp);
-						tmp.setToRotation(yAxis, angleYFront);
+						tmp.setToRotation(Vector3.Y, angleYFront);
 						model.mul(tmp);
 						
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
@@ -926,9 +959,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 //						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
-						tmp.setToRotation(xAxis, angleXFront);
+						tmp.setToRotation(Vector3.X, angleXFront);
 						model.mul(tmp);
-						tmp.setToRotation(yAxis, angleYFront);
+						tmp.setToRotation(Vector3.Y, angleYFront);
 						model.mul(tmp);
 						
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
@@ -955,9 +988,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 //						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
-						tmp.setToRotation(xAxis, angleXFront);
+						tmp.setToRotation(Vector3.X, angleXFront);
 						model.mul(tmp);
-						tmp.setToRotation(yAxis, angleYFront);
+						tmp.setToRotation(Vector3.Y, angleYFront);
 						model.mul(tmp);
 						
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
@@ -984,9 +1017,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 //						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
-						tmp.setToRotation(xAxis, angleXFront);
+						tmp.setToRotation(Vector3.X, angleXFront);
 						model.mul(tmp);
-						tmp.setToRotation(yAxis, angleYFront);
+						tmp.setToRotation(Vector3.Y, angleYFront);
 						model.mul(tmp);
 						
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
@@ -1013,9 +1046,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //						transShader.setUniformf("a_color", Resources.getInstance().portalEdgeColor[0],Resources.getInstance().portalEdgeColor[1] , Resources.getInstance().portalEdgeColor[2], Resources.getInstance().portalEdgeColor[3]  + renderable.collideAnimation);
 //						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 						
-						tmp.setToRotation(xAxis, angleXFront);
+						tmp.setToRotation(Vector3.X, angleXFront);
 						model.mul(tmp);
-						tmp.setToRotation(yAxis, angleYFront);
+						tmp.setToRotation(Vector3.Y, angleYFront);
 						model.mul(tmp);
 						
 						tmp.setToScaling(0.8f, 0.8f, 0.8f);
@@ -1032,7 +1065,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if(renderable instanceof Target) {
 				model.set(renderable.model);
 				
-				tmp.setToRotation(yAxis, angleY + angleYBack);
+				tmp.setToRotation(Vector3.Y, angleY + angleYBack);
 				model.mul(tmp);
 
 				transShader.setUniformMatrix("MMatrix", model);
@@ -1371,8 +1404,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	private void movePlayer() {
 		if (!player.isMoving) {
 			player.direction.set(0, 0, -1);
-			player.direction.rot(new Matrix4().setToRotation(xAxis, -angleX));
-			player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
+			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			player.move();
 			
 		}
@@ -1494,6 +1527,20 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleY += ((x - touchStartX) / 5.f);
 		angleX += ((y - touchStartY) / 5.f);
 
+		//update Player Shadow
+		player.direction.set(0, 0, -1);
+		player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+		player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+		player.setDirection();
+		if(!player.direction.equals(playerShadow.direction)) {
+			playerShadow.position.set(player.position);
+			playerShadow.direction.set(0, 0, -1);
+			playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			playerShadow.setDirection();
+		}
+
+		
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
 
 		touchStartX = x;

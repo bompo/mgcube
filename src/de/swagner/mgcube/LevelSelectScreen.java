@@ -1,7 +1,5 @@
 package de.swagner.mgcube;
 
-import org.lwjgl.LWJGLException;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -208,6 +206,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
 	
+	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		cam = new PerspectiveCamera(40, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -903,6 +902,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		
 	}
 	
+	@Override
 	public void dispose() {
 		frameBuffer.dispose();
 		frameBufferVert.dispose();

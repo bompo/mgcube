@@ -1,12 +1,9 @@
 package de.swagner.mgcube;
 
-import org.lwjgl.LWJGLException;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -41,7 +38,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	Matrix4 modelView = new Matrix4().idt();
 	Matrix4 modelViewProjection = new Matrix4().idt();
 	Matrix4 tmp = new Matrix4().idt();
-	private ShaderProgram transShader;
 	private ShaderProgram bloomShader;
 	FrameBuffer frameBuffer;
 	FrameBuffer frameBufferVert;
@@ -64,8 +60,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
 		cam.far = 1000;
-
-		
 		
 		// controller = new PerspectiveCamController(cam);
 		// Gdx.input.setInputProcessor(controller);
@@ -77,7 +71,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
-		transShader = Resources.getInstance().transShader;
 		bloomShader = Resources.getInstance().bloomShader;
 		
 		initRender();

@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -122,7 +121,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	
 	float touchStartX = 0;
 	float touchStartY = 0;
-	private boolean changeLevel;
 	
 	//pinchToZoom
 	HashMap<Integer, Vector2> pointers  = new HashMap<Integer,Vector2>();;

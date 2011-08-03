@@ -1,9 +1,5 @@
 package de.swagner.mgcube;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.Deflater;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -675,7 +671,7 @@ public class Resources {
 		}
 
 		// Texel offset for blur filter kernle
-		m_fTexelOffset = 1.0f / (float) m_i32TexSize / 4.f;
+		m_fTexelOffset = 1.0f / m_i32TexSize / 4.f;
 
 		// Altered weights for the faster filter kernel
 		float w1 = 0.0555555f;
