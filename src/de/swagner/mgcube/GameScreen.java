@@ -852,7 +852,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 			
 			// render player shadow
-			if(renderable instanceof PlayerShadow) {
+			if(renderable instanceof PlayerShadow && !player.isMoving) {
 				model.set(renderable.model);				
 				
 				tmp.setToRotation(Vector3.X, angleXBack);
