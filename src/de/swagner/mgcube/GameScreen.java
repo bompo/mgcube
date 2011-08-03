@@ -166,6 +166,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleX = 0;
 		
 		initLevel(level);
+		
+		updatePlayerShadow();
 	}
 	
 	public void initRender() {
@@ -292,6 +294,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		player.collideAnimation = 1;
 		animateWorld = false;
 		player.stop();
+		updatePlayerShadow();
 		for(MovableBlock m : movableBlocks) {
 			m.stop();
 		}
@@ -1094,6 +1097,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				float dst = intersection.dst(player.position);
 				if (dst < 1.0f && intersect) {
 					player.stop();
+					updatePlayerShadow();
 					block.isCollidedAnimation = true;
 					break;
 				}
@@ -1407,7 +1411,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			player.move();
-			
+			playerShadow.isMoving = false;
 		}
 	}
 
@@ -1528,6 +1532,19 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleX += ((y - touchStartY) / 5.f);
 
 		//update Player Shadow
+		updatePlayerShadow();
+
+		
+		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
+
+		touchStartX = x;
+		touchStartY = y;
+		}
+
+		return false;
+	}
+
+	private void updatePlayerShadow() {
 		player.direction.set(0, 0, -1);
 		player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 		player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
@@ -1538,16 +1555,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			playerShadow.setDirection();
+			playerShadow.isMoving = true;
+			playerShadow.position.add(playerShadow.direction.x, playerShadow.direction.y, playerShadow.direction.z);
+			for(Renderable renderable:renderObjects) {				
+				if(!(renderable instanceof Player) && !(renderable instanceof PlayerShadow) && renderable.position.dst(playerShadow.position)<2.0f) {
+					playerShadow.isMoving = false;
+					break;
+				}
+			}
+			playerShadow.position.set(player.position);
 		}
-
-		
-		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
-
-		touchStartX = x;
-		touchStartY = y;
-		}
-
-		return false;
 	}
 
 	@Override

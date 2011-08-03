@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class PlayerShadow extends Renderable {
 	
-	public Vector3 direction = new Vector3(0,0,-1);
+	public Vector3 direction = new Vector3(0,0,0);
 	public float moveShadow = 0.0f; 
 	
 	public boolean isMoving = true;
