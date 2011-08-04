@@ -12,35 +12,52 @@ public class TVShader {
         "#ifdef GL_ES\n" +
         "precision mediump float;\n" +
         "#endif\n"
-		+ "uniform float time;\n" 
-		+ "uniform vec2 resolution;\n" 
-		+ "uniform sampler2D sampler0;\n"
-		+ "uniform int rotation;\n"
-		+ "void main(void) {\n"
-		+ "vec2 position = gl_FragCoord.xy / resolution.xy;\n" 
-		+ "position.y *=-1.0;\n" 
-		+ "vec3 color;\n" 
-		+ "//color separation\n"
-		+ "if(rotation==0) {"
-		+ "	color.r = texture2D(sampler0,vec2(position.x+0.002,-position.y)).x;\n" 
-		+ "	color.g = texture2D(sampler0,vec2(position.x+0.000,-position.y)).y;\n"
-		+ "	color.b = texture2D(sampler0,vec2(position.x-0.002,-position.y)).z;\n"
-		+ "} else {"
-		+ "	color.r = texture2D(sampler0,vec2(-position.y+0.002,-position.x)).x;\n" 
-		+ "	color.g = texture2D(sampler0,vec2(-position.y+0.000,-position.x)).y;\n"
-		+ "	color.b = texture2D(sampler0,vec2(-position.y-0.002,-position.x)).z;\n"
-		+ "}"
-		+ "//contrast\n" 
-		+ "color = clamp(color*0.5+0.5*color*color*1.2,0.0,1.0);\n" 
-		+ "//circular vignette fade\n"
-		+ "color *= 0.5 + 0.5*16.0*position.x*position.y*(1.0-position.x)*(-1.0-position.y);\n" 
-		+ "//color shift \n" 
-		+ "color *= vec3(0.95,0.85,1.0); //blue\n" 
-		+ "//tvlines effect\n"
-		+ "color *= 0.9+0.1*sin(10.0*time+position.y*1000.0);\n" 
-		+ "//tv flicker effect\n" 
-		+ "color *= 0.97+0.03*sin(110.0*time);\n"
-		+ "gl_FragColor = vec4(color,1.0);\n" 
-		+ "}";
+"uniform int rotation;\n" +
+"uniform sampler2D sampler0;\n" +
+"uniform vec2 resolution;\n" +
+"uniform float time;\n" +
+"void main ()\n" +
+"{\n" +
+"  vec3 color;\n" +
+"  vec2 position;\n" +
+"  vec2 tmpvar_1;\n" +
+"  tmpvar_1 = (gl_FragCoord.xy / resolution);\n" +
+"  position = tmpvar_1;\n" +
+"  position.y = (tmpvar_1.y * -1.0);\n" +
+"  if ((rotation == 0)) {\n" +
+"    vec2 tmpvar_2;\n" +
+"    tmpvar_2.x = (tmpvar_1.x + 0.002);\n" +
+"    tmpvar_2.y = -(position.y);\n" +
+"    color.x = texture2D (sampler0, tmpvar_2).x;\n" +
+"    vec2 tmpvar_3;\n" +
+"    tmpvar_3.x = tmpvar_1.x;\n" +
+"    tmpvar_3.y = -(position.y);\n" +
+"    color.y = texture2D (sampler0, tmpvar_3).y;\n" +
+"    vec2 tmpvar_4;\n" +
+"    tmpvar_4.x = (tmpvar_1.x - 0.002);\n" +
+"    tmpvar_4.y = -(position.y);\n" +
+"    color.z = texture2D (sampler0, tmpvar_4).z;\n" +
+"  } else {\n" +
+"    vec2 tmpvar_5;\n" +
+"    tmpvar_5.x = (-(position.y) + 0.002);\n" +
+"    tmpvar_5.y = -(tmpvar_1.x);\n" +
+"    color.x = texture2D (sampler0, tmpvar_5).x;\n" +
+"    vec2 tmpvar_6;\n" +
+"    tmpvar_6.x = -(position.y);\n" +
+"    tmpvar_6.y = -(tmpvar_1.x);\n" +
+"    color.y = texture2D (sampler0, tmpvar_6).y;\n" +
+"    vec2 tmpvar_7;\n" +
+"    tmpvar_7.x = (-(position.y) - 0.002);\n" +
+"    tmpvar_7.y = -(tmpvar_1.x);\n" +
+"    color.z = texture2D (sampler0, tmpvar_7).z;\n" +
+"  };\n" +
+"  vec3 tmpvar_8;\n" +
+"  tmpvar_8 = ((((clamp (((color * 0.5) + (((0.5 * 1.2) * color) * color)), 0.0, 1.0) * (0.5 + ((((8.0 * tmpvar_1.x) * position.y) * (1.0 - tmpvar_1.x)) * (-1.0 - position.y)))) * vec3(0.95, 0.85, 1.0)) * (0.9 + (0.1 * sin (((10.0 * time) + (position.y * 1000.0)))))) * (0.97 + (0.03 * sin ((110.0 * time)))));\n" +
+"  color = tmpvar_8;\n" +
+"  vec4 tmpvar_9;\n" +
+"  tmpvar_9.w = 1.0;\n" +
+"  tmpvar_9.xyz = tmpvar_8;\n" +
+"  gl_FragColor = tmpvar_9;\n" +
+"}\n";
 
 }
