@@ -11,7 +11,7 @@ public class TVShader {
     public static final String mFragmentShader =   
         "#ifdef GL_ES\n" +
         "precision mediump float;\n" +
-        "#endif\n"
+        "#endif\n" +
 "uniform int rotation;\n" +
 "uniform sampler2D sampler0;\n" +
 "uniform vec2 resolution;\n" +

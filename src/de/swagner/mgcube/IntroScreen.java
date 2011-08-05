@@ -46,6 +46,8 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 		
+		Gdx.app.log("", Gdx.graphics.getType().toString());
+		
 		if(Resources.getInstance().fullscreenOnOff)
 			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 		
