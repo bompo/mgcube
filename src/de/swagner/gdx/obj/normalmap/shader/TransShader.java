@@ -7,7 +7,7 @@ public class TransShader {
     	"uniform mat4 VPMatrix;\n"+
     	"uniform mat4 MMatrix;\n"+
     	"void main() {\n"+
-    	"	gl_Position = VPMatrix * MMatrix * a_vertex;\n"+
+    	"	gl_Position = ((VPMatrix * MMatrix) * a_vertex);\n"+
     	"}\n";
 
     public static final String mFragmentShader =   
