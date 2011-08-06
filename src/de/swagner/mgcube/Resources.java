@@ -1,5 +1,8 @@
 package de.swagner.mgcube;
 
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -11,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
 
 import de.swagner.gdx.obj.normalmap.shader.FastBloomShader;
 import de.swagner.gdx.obj.normalmap.shader.TransShader;
@@ -499,7 +503,10 @@ public class Resources {
 	public Mesh quadModel;
 	public Mesh wireCubeModel;
 	public Mesh sphereModel;
-	public Mesh sphereSliceModel;
+	public Mesh bigMesh;
+	
+	public Array<Integer> bigMeshIndicesCntSubMesh = new Array<Integer>();
+	public Array<Integer> bigMeshVerticesCntSubMesh = new Array<Integer>();
 
 	public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 	public Sound move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
@@ -562,18 +569,12 @@ public class Resources {
 
 		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere_small.obj").read());
 		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-		
-		coneModel = ObjLoader.loadObj(Gdx.files.internal("data/cone.obj").read());
-		coneModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
+	
 		sphereModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
 		sphereModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 
 		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
 		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-		
-		sphereSliceModel= ObjLoader.loadObj(Gdx.files.internal("data/sphere_slice.obj").read());
-		sphereSliceModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
 		
 		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_vertex"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
 		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
@@ -624,7 +625,55 @@ public class Resources {
 		short[] indices2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
 		wireCubeModel.setVertices(vertices2);
 		wireCubeModel.setIndices(indices2);
+		
+		//copy all Meshes into a combined Mesh for performance reasons...
+		int bigMeshVerticesCnt = blockModel.getNumVertices()+playerModel.getNumVertices()+targetModel.getNumVertices();
+		bigMesh = new Mesh(true, bigMeshVerticesCnt, 0, new VertexAttribute(Usage.Position, 4, "a_vertex"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
 
+		Array<Float> bigMeshVertices =  new Array<Float>(bigMeshVerticesCnt);
+		{		
+		float[] bigMeshCopyVertices = new float[blockModel.getNumVertices() * blockModel.getVertexSize()/4];
+		blockModel.getVertices(bigMeshCopyVertices);
+		for(Float f:bigMeshCopyVertices) {
+			bigMeshVertices.add(f);	
+		}		
+		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
+		}			
+		{
+		float[] bigMeshCopyVertices = new float[playerModel.getNumVertices() * playerModel.getVertexSize() / 4];
+		playerModel.getVertices(bigMeshCopyVertices);
+		for(Float f:bigMeshCopyVertices) {
+			bigMeshVertices.add(f);	
+		}	
+		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
+		}
+		{
+		float[] bigMeshCopyVertices = new float[targetModel.getNumVertices() * targetModel.getVertexSize() / 4];
+		targetModel.getVertices(bigMeshCopyVertices);
+		for(Float f:bigMeshCopyVertices) {
+			bigMeshVertices.add(f);	
+		}	
+		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
+		}
+		
+		float[] bigMeshVerticesFloatArray = new float[bigMeshVertices.size];
+		for (int i = 0; i < bigMeshVertices.size; i++) {
+		    Float f = bigMeshVertices.get(i);
+		    bigMeshVerticesFloatArray[i] = (f != null ? f : 0); // Or whatever default you want.
+		}
+		bigMesh.setVertices(bigMeshVerticesFloatArray);
+		
+//		for(Integer inte:bigMeshVerticesCntSubMesh) {
+//			Gdx.app.log("", inte.toString());
+//		}
+//		Gdx.app.log("", "---");
+//		int n = 0;
+//		for(Float inte:bigMeshVerticesFloatArray) {
+//			Gdx.app.log("", n + ": " + inte.toString());
+//			++n;
+//		}
+		
+		
 		if(music!=null) music.stop();
 		if(move!=null) move.stop();
 		

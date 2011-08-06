@@ -135,7 +135,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		quadModel = Resources.getInstance().quadModel;
 		wireCubeModel = Resources.getInstance().wireCubeModel;
 		sphereModel = Resources.getInstance().sphereModel;
-		sphereSliceModel = Resources.getInstance().sphereSliceModel;
 
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(0, 0, 16f);
@@ -379,7 +378,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	
 			bloomShader.begin();
 			bloomShader.setUniformi("sTexture", 0);
-			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f));
+			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f + changeLevelEffect,0,1,0.50f,0.70f));
 	
 			frameBufferVert.begin();
 			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
@@ -549,7 +548,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformMatrix("MMatrix", model);
 
 			transShader.setUniformf("a_color", Resources.getInstance().backgroundWireColor[0],Resources.getInstance().backgroundWireColor[1],Resources.getInstance().backgroundWireColor[2],Resources.getInstance().backgroundWireColor[3]);
-			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
+			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 		{
 			// render Wire

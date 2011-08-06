@@ -32,6 +32,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	Mesh worldModel;
 	Mesh wireCubeModel;
 	Mesh sphereModel;
+	Mesh bigMesh;
 	float angleX = 0;
 	float angleY = 0;
 	SpriteBatch batch;
@@ -82,14 +83,15 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		Gdx.input.setInputProcessor(this);
 
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
-
+		
 		blockModel = Resources.getInstance().blockModel;
 		playerModel = Resources.getInstance().playerModel;
 		targetModel = Resources.getInstance().targetModel;
 		quadModel = Resources.getInstance().quadModel;
 		wireCubeModel = Resources.getInstance().wireCubeModel;
 		sphereModel = Resources.getInstance().sphereModel;
-
+		bigMesh = Resources.getInstance().bigMesh;
+		
 		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.position.set(5.0f, 0, 16f);
 		cam.direction.set(0, 0, -1);
@@ -265,12 +267,13 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			frameBuffer.getColorBufferTexture().bind(0);
 	
 			bloomShader.begin();
+			quadModel.bind(transShader);
 			bloomShader.setUniformi("sTexture", 0);
 			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f));
 	
 			frameBufferVert.begin();
 			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-			bloomShader.setUniformf("TexelOffsetY", 0.0f);
+			bloomShader.setUniformf("TexelOffsetY", 0.0f);			
 			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 			frameBufferVert.end();
 	
@@ -281,7 +284,8 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 			frameBuffer.end();
-	
+			quadModel.unbind(transShader);
+			
 			bloomShader.end();
 			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
 			batch.begin();
@@ -632,6 +636,8 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 				
 		transShader.begin();
+
+		
 		transShader.setUniformMatrix("VPMatrix", cam.combined);
 		{
 			// render Background Wire
@@ -650,9 +656,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			model.mul(tmp);
 
 			transShader.setUniformMatrix("MMatrix", model);
-
+			
 			transShader.setUniformf("a_color", Resources.getInstance().backgroundWireColor[0],Resources.getInstance().backgroundWireColor[1],Resources.getInstance().backgroundWireColor[2],Resources.getInstance().backgroundWireColor[3]);
-			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
+//			bigMesh.render(transShader, GL20.GL_LINE_STRIP, 0, Resources.getInstance().bigMeshVerticesCntSubMesh.get(0));
+//Gdx.app.log("", Resources.getInstance().bigMeshVerticesCntSubMesh.get(1)+ " " + (Resources.getInstance().bigMeshVerticesCntSubMesh.get(2)-Resources.getInstance().bigMeshVerticesCntSubMesh.get(1)));
+			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 		{
 			// render Wire
@@ -673,9 +681,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformMatrix("MMatrix", model);
 
 			transShader.setUniformf("a_color", Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
+//			bigMesh.render(transShader, GL20.GL_TRIANGLES, 0, Resources.getInstance().bigMeshVerticesCntSubMesh.get(0));
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 			
 			transShader.setUniformf("a_color", Resources.getInstance().wireCubeEdgeColor[0],Resources.getInstance().wireCubeEdgeColor[1],Resources.getInstance().wireCubeEdgeColor[2],Resources.getInstance().wireCubeEdgeColor[3]);
+//			bigMesh.render(transShader, GL20.GL_LINE_STRIP, Resources.getInstance().bigMeshVerticesCntSubMesh.get(3), Resources.getInstance().bigMeshVerticesCntSubMesh.get(4)-Resources.getInstance().bigMeshVerticesCntSubMesh.get(3));
 			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
 			
 //			transShader.setUniformf("a_color", Resources.getInstance().wireCubeColor[0],Resources.getInstance().wireCubeColor[1],Resources.getInstance().wireCubeColor[2],Resources.getInstance().wireCubeColor[3]);
@@ -684,7 +694,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				
 		// render all objects
 		for (int i = 0; i<renderObjects.size;++i) {
-			
+						
 			//render impact
 			if(renderObjects.get(i).isCollidedAnimation == true && renderObjects.get(i).collideAnimation == 0) {
 				renderObjects.get(i).collideAnimation = 1.0f;
@@ -822,6 +832,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			}
 				
 		}
+		
 		
 		transShader.end();
 	}

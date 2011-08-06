@@ -552,7 +552,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 
 			transShader.setUniformf("a_color", Resources.getInstance().backgroundWireColor[0], Resources.getInstance().backgroundWireColor[1],
 					Resources.getInstance().backgroundWireColor[2], Resources.getInstance().backgroundWireColor[3]);
-			sphereModel.render(transShader, GL20.GL_LINE_STRIP);
+			playerModel.render(transShader, GL20.GL_LINE_STRIP);
 		}
 		{
 			// render Wire
