@@ -233,8 +233,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 //	}
 	
 	@Override
-	public void render(float deltaTime) {
-		
+	public void render(float deltaTime) {		
 		delta = Math.min(0.02f, deltaTime);
 		startTime += delta;
 
@@ -247,6 +246,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		cam.update();
 
 		sortScene();
+
+		// render scene again
+		renderScene();
+		renderMenu();
 
 		if(Resources.getInstance().bloomOnOff) {
 			frameBuffer.begin();
@@ -280,21 +283,28 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			frameBuffer.end();
 	
 			bloomShader.end();
-		}
-
-		// render scene again
-		renderScene();
-		renderMenu();
-
-		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-
-		if(Resources.getInstance().bloomOnOff) {
-			batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
+			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
 			batch.begin();
 			batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
 			batch.end();
-		}
+			
+			if(Gdx.graphics.getBufferFormat().coverageSampling) {
+				Gdx.gl.glClear(GL20.GL_COVERAGE_BUFFER_BIT_NV);
+				Gdx.graphics.getGL20().glColorMask(false, false, false, false);			
+				renderScene();
+				renderMenu();
+				Gdx.graphics.getGL20().glColorMask(true, true, true, true);
+				
+				Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+				Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+				Gdx.gl.glDisable(GL20.GL_BLEND);
+			}
+
+		} else {
+			Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+			Gdx.gl.glDisable(GL20.GL_BLEND);
+		}	
 
 		batch.begin();
 		float y = 405;
@@ -619,7 +629,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 				
 		transShader.begin();
 		transShader.setUniformMatrix("VPMatrix", cam.combined);

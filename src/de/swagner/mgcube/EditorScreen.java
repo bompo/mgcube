@@ -205,11 +205,14 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	}
 	
 	public void initRender() {
-		Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
+		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
-		Gdx.gl20.glDepthMask(true);
+
+		Gdx.gl.glClearColor(Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
+		Gdx.graphics.getGL20().glDepthMask(true);
+		Gdx.graphics.getGL20().glColorMask(true, true, true, true);
 	}
 	
 	@Override
@@ -480,55 +483,64 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		
 		sortScene();
 		
+		// render scene again
+		renderScene();
+		renderButtons();
+
 		if(Resources.getInstance().bloomOnOff) {
 			frameBuffer.begin();
 			renderScene();
 			renderButtons();
 			frameBuffer.end();
 	
-			//PostProcessing
+			// PostProcessing
 			Gdx.gl.glDisable(GL20.GL_CULL_FACE);
 			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 			Gdx.gl.glDisable(GL20.GL_BLEND);
-			
+	
 			frameBuffer.getColorBufferTexture().bind(0);
-			
+	
 			bloomShader.begin();
 			bloomShader.setUniformi("sTexture", 0);
-			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f)+changeLevelEffect);
-			
+			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f));
+	
 			frameBufferVert.begin();
 			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
 			bloomShader.setUniformf("TexelOffsetY", 0.0f);
 			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 			frameBufferVert.end();
-			
+	
 			frameBufferVert.getColorBufferTexture().bind(0);
-			
-			frameBuffer.begin();		
+	
+			frameBuffer.begin();
 			bloomShader.setUniformf("TexelOffsetX", 0.0f);
 			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
 			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 			frameBuffer.end();
 	
-			bloomShader.end(); 
-		}
-		
-		//render scene again
-		renderScene();
-		renderButtons();
-		
-		Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-		Gdx.gl.glDisable(GL20.GL_BLEND);
-				
-		if(Resources.getInstance().bloomOnOff) {
-			batch.enableBlending();
-			batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
+			bloomShader.end();
+			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
 			batch.begin();
-			batch.draw(frameBuffer.getColorBufferTexture(), 0, 0,800,480,0,0,frameBuffer.getWidth(),frameBuffer.getHeight(),false,true);
+			batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
 			batch.end();
-		}
+			
+			if(Gdx.graphics.getBufferFormat().coverageSampling) {
+				Gdx.gl.glClear(GL20.GL_COVERAGE_BUFFER_BIT_NV);
+				Gdx.graphics.getGL20().glColorMask(false, false, false, false);			
+				renderScene();
+				renderButtons();
+				Gdx.graphics.getGL20().glColorMask(true, true, true, true);
+				
+				Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+				Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+				Gdx.gl.glDisable(GL20.GL_BLEND);
+			}
+
+		} else {
+			Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+			Gdx.gl.glDisable(GL20.GL_BLEND);
+		}	
 		
 		//GUI
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
@@ -844,7 +856,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 
 	private void renderScene() {		
 		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 		
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
