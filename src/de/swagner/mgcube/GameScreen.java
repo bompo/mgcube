@@ -379,7 +379,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			frameBuffer.getColorBufferTexture().bind(0);
 	
 			bloomShader.setUniformi("sTexture", 0);
-			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f + (changeLevelEffect*4),0,1,0.50f,0.70f));
+			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f + (changeLevelEffect*4),0,1,0.50f,0.60f));
 	
 			frameBufferVert.begin();
 			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
