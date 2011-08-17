@@ -504,6 +504,7 @@ public class Resources {
 	public Mesh wireCubeModel;
 	public Mesh sphereModel;
 	public Mesh bigMesh;
+	public Mesh combinedModel;
 	
 	public Array<Integer> bigMeshIndicesCntSubMesh = new Array<Integer>();
 	public Array<Integer> bigMeshVerticesCntSubMesh = new Array<Integer>();
@@ -565,18 +566,13 @@ public class Resources {
 
 	public void reInit() {		
 		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj").read());
-		blockModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
-		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere_small.obj").read());
-		playerModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-	
+		playerModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere_small.obj").read());	
 		sphereModel = ObjLoader.loadObj(Gdx.files.internal("data/sphere.obj").read());
-		sphereModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
-
 		targetModel = ObjLoader.loadObj(Gdx.files.internal("data/cylinder.obj").read());
-		targetModel.getVertexAttribute(Usage.Position).alias = "a_vertex";
+		combinedModel = ObjLoader.loadObj(Gdx.files.internal("data/models.obj").read());
+		coneModel = ObjLoader.loadObj(Gdx.files.internal("data/cone.obj").read());
 		
-		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_vertex"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
+		quadModel = new Mesh(true, 4, 6, new VertexAttribute(Usage.Position, 4, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
 		float[] vertices = { -1.0f, 1.0f, 0.0f, 1.0f, // Position 0
 				0.0f, 0.0f, // TexCoord 0
 				-1.0f, -1.0f, 0.0f, 1.0f, // Position 1
@@ -590,83 +586,95 @@ public class Resources {
 		quadModel.setVertices(vertices);
 		quadModel.setIndices(indices);
 
-		wireCubeModel = new Mesh(true, 20, 20, new VertexAttribute(Usage.Position, 4, "a_vertex"));
+		wireCubeModel = new Mesh(true, 20, 20, new VertexAttribute(Usage.Position, 3, "a_position"));
 		float[] vertices2 = {
 				// front face
-				-1.0f, 1.0f, 1.0f, 1.0f, // 0
-				1.0f, 1.0f, 1.0f, 1.0f, // 1
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
+				-1.0f, 1.0f, 1.0f, // 0
+				1.0f, 1.0f, 1.0f, // 1
+				1.0f, -1.0f, 1.0f, // 2
+				-1.0f, -1.0f, 1.0f, // 3
 
 				// left face
-				-1.0f, 1.0f, 1.0f, 1.0f, // 0
-				-1.0f, 1.0f, -1.0f, 1.0f, // 4
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
+				-1.0f, 1.0f, 1.0f, // 0
+				-1.0f, 1.0f, -1.0f, // 4
+				-1.0f, -1.0f, -1.0f, // 7
+				-1.0f, -1.0f, 1.0f, // 3
 
 				// bottom face
-				-1.0f, -1.0f, 1.0f, 1.0f, // 3
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
+				-1.0f, -1.0f, 1.0f, // 3
+				1.0f, -1.0f, 1.0f, // 2
+				1.0f, -1.0f, -1.0f, // 6
+				-1.0f, -1.0f, -1.0f, // 7
 
 				// back face
-				-1.0f, -1.0f, -1.0f, 1.0f, // 7
-				-1.0f, 1.0f, -1.0f, 1.0f, // 4
-				1.0f, 1.0f, -1.0f, 1.0f, // 5
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
+				-1.0f, -1.0f, -1.0f, // 7
+				-1.0f, 1.0f, -1.0f, // 4
+				1.0f, 1.0f, -1.0f, // 5
+				1.0f, -1.0f, -1.0f, // 6
 
 				// right face
-				1.0f, -1.0f, -1.0f, 1.0f, // 6
-				1.0f, -1.0f, 1.0f, 1.0f, // 2
-				1.0f, 1.0f, 1.0f, 1.0f, // 1
-				1.0f, 1.0f, -1.0f, 1.0f, // 5
+				1.0f, -1.0f, -1.0f, // 6
+				1.0f, -1.0f, 1.0f, // 2
+				1.0f, 1.0f, 1.0f, // 1
+				1.0f, 1.0f, -1.0f, // 5
 		};
 		short[] indices2 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
 		wireCubeModel.setVertices(vertices2);
 		wireCubeModel.setIndices(indices2);
+
+//		wireCubeModel = ObjLoader.loadObj(Gdx.files.internal("data/wirecube.obj").read());
 		
 		//copy all Meshes into a combined Mesh for performance reasons...
-		int bigMeshVerticesCnt = blockModel.getNumVertices()+playerModel.getNumVertices()+targetModel.getNumVertices();
-		bigMesh = new Mesh(true, bigMeshVerticesCnt, 0, new VertexAttribute(Usage.Position, 4, "a_vertex"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoord"));
+		int bigMeshVerticesCnt = blockModel.getNumVertices() * blockModel.getVertexSize()/4;//+playerModel.getNumVertices()+targetModel.getNumVertices();
+
 
 		Array<Float> bigMeshVertices =  new Array<Float>(bigMeshVerticesCnt);
-		{		
+			
 		float[] bigMeshCopyVertices = new float[blockModel.getNumVertices() * blockModel.getVertexSize()/4];
 		blockModel.getVertices(bigMeshCopyVertices);
 		for(Float f:bigMeshCopyVertices) {
 			bigMeshVertices.add(f);	
-		}		
-		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
-		}			
-		{
-		float[] bigMeshCopyVertices = new float[playerModel.getNumVertices() * playerModel.getVertexSize() / 4];
-		playerModel.getVertices(bigMeshCopyVertices);
-		for(Float f:bigMeshCopyVertices) {
-			bigMeshVertices.add(f);	
 		}	
 		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
-		}
-		{
-		float[] bigMeshCopyVertices = new float[targetModel.getNumVertices() * targetModel.getVertexSize() / 4];
-		targetModel.getVertices(bigMeshCopyVertices);
-		for(Float f:bigMeshCopyVertices) {
-			bigMeshVertices.add(f);	
-		}	
-		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
-		}
+			
+//		{
+//		float[] bigMeshCopyVertices = new float[playerModel.getNumVertices() * playerModel.getVertexSize() / 4];
+//		playerModel.getVertices(bigMeshCopyVertices);
+//		for(Float f:bigMeshCopyVertices) {
+//			bigMeshVertices.add(f);	
+//		}	
+//		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
+//		}
+//		{
+//		float[] bigMeshCopyVertices = new float[targetModel.getNumVertices() * targetModel.getVertexSize() / 4];
+//		targetModel.getVertices(bigMeshCopyVertices);
+//		for(Float f:bigMeshCopyVertices) {
+//			bigMeshVertices.add(f);	
+//		}	
+//		bigMeshVerticesCntSubMesh.add(bigMeshVertices.size);
+//		}
+		
 		
 		float[] bigMeshVerticesFloatArray = new float[bigMeshVertices.size];
 		for (int i = 0; i < bigMeshVertices.size; i++) {
 		    Float f = bigMeshVertices.get(i);
 		    bigMeshVerticesFloatArray[i] = (f != null ? f : 0); // Or whatever default you want.
-		}
-		bigMesh.setVertices(bigMeshVerticesFloatArray);
+		}	
 		
-//		for(Integer inte:bigMeshVerticesCntSubMesh) {
-//			Gdx.app.log("", inte.toString());
-//		}
-//		Gdx.app.log("", "---");
+		short[] bigMeshIndicesShortArray = new short[bigMeshVertices.size];
+		for (short i = 0; i < bigMeshVertices.size; i++) {
+		    Short f = i;
+		    bigMeshIndicesShortArray[i] = (f != null ? f : 0); // Or whatever default you want.
+		}
+		
+		bigMesh = new Mesh(true, bigMeshVertices.size,0, new VertexAttribute(Usage.Position,3, "a_position"));
+		bigMesh.setVertices(bigMeshCopyVertices);
+//		bigMesh.setIndices(bigMeshIndicesShortArray);
+		
+		for(Integer inte:bigMeshVerticesCntSubMesh) {
+			Gdx.app.log("", inte.toString());
+		}
+		Gdx.app.log("", "---");
 //		int n = 0;
 //		for(Float inte:bigMeshVerticesFloatArray) {
 //			Gdx.app.log("", n + ": " + inte.toString());

@@ -1114,7 +1114,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				if (movdst < 1.0f && box.contains(m.position) && intersect) {
 					player.stop();
 					updatePlayerShadow();
-					m.move(player.direction.cpy());
+					m.move(player.moveDirection.cpy());
 					m.isCollidedAnimation = true;
 				}
 				else if(movdst <1.0f && !box.contains(m.position) && intersect) {
@@ -1308,7 +1308,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						if (dst < 1.0f && intersect) {
 							m.stop();
 							if(box.contains(mm.position)) 
-								mm.move(m.direction);
+								mm.move(m.direction.cpy());
 							else
 								player.stop();
 							mm.isCollidedAnimation = true;

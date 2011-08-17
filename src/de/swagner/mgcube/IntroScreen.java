@@ -193,6 +193,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	public void dispose() {
 		frameBuffer.dispose();
 		frameBufferVert.dispose();
+		title.getTexture().dispose();
 	}
 
 	@Override

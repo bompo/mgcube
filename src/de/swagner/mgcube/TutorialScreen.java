@@ -1268,7 +1268,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 				float movdst = intersection.dst(player.position);
 				if (movdst < 1.0f && box.contains(m.position) && intersect) {
 					player.stop();
-					m.move(player.direction.cpy());
+					m.move(player.moveDirection.cpy());
 					m.isCollidedAnimation = true;
 					
 					if(Resources.getInstance().currentlevel == 4) {
@@ -1485,7 +1485,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 							
 							m.stop();
 							if(box.contains(mm.position)) 
-								mm.move(m.direction);
+								mm.move(m.direction.cpy());
 							else
 								player.stop();
 							mm.isCollidedAnimation = true;

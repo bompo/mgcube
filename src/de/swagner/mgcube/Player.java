@@ -6,11 +6,13 @@ import com.badlogic.gdx.math.Vector3;
 public class Player extends Renderable {
 	
 	public Vector3 direction = new Vector3(0,0,-1);
+	public Vector3 moveDirection = new Vector3(0,0,-1);
 
 	public boolean isMoving = false;
 	
 	public void move() {
 		this.setDirection();
+		moveDirection.set(direction);
 		if(Resources.getInstance().musicOnOff) {
 			Resources.getInstance().move.play();
 		}

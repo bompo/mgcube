@@ -3,38 +3,38 @@ package de.swagner.gdx.obj.normalmap.shader;
 public class FastBloomShader {
 
     public static final String mVertexShader =                    
-"varying vec2 TexCoord2; \n" +
-"varying vec2 TexCoord1; \n" + 
-"varying vec2 TexCoord0; \n" +
-"uniform float TexelOffsetY; \n" +
-"uniform float TexelOffsetX; \n" +
-"attribute vec2 a_texCoord; \n" +
-"attribute vec4 a_vertex; \n" +
-"void main () \n" +
-"{ \n" +
-"  gl_Position = a_vertex; \n" +
-"  vec2 tmpvar_1; \n" +
-"  tmpvar_1.x = TexelOffsetX; \n" +
-"  tmpvar_1.y = TexelOffsetY; \n" +
-"  TexCoord0 = (a_texCoord - tmpvar_1); \n" +
-"  TexCoord1 = a_texCoord; \n" +
-"  TexCoord2 = (a_texCoord + tmpvar_1); \n" +
-"} \n";
+		"varying vec2 TexCoord2; \n" +
+		"varying vec2 TexCoord1; \n" + 
+		"varying vec2 TexCoord0; \n" +
+		"uniform float TexelOffsetY; \n" +
+		"uniform float TexelOffsetX; \n" +
+		"attribute vec2 a_texCoord; \n" +
+		"attribute vec4 a_position; \n" +
+		"void main () \n" +
+		"{ \n" +
+		"  gl_Position = a_position; \n" +
+		"  vec2 tmpvar_1; \n" +
+		"  tmpvar_1.x = TexelOffsetX; \n" +
+		"  tmpvar_1.y = TexelOffsetY; \n" +
+		"  TexCoord0 = (a_texCoord - tmpvar_1); \n" +
+		"  TexCoord1 = a_texCoord; \n" +
+		"  TexCoord2 = (a_texCoord + tmpvar_1); \n" +
+		"} \n";
     
     public static final String mFragmentShader =   
         "#ifdef GL_ES\n" +
         "precision mediump float;\n" +
         "#endif\n" +
-"varying vec2 TexCoord2;\n" +
-"varying vec2 TexCoord1;\n" +
-"varying vec2 TexCoord0;\n" +
-"uniform float bloomFactor;\n" +
-"uniform sampler2D sTexture;\n" +
-"void main ()\n" +
-"{\n" +
-"  gl_FragColor.xyz = (((texture2D (sTexture, TexCoord2).xyz * 0.333333) + ((texture2D (sTexture, TexCoord1).xyz * 0.333333) + (texture2D (sTexture, TexCoord0).xyz * 0.333333))) * bloomFactor);\n" +
-"} \n";
-}
+		"varying vec2 TexCoord2;\n" +
+		"varying vec2 TexCoord1;\n" +
+		"varying vec2 TexCoord0;\n" +
+		"uniform float bloomFactor;\n" +
+		"uniform sampler2D sTexture;\n" +
+		"void main ()\n" +
+		"{\n" +
+		"  gl_FragColor.xyz = (((texture2D (sTexture, TexCoord2).xyz * 0.333333) + ((texture2D (sTexture, TexCoord1).xyz * 0.333333) + (texture2D (sTexture, TexCoord0).xyz * 0.333333))) * bloomFactor);\n" +
+		"} \n";
+		}
 
 /** Precision qualifiers gain one frame on milestone but break desktop support an look a bit uglier
 public static final String mVertexShader =                    
