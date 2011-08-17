@@ -346,34 +346,46 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 	
+			bloomShader.begin();
+			
 			frameBuffer.getColorBufferTexture().bind(0);
 	
-			bloomShader.begin();
 			bloomShader.setUniformi("sTexture", 0);
 			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.70f));
 	
 			frameBufferVert.begin();
 			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-			bloomShader.setUniformf("TexelOffsetY", 0.0f);
+			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);			
 			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 			frameBufferVert.end();
 	
-			frameBufferVert.getColorBufferTexture().bind(0);
-	
-			frameBuffer.begin();
-			bloomShader.setUniformf("TexelOffsetX", 0.0f);
-			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
-			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-			frameBuffer.end();
-	
+//			frameBufferVert.getColorBufferTexture().bind(0);
+//	
+//			frameBuffer.begin();
+//			bloomShader.setUniformf("TexelOffsetX", 0.0f);
+//			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
+//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);			
+//			frameBuffer.end();
+//			
+//			frameBuffer.getColorBufferTexture().bind(0);
+//	
+//			frameBufferVert.begin();
+//			bloomShader.setUniformf("TexelOffsetX", 0.0f);
+//			bloomShader.setUniformf("TexelOffsetY", 0.0f);			
+//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+//			frameBufferVert.end();
+			
 			bloomShader.end();
-			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
+			
+			batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
+			batch.getProjectionMatrix().setToOrtho2D(0, 0, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize);
 			batch.begin();
-			batch.draw(frameBuffer.getColorBufferTexture(), 0, 0, 800, 480, 0, 0, frameBuffer.getWidth(), frameBuffer.getHeight(), false, true);
+			batch.draw(frameBufferVert.getColorBufferTexture(),0,0);
 			batch.end();
+			batch.getProjectionMatrix().setToOrtho2D(0, 0, 800,480);
 			
 			if(Gdx.graphics.getBufferFormat().coverageSampling) {
-				Gdx.gl.glClear((Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
+				Gdx.gl.glClear(GL20.GL_COVERAGE_BUFFER_BIT_NV);
 				Gdx.graphics.getGL20().glColorMask(false, false, false, false);			
 				renderScene();
 				renderLevelSelect();
