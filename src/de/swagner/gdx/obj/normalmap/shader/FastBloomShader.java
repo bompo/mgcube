@@ -23,7 +23,7 @@ public class FastBloomShader {
     
     public static final String mFragmentShader =   
         "#ifdef GL_ES\n" +
-        "precision mediump float;\n" +
+        "precision highp float;\n" +
         "#endif\n" +
 		"varying vec2 TexCoord2;\n" +
 		"varying vec2 TexCoord1;\n" +

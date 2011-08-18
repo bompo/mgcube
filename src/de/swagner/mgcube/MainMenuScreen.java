@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -150,6 +151,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 
+		frameBuffer.getColorBufferTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		frameBufferVert.getColorBufferTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
 		Gdx.gl.glClearColor(Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
 		Gdx.graphics.getGL20().glDepthMask(true);
 		Gdx.graphics.getGL20().glColorMask(true, true, true, true);
@@ -269,30 +273,30 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			frameBuffer.getColorBufferTexture().bind(0);
 	
 			bloomShader.setUniformi("sTexture", 0);
-			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.50f,0.60f));
+			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f,0,1,0.67f,0.75f));
 	
 			frameBufferVert.begin();
 			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);			
+			bloomShader.setUniformf("TexelOffsetY", 0.0f);			
 			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 			frameBufferVert.end();
 	
-//			frameBufferVert.getColorBufferTexture().bind(0);
-//	
-//			frameBuffer.begin();
-//			bloomShader.setUniformf("TexelOffsetX", 0.0f);
-//			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
-//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);			
-//			frameBuffer.end();
-//			
-//			frameBuffer.getColorBufferTexture().bind(0);
-//	
-//			frameBufferVert.begin();
-//			bloomShader.setUniformf("TexelOffsetX", 0.0f);
-//			bloomShader.setUniformf("TexelOffsetY", 0.0f);			
-//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-//			frameBufferVert.end();
+			frameBufferVert.getColorBufferTexture().bind(0);
+	
+			frameBuffer.begin();
+			bloomShader.setUniformf("TexelOffsetX", 0.0f);
+			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
+			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);			
+			frameBuffer.end();
 			
+			frameBuffer.getColorBufferTexture().bind(0);
+	
+			frameBufferVert.begin();
+			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset/2);
+			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset/2);			
+			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+			frameBufferVert.end();
+					
 			bloomShader.end();
 			
 			batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);

@@ -368,32 +368,32 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			bloomShader.begin();
 			
 			frameBuffer.getColorBufferTexture().bind(0);
-	
+			
 			bloomShader.setUniformi("sTexture", 0);
-			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f) + 0.5f + (changeLevelEffect*4),0,1,0.50f,0.70f));
+			bloomShader.setUniformf("bloomFactor", Helper.map((MathUtils.sin(startTime * 3f) * 0.5f + (changeLevelEffect*4f)) + 0.5f,0,1,0.67f,0.75f));
 	
 			frameBufferVert.begin();
 			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);			
+			bloomShader.setUniformf("TexelOffsetY", 0.0f);			
 			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
 			frameBufferVert.end();
 	
-//			frameBufferVert.getColorBufferTexture().bind(0);
-//	
-//			frameBuffer.begin();
-//			bloomShader.setUniformf("TexelOffsetX", 0.0f);
-//			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
-//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);			
-//			frameBuffer.end();
-//			
-//			frameBuffer.getColorBufferTexture().bind(0);
-//	
-//			frameBufferVert.begin();
-//			bloomShader.setUniformf("TexelOffsetX", 0.0f);
-//			bloomShader.setUniformf("TexelOffsetY", 0.0f);			
-//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-//			frameBufferVert.end();
+			frameBufferVert.getColorBufferTexture().bind(0);
+	
+			frameBuffer.begin();
+			bloomShader.setUniformf("TexelOffsetX", 0.0f);
+			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset);
+			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);			
+			frameBuffer.end();
 			
+			frameBuffer.getColorBufferTexture().bind(0);
+	
+			frameBufferVert.begin();
+			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset/2);
+			bloomShader.setUniformf("TexelOffsetY", Resources.getInstance().m_fTexelOffset/2);			
+			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+			frameBufferVert.end();
+					
 			bloomShader.end();
 			
 			batch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE);
