@@ -868,34 +868,34 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //				sphereSliceModel.render(transShader, GL20.GL_LINE_STRIP);
 			}
 			
-			// render player shadow
-			if(renderObjects.get(i) instanceof PlayerShadow && !player.isMoving && player.collideAnimation==0 && playerShadow.isMoving) {
-				model.set(renderObjects.get(i).model);				
-				
-				tmp.setToRotation(Vector3.X, angleXBack);
-				model.mul(tmp);
-				tmp.setToRotation(Vector3.Y, angleYBack);
-				model.mul(tmp);
-
-				tmp.setToScaling(0.5f, 0.5f, 0.5f);
-				model.mul(tmp);
-
-				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color",Resources.getInstance().playerColor[0], Resources.getInstance().playerColor[1], Resources.getInstance().playerColor[2], Resources.getInstance().playerColor[3] - (playerShadow.distance/4.f));
-				playerModel.render(transShader, GL20.GL_TRIANGLES);
-				
-				tmp.setToScaling(2.0f - (player.collideAnimation), 2.0f - (player.collideAnimation), 2.0f  - (player.collideAnimation));
-				model.mul(tmp);
-
-				//render hull			
-				transShader.setUniformMatrix("MMatrix", model);
-				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]  - (playerShadow.distance/4.f));
-				
-				playerModel.render(transShader, GL20.GL_LINE_STRIP);
-				
-				//TODO add animations
-				playerModel.render(transShader, GL20.GL_LINE_STRIP, 0, (int) (playerModel.getNumVertices()-(renderObjects.get(i).collideAnimation*playerModel.getNumVertices())));
-			}
+//			// render player shadow
+//			if(renderObjects.get(i) instanceof PlayerShadow && !player.isMoving && player.collideAnimation==0 && playerShadow.isMoving) {
+//				model.set(renderObjects.get(i).model);				
+//				
+//				tmp.setToRotation(Vector3.X, angleXBack);
+//				model.mul(tmp);
+//				tmp.setToRotation(Vector3.Y, angleYBack);
+//				model.mul(tmp);
+//
+//				tmp.setToScaling(0.5f, 0.5f, 0.5f);
+//				model.mul(tmp);
+//
+//				transShader.setUniformMatrix("MMatrix", model);
+//				transShader.setUniformf("a_color",Resources.getInstance().playerColor[0], Resources.getInstance().playerColor[1], Resources.getInstance().playerColor[2], Resources.getInstance().playerColor[3] - (playerShadow.distance/4.f));
+//				playerModel.render(transShader, GL20.GL_TRIANGLES);
+//				
+//				tmp.setToScaling(2.0f - (player.collideAnimation), 2.0f - (player.collideAnimation), 2.0f  - (player.collideAnimation));
+//				model.mul(tmp);
+//
+//				//render hull			
+//				transShader.setUniformMatrix("MMatrix", model);
+//				transShader.setUniformf("a_color",Resources.getInstance().playerEdgeColor[0], Resources.getInstance().playerEdgeColor[1], Resources.getInstance().playerEdgeColor[2], Resources.getInstance().playerEdgeColor[3]  - (playerShadow.distance/4.f));
+//				
+//				playerModel.render(transShader, GL20.GL_LINE_STRIP);
+//				
+//				//TODO add animations
+//				playerModel.render(transShader, GL20.GL_LINE_STRIP, 0, (int) (playerModel.getNumVertices()-(renderObjects.get(i).collideAnimation*playerModel.getNumVertices())));
+//			}
 			
 			// render Portals
 			if(renderObjects.get(i) instanceof Portal) {
