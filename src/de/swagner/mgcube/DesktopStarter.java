@@ -38,7 +38,7 @@ public class DesktopStarter extends Game {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		config.setFromDisplayMode(displayMode);
-		
+
 		config.width = 800;
 		config.height = 480;
 		config.title = "Qb";
