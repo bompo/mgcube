@@ -727,11 +727,11 @@ public class Resources {
 
 		// BLOOOOOOMMMM from powervr examples
 		// Blur render target size (power-of-two)
-		if(Gdx.graphics.getWidth()<=1000) {
-			m_i32TexSize = 256;
-		} else {
+//		if(Gdx.graphics.getWidth()<=1000) {
+//			m_i32TexSize = 256;
+//		} else {
 			m_i32TexSize = 128;
-		}
+//		}
 
 		// Texel offset for blur filter kernle
 		m_fTexelOffset = 1.0f / m_i32TexSize /2.0f;
