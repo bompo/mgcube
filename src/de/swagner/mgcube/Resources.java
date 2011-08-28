@@ -687,9 +687,12 @@ public class Resources {
 //			++n;
 //		}
 		
-		
+		try {
 		if(music!=null) music.stop();
 		if(move!=null) move.stop();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
 		move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
@@ -727,18 +730,21 @@ public class Resources {
 
 		// BLOOOOOOMMMM from powervr examples
 		// Blur render target size (power-of-two)
-//		if(Gdx.graphics.getWidth()<=1000) {
+		float blurSize = 1.0f;
+		if(Gdx.graphics.getWidth()<=1000) {
+			blurSize = 1.0f;
 //			m_i32TexSize = 256;
-//		} else {
-			m_i32TexSize = 128;
-//		}
+		} else {
+//			m_i32TexSize = 128;
+			blurSize = 1.0f;
+		}
 
 		// Texel offset for blur filter kernle
-		m_fTexelOffset = 1.0f / m_i32TexSize /2.0f;
+		m_fTexelOffset = 1.0f / m_i32TexSize /blurSize;
 
 		// Altered weights for the faster filter kernel
-		float w1 = 0.0555555f /2.0f;
-		float w2 = 0.2777777f /2.0f;
+		float w1 = 0.0555555f /blurSize;
+		float w2 = 0.2777777f /blurSize;
 		float intraTexelOffset = (w2 / (w1 + w2)) * m_fTexelOffset;
 		m_fTexelOffset += intraTexelOffset;
 

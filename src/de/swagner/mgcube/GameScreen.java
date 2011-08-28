@@ -339,7 +339,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		angleXFront += MathUtils.sin(startTime) * delta * 10f;
 		angleYFront += MathUtils.cos(startTime) * delta * 5f;
-
+		
 		cam.update();
 		
 		if(player!= null && player.isMoving) {
@@ -603,6 +603,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					nextBlock = renderable;
 					oldDst = dst;
 				}
+				renderable.isHighlightAnimation = false;
 			}
 		}
 		if (oldDst > 1.0f && nextBlock != null) {
@@ -623,13 +624,26 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 			
 			//render highlight
-			if(renderObjects.get(i).isHighlightAnimation == true && renderObjects.get(i).highlightAnimation == 0) {
-				renderObjects.get(i).highlightAnimation = 0.5f;
+			if(renderObjects.get(i).isHighlightAnimation == true && renderObjects.get(i).isHighlightAnimationFadeInOut) {
+				renderObjects.get(i).highlightAnimation += delta/6.f;
+				renderObjects.get(i).highlightAnimation = Math.min(0.5f, renderObjects.get(i).highlightAnimation);
+				if(renderObjects.get(i).highlightAnimation>=0.5) {
+					renderObjects.get(i).isHighlightAnimationFadeInOut = !renderObjects.get(i).isHighlightAnimationFadeInOut;
+				}
 			}
-			if(renderObjects.get(i).highlightAnimation>0.0f) {
+			if(renderObjects.get(i).isHighlightAnimation == true && !renderObjects.get(i).isHighlightAnimationFadeInOut) {
 				renderObjects.get(i).highlightAnimation -= delta/6.f;
 				renderObjects.get(i).highlightAnimation = Math.max(0.0f, renderObjects.get(i).highlightAnimation);
-				if(renderObjects.get(i).highlightAnimation == 0.0f) renderObjects.get(i).isHighlightAnimation = false;
+				if(renderObjects.get(i).highlightAnimation<=0) {
+					renderObjects.get(i).isHighlightAnimationFadeInOut = !renderObjects.get(i).isHighlightAnimationFadeInOut;
+				}
+			}
+			if(renderObjects.get(i).isHighlightAnimation == false) {
+				renderObjects.get(i).highlightAnimation -= delta/1.f;
+				renderObjects.get(i).highlightAnimation = Math.max(0.0f, renderObjects.get(i).highlightAnimation);
+				if(renderObjects.get(i).highlightAnimation<=0) {
+					renderObjects.get(i).isHighlightAnimationFadeInOut = !renderObjects.get(i).isHighlightAnimationFadeInOut;
+				}
 			}
 			
 			//render switchblock fade out/in

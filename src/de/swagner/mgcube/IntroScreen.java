@@ -46,8 +46,6 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 		
-		Gdx.app.log("", Gdx.graphics.getType().toString());
-		
 		if(Resources.getInstance().fullscreenOnOff)
 			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 		
@@ -95,6 +93,41 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	
 	@Override
 	public void show() {
+		
+		Resources.getInstance().reInit();
+		
+		Gdx.input.setInputProcessor(this);
+		
+		if(Resources.getInstance().fullscreenOnOff)
+			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
+		
+		title = new Sprite(new Texture(Gdx.files.internal("data/logo.png")));
+		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
+
+		quadModel = Resources.getInstance().quadModel;
+
+		cam = new PerspectiveCamera(60, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(0, 0, 16f);
+		cam.direction.set(0, 0, -1);
+		cam.up.set(0, 1, 0);
+		cam.near = 1f;
+		cam.far = 1000;
+
+		cam.update();
+		
+		// controller = new PerspectiveCamController(cam);
+		// Gdx.input.setInputProcessor(controller);
+
+		batch = new SpriteBatch();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		font = new BitmapFont();
+		
+		fadeBatch = new SpriteBatch();
+		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
+
+		bloomShader = Resources.getInstance().bloomShader;
+		
+		initRender();
 	}
 
 	@Override
