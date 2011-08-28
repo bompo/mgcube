@@ -306,8 +306,8 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}
 		}
 		
-		renderObjects.add(player);
-		renderObjects.add(target);
+//		renderObjects.add(player);
+//		renderObjects.add(target);
 		renderObjects.addAll(blocks);		
 		renderObjects.addAll(portals);
 		renderObjects.addAll(movableBlocks);
