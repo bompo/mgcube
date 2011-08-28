@@ -445,18 +445,38 @@
 </head> 
  
  
-<body onload="webGLStart();" style="background:#000000;"> 
+<body style="background:#000000;"> 
     
-    <div>    
-        <canvas id="canvas" style="border: none;" width="500" height="500"></canvas> 
-        <img src="qb_logo.png" alt="logo1" />
-<a href="http://market.android.com/search?q=pub:Stefan+Wagner">
-      <img src="http://www.android.com/images/brand/60_avail_market_logo1.png"
-           alt="Available in Android Market" />
-    </a>
-    </div>    
 
+<div id="applet_container">
+  <applet code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar" codebase="." width="800" height="480">
+  
+    <param name="al_title" value="AppletStarter">
+    <param name="al_main" value="de.swagner.mgcube.AppletStarter">
+    <param name="al_logo" value="qb_logo.png">
+    <param name="al_progressbar" value="appletprogress.gif">
 
+    <param name="al_bgcolor" value="000000">
+    <param name="al_fgcolor" value="ffffff">
+    
+    <param name="al_jars" value="qb.jar, gdx.jar, gdx-backend-lwjgl.jar">
+
+    <param name="al_windows" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_linux" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_mac" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_solaris" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    
+    <param name="codebase_lookup" value="false">
+
+    <param name="java_arguments" value="-Dsun.java2d.noddraw=true -Dsun.awt.noerasebackground=true -Dsun.java2d.d3d=false -Dsun.java2d.opengl=false -Dsun.java2d.pmoffscreen=false -Xmx800M">
+   <param name="lwjgl_arguments" value="-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true">
+    <param name="separate_jvm" value="true">
+    <param name="codebase_lookup" value="false">
+  </applet>
+  </div>
+
+<br/><br/><br/>
+    <h3 style="color:#fff;">Screenshots</h3>
     <div>  
     <img src="screen1.png" alt="Screenshot1" />
     </div>  
@@ -470,7 +490,15 @@
     </div>    
     <br/>
     <div> 
-    <img src="screen3.png" alt="Screenshot4" />
+    <img src="screen4.png" alt="Screenshot4" />
+    </div>    
+
+
+    <div>    
+<a href="http://market.android.com/search?q=pub:Stefan+Wagner">
+      <img src="http://www.android.com/images/brand/60_avail_market_logo1.png"
+           alt="Available in Android Market" />
+    </a>
     </div>    
 </body> 
  
