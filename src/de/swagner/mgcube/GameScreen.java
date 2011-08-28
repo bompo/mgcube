@@ -1,5 +1,6 @@
 package de.swagner.mgcube;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Game;
@@ -596,16 +597,20 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		
 		pRay.set(player.position, player.direction);
-
+		float oldDst = 1111f;
+		Renderable nextBlock = new Renderable();
 		for (Renderable renderable:renderObjects) {
 			if(!(renderable instanceof Player) && !(renderable instanceof Switch)) {
 				boolean intersect = Intersector.intersectRaySphere(pRay, renderable.position, 1f, intersection);
 				float dst = intersection.dst(player.position);
-				if (dst > 1.0f && intersect) {
-					renderable.isCollidedAnimation = true;
-					break;
+				if(dst< oldDst && intersect) {
+					nextBlock = renderable;
+					oldDst = dst;
 				}
 			}
+		}
+		if (oldDst > 1.0f && nextBlock != null) {
+			nextBlock.isCollidedAnimation = true;
 		}
 		
 //		while(!shadowBlocked && (showdowCounter<20) ) {
