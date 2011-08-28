@@ -593,21 +593,36 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		boolean shadowBlocked = false;
 		int showdowCounter = 2;
-		while(!shadowBlocked && (showdowCounter<20) ) {
-			shadowBlocked = false;
-			
-//			Gdx.app.log("", player.position.cpy().add(player.direction.cpy().mul(showdowCounter)).toString());
-			for(Renderable renderable:renderObjects) {				
-				if(!(renderable instanceof Player) && renderable.position.dst(player.position.cpy().add(player.direction.cpy().mul(showdowCounter)))<1.0f) {
+		
+		
+		pRay.set(player.position, player.direction);
+
+		for (Renderable renderable:renderObjects) {
+			if(!(renderable instanceof Player) && !(renderable instanceof Switch)) {
+				boolean intersect = Intersector.intersectRaySphere(pRay, renderable.position, 1f, intersection);
+				if (intersect) {
 					renderable.isCollidedAnimation = true;
-					shadowBlocked = true;
+					
 					break;
-				}
-				if(!shadowBlocked) {		
-					showdowCounter += 1;
 				}
 			}
 		}
+		
+//		while(!shadowBlocked && (showdowCounter<20) ) {
+//			shadowBlocked = false;
+//			
+////			Gdx.app.log("", player.position.cpy().add(player.direction.cpy().mul(showdowCounter)).toString());
+//			for(Renderable renderable:renderObjects) {				
+//				if(!(renderable instanceof Player) && renderable.position.dst(player.position.cpy().add(player.direction.cpy().mul(showdowCounter)))<1.0f) {
+//					renderable.isCollidedAnimation = true;
+//					shadowBlocked = true;
+//					break;
+//				}
+//				if(!shadowBlocked) {		
+//					showdowCounter += 1;
+//				}
+//			}
+//		}
 		
 		
 		// render all objects
