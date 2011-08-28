@@ -591,8 +591,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 				
 		
-		boolean shadowBlocked = false;
-		int showdowCounter = 2;
+//		boolean shadowBlocked = false;
+//		int showdowCounter = 2;
 		
 		
 		pRay.set(player.position, player.direction);
@@ -600,9 +600,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		for (Renderable renderable:renderObjects) {
 			if(!(renderable instanceof Player) && !(renderable instanceof Switch)) {
 				boolean intersect = Intersector.intersectRaySphere(pRay, renderable.position, 1f, intersection);
-				if (intersect) {
+				float dst = intersection.dst(player.position);
+				if (dst > 1.0f && intersect) {
 					renderable.isCollidedAnimation = true;
-					
 					break;
 				}
 			}
