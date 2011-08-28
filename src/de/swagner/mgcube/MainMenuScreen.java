@@ -894,6 +894,11 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		if (keycode == Input.Keys.ENTER && selectedMenuItem != -1) {
 			finished = true;
 		}
+		
+		if (keycode == Input.Keys.MENU) {
+			selectedMenuItem = 5;
+			finished = true;
+		}
 
 		if (keycode == Input.Keys.DOWN) {
 			selectedMenuItem++;
