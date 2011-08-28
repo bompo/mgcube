@@ -590,6 +590,26 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 				
+		
+		boolean shadowBlocked = false;
+		int showdowCounter = 2;
+		while(!shadowBlocked && (showdowCounter<20) ) {
+			shadowBlocked = false;
+			
+//			Gdx.app.log("", player.position.cpy().add(player.direction.cpy().mul(showdowCounter)).toString());
+			for(Renderable renderable:renderObjects) {				
+				if(!(renderable instanceof Player) && renderable.position.dst(player.position.cpy().add(player.direction.cpy().mul(showdowCounter)))<1.0f) {
+					renderable.isCollidedAnimation = true;
+					shadowBlocked = true;
+					break;
+				}
+				if(!shadowBlocked) {		
+					showdowCounter += 1;
+				}
+			}
+		}
+		
+		
 		// render all objects
 		for (int i = 0; i<renderObjects.size;++i) {
 			
@@ -896,40 +916,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 //				//TODO add animations
 //				playerModel.render(transShader, GL20.GL_LINE_STRIP, 0, (int) (playerModel.getNumVertices()-(renderObjects.get(i).collideAnimation*playerModel.getNumVertices())));
 //			}
-			
-			boolean shadowBlocked = false;
-			int showdowCounter = 2;
-			while(!shadowBlocked && (showdowCounter<10) ) {
-				shadowBlocked = false;
-				for(Renderable renderable:renderObjects) {				
-					if(!(renderable instanceof Player) && renderable.position.dst(player.position.tmp().add(player.direction.tmp().mul(showdowCounter)))<2.0f) {
-						shadowBlocked = true;
-						break;
-					}
-					if(!shadowBlocked) {
-						tmp.idt();
-						model.idt();
 						
-						tmp.setToScaling(0.5f, 0.5f, 0.5f);
-						model.mul(tmp);
-
-						tmp.setToRotation(Vector3.X, angleX);
-						model.mul(tmp);
-						tmp.setToRotation(Vector3.Y, angleY);
-						model.mul(tmp);
-						
-						tmp.setToTranslation(player.position.tmp().add(player.direction.tmp().mul(showdowCounter)).x, player.position.tmp().add(player.direction.tmp().mul(showdowCounter)).y, player.position.tmp().add(player.direction.tmp().mul(showdowCounter)).z);
-						model.mul(tmp);
-
-						transShader.setUniformMatrix("MMatrix", model);
-						transShader.setUniformf("a_color",Resources.getInstance().playerShadowColor[0], Resources.getInstance().playerShadowColor[1], Resources.getInstance().playerShadowColor[2], Resources.getInstance().playerShadowColor[3]  + renderObjects.get(i).collideAnimation);
-						wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-					
-						showdowCounter += 1;
-					}
-				}
-			}
-			
 			// render Portals
 			if(renderObjects.get(i) instanceof Portal) {
 				if(renderObjects.get(i).position.x != -11) {
