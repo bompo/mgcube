@@ -294,7 +294,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	}
 	
 	private boolean canSaveCheck() {
-		Gdx.app.log("", "can it save?!");
 		if(player == null) {
 			errorReason = 0;
 			return false;
@@ -303,14 +302,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			errorReason = 1;
 			return false;
 		}
-		
-		for (Renderable portal2 : renderObjects) {
-			if (!(portal2 instanceof Portal))
-				continue;
-			Gdx.app.log("", ((Portal) portal2).id + " ");
-		}
 
-		Gdx.app.log("", "can it save22?!");
 		for (int i=0; i< renderObjects.size;i++) {
 			Renderable portal = renderObjects.get(i);
 			if (!(portal instanceof Portal))
@@ -323,7 +315,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				if (((Portal) portal).id == -((Portal) portal2).id) {
 					found = true;
 				}
-				Gdx.app.log("", ((Portal) portal).id + "   " +  -((Portal) portal2).id);
 			}
 			if (found == false) {
 				errorReason = 2;
@@ -331,7 +322,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 
-		Gdx.app.log("", "yup");
 		return true;
 	}
 	
