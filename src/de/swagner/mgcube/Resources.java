@@ -716,6 +716,7 @@ public class Resources {
 		
 		//load custom levels
 		int customLevelCount = prefs.getInteger("customLevel_count",0);
+		customLevels.clear();
 		for(int i = 1; i<=customLevelCount;i++) {
 			customLevels.add(prefs.getString("customLevel_"+i));
 		}
