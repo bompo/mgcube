@@ -294,6 +294,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 	}
 	
 	private boolean canSaveCheck() {
+		Gdx.app.log("", "can it save?!");
 		if(player == null) {
 			errorReason = 0;
 			return false;
@@ -303,19 +304,34 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			return false;
 		}
 		
-		for(Portal portal:portals) {
+		for (Renderable portal2 : renderObjects) {
+			if (!(portal2 instanceof Portal))
+				continue;
+			Gdx.app.log("", ((Portal) portal2).id + " ");
+		}
+
+		Gdx.app.log("", "can it save22?!");
+		for (int i=0; i< renderObjects.size;i++) {
+			Renderable portal = renderObjects.get(i);
+			if (!(portal instanceof Portal))
+				continue;
 			boolean found = false;
-			for(Portal portal2:portals) {
-				if(portal.id==-portal2.id) {
+			for (int n=0; n< renderObjects.size;n++) {
+				Renderable portal2 = renderObjects.get(n);
+				if (!(portal2 instanceof Portal))
+					continue;
+				if (((Portal) portal).id == -((Portal) portal2).id) {
 					found = true;
 				}
+				Gdx.app.log("", ((Portal) portal).id + "   " +  -((Portal) portal2).id);
 			}
-			if(found ==false) {
+			if (found == false) {
 				errorReason = 2;
 				return false;
 			}
 		}
-		
+
+		Gdx.app.log("", "yup");
 		return true;
 	}
 	
@@ -371,34 +387,34 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						target.position.y = -10f + (y * 2);
 						target.position.z = -10f + (z * 2);
 					}
-					if (level[z][y][x] >=4 && level[z][y][x] <=8) {
+					if (level[z][y][x] >= 4 && level[z][y][x] <= 8) {
 						Portal temp = new Portal(level[z][y][x]);
 						temp.position.x = 10f - (x * 2);
 						temp.position.y = -10f + (y * 2);
 						temp.position.z = -10f + (z * 2);
 						portals.add(temp);
-						}
-					if (level[z][y][x] >=-8 && level[z][y][x] <=-4){
+					}
+					if (level[z][y][x] >= -8 && level[z][y][x] <= -4) {
 						Portal temp = new Portal(level[z][y][x]);
 						temp.position.x = 10f - (x * 2);
 						temp.position.y = -10f + (y * 2);
 						temp.position.z = -10f + (z * 2);
 						portals.add(temp);
-						}
-					if (level[z][y][x] == 9){
-						MovableBlock temp = new MovableBlock(new Vector3(10f - (x * 2),-10f + (y * 2),-10f + (z * 2)));
+					}
+					if (level[z][y][x] == 9) {
+						MovableBlock temp = new MovableBlock(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2)));
 						movableBlocks.add(temp);
-						}
-					if (level[z][y][x] <= -10){
-						Switch temp = new Switch(new Vector3(10f - (x * 2),-10f + (y * 2),-10f + (z * 2)));
-						temp.id = level[z][y][x];
-						switches.add(temp);
-						}
-					if (level[z][y][x] >= 10){
-						SwitchableBlock temp = new SwitchableBlock(new Vector3(10f - (x * 2),-10f + (y * 2),-10f + (z * 2)));
+					}
+					if (level[z][y][x] <= -10) {
+						SwitchableBlock temp = new SwitchableBlock(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2)));
 						temp.id = level[z][y][x];
 						switchblocks.add(temp);
-						}
+					}
+					if (level[z][y][x] >= 10) {
+						Switch temp = new Switch(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2)));
+						temp.id = level[z][y][x];
+						switches.add(temp);
+					}
 				}
 			}
 		}
@@ -923,23 +939,25 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 //			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 				
-		//highlight renderable in line sight
-		pRay.set(player.position, player.direction);
-		float oldDst = 1111f;
-		nextBlock = new Renderable();
-		for (Renderable renderable:renderObjects) {
-			if(!(renderable instanceof Player) && !(renderable instanceof Switch)) {
-				boolean intersect = Intersector.intersectRaySphere(pRay, renderable.position, 1f, intersection);
-				float dst = intersection.dst(player.position);
-				if(dst< oldDst && intersect) {
-					nextBlock = renderable;
-					oldDst = dst;
+		// highlight renderable in line sight
+		if (player != null) {
+			pRay.set(player.position, player.direction);
+			float oldDst = 1111f;
+			nextBlock = new Renderable();
+			for (Renderable renderable : renderObjects) {
+				if (!(renderable instanceof Player) && !(renderable instanceof Switch)) {
+					boolean intersect = Intersector.intersectRaySphere(pRay, renderable.position, 1f, intersection);
+					float dst = intersection.dst(player.position);
+					if (dst < oldDst && intersect) {
+						nextBlock = renderable;
+						oldDst = dst;
+					}
+					renderable.isHighlightAnimation = false;
 				}
-				renderable.isHighlightAnimation = false;
 			}
-		}
-		if (oldDst > 1.0f && nextBlock != null) {
-			nextBlock.isHighlightAnimation = true;
+			if (oldDst > 1.0f && nextBlock != null) {
+				nextBlock.isHighlightAnimation = true;
+			}
 		}
 		
 		// render all objects
@@ -1960,7 +1978,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				Portal portalT = null;
 				for(Portal portal:portals) {
 					if(Math.abs(portal.id)>Math.abs(portalIDT)) {
-						portalIDT = portal.id;
+						portalIDT = Math.abs(portal.id);
 						portalT = portal;
 					}
 				}
@@ -1969,7 +1987,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					portal.position.set(editorBlock.position);
 					portals.add(portal);
 //					Gdx.app.log("", "new Portal(4)");
-				} else if(portalT.correspondingPortal != null && portalT.correspondingPortal.id==-8) {
+				} else if((portalT.correspondingPortal != null && portalT.correspondingPortal.id==-8) || portalT.id == -8) {
 					//max reached skip this
 					castTo = 6;
 					deleteObject = 4;
@@ -1994,7 +2012,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				Switch switchT = null;
 				for(Switch switch_:switches) {
 					if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
-						switchIDT = switch_.id;
+						switchIDT = Math.abs(switch_.id);
 						switchT = switch_;
 					}
 				}
@@ -2026,15 +2044,15 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				Switch switchT = null;
 				for(Switch switch_:switches) {
 					if(Math.abs(switch_.id)>Math.abs(switchIDT)) {
-						switchIDT = switch_.id;
+						switchIDT = Math.abs(switch_.id);
 						switchT = switch_;
 					}
 				}			
 				if(switchT!=null) {
 					SwitchableBlock switchBlock = new SwitchableBlock(new Vector3(editorBlock.position));
 					switchBlock.id = -switchT.id;
-					switchblocks.add(switchBlock);
 					switchT.sBlocks.add(switchBlock);
+					switchblocks.add(switchBlock);
 //					Gdx.app.log("", "new SwitchBlock(" + switchBlock.id + ") in Switch(" + switchT.id + ")");
 				}
 			} 
@@ -2053,15 +2071,20 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		} else if (deleteObject == 2) {
 			target = null;
 		} else if (deleteObject == 3) {
-			blocks.removeValue((Block) castObject, true);			
+			if (castObject instanceof Block)
+				blocks.removeValue((Block) castObject, true);
 		} else if (deleteObject == 4) {
-			movableBlocks.removeValue((MovableBlock) castObject, true);
+			if (castObject instanceof MovableBlock)
+				movableBlocks.removeValue((MovableBlock) castObject, true);
 		} else if (deleteObject == 5) {
-			portals.removeValue((Portal) castObject, true);
+			if (castObject instanceof Portal)
+				portals.removeValue((Portal) castObject, true);
 		} else if (deleteObject == 6) {
-			switches.removeValue((Switch) castObject, true);
+			if (castObject instanceof Switch)
+				switches.removeValue((Switch) castObject, true);
 		} else if (deleteObject == -1) {
-			switchblocks.removeValue((SwitchableBlock) castObject, true);
+			if (castObject instanceof SwitchableBlock)
+				switchblocks.removeValue((SwitchableBlock) castObject, true);
 		}
 	}
 

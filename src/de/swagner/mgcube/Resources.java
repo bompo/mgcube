@@ -676,11 +676,11 @@ public class Resources {
 		bigMesh = new Mesh(true, bigMeshVertices.size,0, new VertexAttribute(Usage.Position,3, "a_position"));
 		bigMesh.setVertices(bigMeshCopyVertices);
 //		bigMesh.setIndices(bigMeshIndicesShortArray);
-		
-		for(Integer inte:bigMeshVerticesCntSubMesh) {
-			Gdx.app.log("", inte.toString());
-		}
-		Gdx.app.log("", "---");
+//		
+//		for(Integer inte:bigMeshVerticesCntSubMesh) {
+//			Gdx.app.log("", inte.toString());
+//		}
+//		Gdx.app.log("", "---");
 //		int n = 0;
 //		for(Float inte:bigMeshVerticesFloatArray) {
 //			Gdx.app.log("", n + ": " + inte.toString());

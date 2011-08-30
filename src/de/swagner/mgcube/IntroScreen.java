@@ -46,8 +46,8 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 		
-		if(Resources.getInstance().fullscreenOnOff)
-			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
+//		if(Resources.getInstance().fullscreenOnOff)
+//			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 		
 		title = new Sprite(new Texture(Gdx.files.internal("data/logo.png")));
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
