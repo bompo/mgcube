@@ -1,5 +1,7 @@
 package de.swagner.mgcube;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -911,6 +913,16 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			else
 				selectedMenuItem = 3;
 		}
+		
+		if(keycode == Input.Keys.H) {
+			try {
+				ScreenshotSaver.saveScreenshot("screenshot");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}	
+		
 		return false;
 	}
 

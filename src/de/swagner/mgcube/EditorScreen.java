@@ -1,5 +1,6 @@
 package de.swagner.mgcube;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Game;
@@ -1896,6 +1897,14 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 		
+		if(keycode == Input.Keys.H) {
+			try {
+				ScreenshotSaver.saveScreenshot("screenshot");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}	
 		
 		return false;
 	}
