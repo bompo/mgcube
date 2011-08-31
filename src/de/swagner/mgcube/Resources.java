@@ -515,7 +515,12 @@ public class Resources {
 	public Array<Integer> bigMeshVerticesCntSubMesh = new Array<Integer>();
 
 	public Music music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
-	public Sound move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
+	public Sound moveSFX = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
+	public Sound warpSFX = Gdx.audio.newSound(Gdx.files.internal("data/warp.wav"));
+	public Sound changeLevelSFX = Gdx.audio.newSound(Gdx.files.internal("data/changeLevel.wav"));
+	public Sound collideSFX = Gdx.audio.newSound(Gdx.files.internal("data/collide.wav"));
+	public Sound switchSFX = Gdx.audio.newSound(Gdx.files.internal("data/switch.wav"));
+	public Sound loseSFX = Gdx.audio.newSound(Gdx.files.internal("data/lose.wav"));
 
 	public ShaderProgram transShader;
 	public ShaderProgram bloomShader;
@@ -689,13 +694,18 @@ public class Resources {
 		
 		try {
 		if(music!=null) music.stop();
-		if(move!=null) move.stop();
+		if(moveSFX!=null) moveSFX.stop();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		
 		music = Gdx.audio.newMusic(Gdx.files.internal("data/bitbof_amboned.mp3"));
-		move = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
+		moveSFX = Gdx.audio.newSound(Gdx.files.internal("data/move.wav"));
+		warpSFX = Gdx.audio.newSound(Gdx.files.internal("data/warp.wav"));
+		changeLevelSFX = Gdx.audio.newSound(Gdx.files.internal("data/changeLevel.wav"));
+		collideSFX = Gdx.audio.newSound(Gdx.files.internal("data/collide.wav"));
+		switchSFX = Gdx.audio.newSound(Gdx.files.internal("data/switch.wav"));
+		loseSFX = Gdx.audio.newSound(Gdx.files.internal("data/lose.wav"));
 		
 		initShader();
 
@@ -767,7 +777,7 @@ public class Resources {
 		wireCubeModel.dispose();
 
 		music.stop();
-		move.stop();
+		moveSFX.stop();
 
 		transShader.dispose();
 		bloomShader.dispose();

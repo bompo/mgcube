@@ -14,7 +14,7 @@ public class Player extends Renderable {
 		this.setDirection();
 		moveDirection.set(direction);
 		if(Resources.getInstance().musicOnOff) {
-			Resources.getInstance().move.play();
+			Resources.getInstance().moveSFX.play();
 		}
 		this.isMoving = true;
 	}

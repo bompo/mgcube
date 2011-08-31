@@ -1157,8 +1157,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				float dst = intersection.dst(player.position);
 				if (dst < 1.0f && intersect) {
 					player.stop();
-					updatePlayerShadow();
 					block.isCollidedAnimation = true;
+					if(Resources.getInstance().musicOnOff) {
+						Resources.getInstance().collideSFX.play();
+					}
 					break;
 				}
 			}
@@ -1168,14 +1170,18 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				float movdst = intersection.dst(player.position);
 				if (movdst < 1.0f && box.contains(m.position) && intersect) {
 					player.stop();
-					updatePlayerShadow();
 					m.move(player.moveDirection.cpy());
 					m.isCollidedAnimation = true;
+					if(Resources.getInstance().musicOnOff) {
+						Resources.getInstance().collideSFX.play();
+					}
 				}
 				else if(movdst <1.0f && !box.contains(m.position) && intersect) {
 					player.stop();
-					updatePlayerShadow();
 					m.isCollidedAnimation = true;
+					if(Resources.getInstance().musicOnOff) {
+						Resources.getInstance().collideSFX.play();
+					}
 				}
 				
 				//recursiveCollisionCheck(m);
@@ -1186,7 +1192,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				float swdst = intersection.dst(player.position);
 				if (swdst < 1.0f && swintersect && !s.isSwitched) {
 					player.stop();
-					updatePlayerShadow();
 					s.isCollidedAnimation = true;
 					break;
 				}
@@ -1244,7 +1249,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			// player out of bound?
 			if (!box.contains(player.position)) {
 				player.stop();
-				updatePlayerShadow();
+				if(Resources.getInstance().musicOnOff) {
+					Resources.getInstance().loseSFX.play();
+				}
 				reset();
 			}
 
@@ -1256,6 +1263,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				Resources.getInstance().timeAttackTime += 45;
 				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
 					changeLevel = true;
+					if(Resources.getInstance().musicOnOff) {
+						Resources.getInstance().changeLevelSFX.play();
+					}
 				} else {
 					//game completed
 					if(mode==1) {
@@ -1268,6 +1278,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				player.position = port.correspondingPortal.position.cpy();
 				warplock = true;
 				port.correspondingPortal.isCollidedAnimation = true;
+				if(Resources.getInstance().musicOnOff) {
+					Resources.getInstance().warpSFX.play();
+				}
 			}
 		}
 		else
@@ -1285,6 +1298,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					if (dst < 1.0f && intersect) {
 						m.stop();
 						block.isCollidedAnimation = true;
+						if(Resources.getInstance().musicOnOff) {
+							Resources.getInstance().collideSFX.play();
+						}
 						break;
 					}
 				}
@@ -1354,6 +1370,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						m.position = port.correspondingPortal.position.cpy();
 						movwarplock = true;
 						port.correspondingPortal.isCollidedAnimation = true;
+						if(Resources.getInstance().musicOnOff) {
+							Resources.getInstance().warpSFX.play();
+						}
 				}
 				
 				for(MovableBlock mm : movableBlocks) {
@@ -1367,6 +1386,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 							else
 								player.stop();
 							mm.isCollidedAnimation = true;
+							if(Resources.getInstance().musicOnOff) {
+								Resources.getInstance().collideSFX.play();
+							}
 							break;
 						}
 					}
@@ -1383,6 +1405,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if (!box.contains(m.position)) {
 				m.stop();
 				movwarplock = false;
+				if(Resources.getInstance().musicOnOff) {
+					Resources.getInstance().collideSFX.play();
+				}
 			}
 		}
 		

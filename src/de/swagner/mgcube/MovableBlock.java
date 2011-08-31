@@ -23,7 +23,7 @@ public class MovableBlock extends Renderable{
 		direction = dir;
 		setDirection();
 		if(Resources.getInstance().musicOnOff) {
-			Resources.getInstance().move.play();
+			Resources.getInstance().moveSFX.play();
 		}
 		this.isMoving = true;
 	}
