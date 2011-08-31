@@ -1,3 +1,8 @@
+@font-face {
+  font-family: PressStart;
+  src: url(PressStart2P.ttf);
+}
+
 body {
   /* Safari 5.1+, Chrome 10+ */
   background: -webkit-radial-gradient(circle, #110000, #000000);
@@ -8,9 +13,8 @@ body {
   /* IE 10 */ 
   background: -ms-radial-gradient(circle, #110000, #000000);
 
-    text-shadow: 0 1px 1px rgba(0,0,0,.5); 
-}
-
+  font-family: PressStart;
+}   
 
 #menu {
   margin: 0 auto;
@@ -27,67 +31,23 @@ body {
   text-align: left;
 }
 
-/*  @group ZURButtons
-    -------------------------------------------------- */
-    .button { background: #222 repeat-x 0 0; display: inline-block; padding: 5px 15px 6px; color: #fff !important; font-size: 13px; font-weight: bold; line-height: 1; text-decoration: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25); text-shadow: 0 -1px 1px rgba(0,0,0,0.25); border-bottom: 1px solid rgba(0,0,0,0.25); position: relative; cursor: pointer; overflow: visible; width: auto; }
-    button::-moz-focus-inner { border: 0; padding: 0; }
-    
-    .button:hover { background-color: #111; color: #fff; }
-    .button:active { -webkit-transform: translateY(1px); -moz-transform: translateY(1px); }
-    /* Small Buttons */
-    .small.button { font-size: 11px; }
-    /* Large Buttons */
-    .large.button { font-size: 14px; padding: 8px 19px 9px; }
-    /* Colors for our beloved buttons */
-    .green.button { background-color: #91bd09; }
-    .green.button:hover { background-color: #749a02; }
-    .blue.button { background-color: #2daebf; }
-    .blue.button:hover { background-color: #007d9a; }
-    .red.button { background-color: #e33100; }
-    .red.button:hover { background-color: #872300; }
-    .magenta.button{ background-color: #a9014b; }
-    .magenta.button:hover { background-color: #630030; }
-    .orange.button { background-color: #ff5c00; }
-    .orange.button:hover { background-color: #d45500; }
-    .orangellow.button { background-color: #ffb515; }
-    .orangellow.button:hover { background-color: #fc9200; }
-    .white.button { background-color: #fff; border: 1px solid #ccc; color: #666 !important; font-weight: normal; text-shadow: 0 1px 1px rgba(255,255,255,1); }
-    .white.button:hover { background-color: #eee; }
-    
-    /*Strike button*/
-    .strike.button  {background-color: #4ADFC1}
-    .strike.button:hover {background-color: #39ceb0}
-    
-    /* Secondary buttons (perfect for Cancels or other secondary actions */
-    .secondary.button { background: #fff url(/images/gradients/36px-black.png) repeat-x 0 0; color: #555 !important; text-shadow: 0 1px 1px rgba(255,255,255,0.5); border: 1px solid #bbb; -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.1); -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .secondary.button:hover { background-color: #eee; color: #444 !important; border-color: #999; }
-
-    /* Make the buttons super awesomer */
-    .super.button { background-image: url(/images/super-button-overlay.png); font-size: 13px; padding: 0; border: 1px solid rgba(0,0,0,.25); -webkit-border-radius: 15px; -moz-border-radius: 15px; }
-    .super.button span { display: block; padding: 4px 15px 6px; -webkit-border-radius: 14px; -moz-border-radius: 14px; border-top: 1px solid rgba(255,255,255,.2); line-height: 1; }
-    .small.super.button { font-size: 11px; -webkit-border-radius: 12px; -moz-border-radius: 12px; }
-    .small.super.button span { padding: 2px 12px 6px; -webkit-border-radius: 11px; -moz-border-radius: 11px; }
-    .small.white.super.button span { padding: 3px 12px 5px; }
-    .large.super.button { background-position: left bottom; -webkit-border-radius: 18px; -moz-border-radius: 18px; }
-    .large.super.button span { font-size: 14px; padding: 7px 20px 9px; -webkit-border-radius: 17px; -moz-border-radius: 17px; }
-
-
-@-webkit-keyframes redPulse {
-from { background-color: #ab0404; -webkit-box-shadow:: 0 0 9px #333; }
-50% { background-color: #cc0909; -webkit-box-shadow:: 0 0 18px #cc0909; }
-to { background-color: #ab0404; -webkit-box-shadow:: 0 0 9px #333; }
+.button { 
+background: none; 
+display: inline-block; 
+padding: 5px 15px 6px; 
+color: #ff2222 !important; 
+font-size: 0.7em; 
+font-weight: bold; 
+line-height: 1; 
+text-decoration: none; 
+text-shadow: 0 -1px 1px rgba(0,0,0,0.25); 
+border: 1px solid #ff2222; 
+position: relative; 
+cursor: pointer; 
+overflow: visible; 
+width: auto; 
 }
 
 a.button {
-	-webkit-animation-duration: 2s;
-	-webkit-animation-iteration-count: infinite; 
-    display: inline-block; 
-    margin: 0 10px 9px 0;
+    margin: 0 18px 9px 0;
 }
-
-.red.button {
--webkit-animation-name: redPulse;
--webkit-animation-duration: 2s;
--webkit-animation-iteration-count: infinite;
-}
-
