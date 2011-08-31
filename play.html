@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=UTF-8><html> 
+    <title>qb - 3d puzzle game</title> 
+<!--[if lt IE 9]><script src=http://html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
+    <link href=main.css rel=stylesheet />
+</head> 
+
+<body> 
+
+<div id="menu">    
+<a class="large red button" href="index.html">Home</a> 
+<a class="large red button" href="download.html">Download</a> 
+<a class="large red button" href="play.html">Play in Browser</a> 
+<a class="large red button" href="screenshots.html">Screenshots</a> 
+<a class="large red button" href="https://github.com/bompo/mgcube">GitHub</a> 
+</div>
+
+<div id="applet_container">
+  <applet code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar" codebase="." width="800" height="480">
+  
+    <param name="al_title" value="AppletStarter">
+    <param name="al_main" value="de.swagner.mgcube.AppletStarter">
+    <param name="al_logo" value="qb_logo.png">
+    <param name="al_progressbar" value="appletprogress.gif">
+
+    <param name="al_version" value="1.2">  
+ 
+    <param name="al_bgcolor" value="000000">
+    <param name="al_fgcolor" value="ffffff">
+    
+    <param name="al_jars" value="qb.jar, gdx.jar, gdx-backend-lwjgl.jar">
+
+    <param name="al_windows" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_linux" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_mac" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_solaris" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    
+    <param name="codebase_lookup" value="false">
+
+    <param name="java_arguments" value="-Dsun.java2d.noddraw=true -Dsun.awt.noerasebackground=true -Dsun.java2d.d3d=false -Dsun.java2d.opengl=false -Dsun.java2d.pmoffscreen=false -Xmx800M">
+   <param name="lwjgl_arguments" value="-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true">
+    <param name="separate_jvm" value="true">
+
+ <br/>You need Java installed to play this game. <br> You may use the button below to get it.<br/><br/> 
+    <a href="http://java.com/download" onclick="window.open( this.href ); return false"> 
+    <img src="http://java.com/en/img/everywhere/getjava_lg.gif" alt="Get Java" style="border-style: none"> 
+    </a> 
+  </applet>
+</div>
+  
+</body> 
+ 
+</html> 
