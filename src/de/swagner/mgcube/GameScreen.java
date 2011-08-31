@@ -1,5 +1,6 @@
 package de.swagner.mgcube;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
@@ -25,6 +27,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
 
@@ -1473,6 +1476,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		if(keycode == Input.Keys.BACK) {
 			game.setScreen(new MainMenuScreen(game));
+		}
+		
+		if(keycode == Input.Keys.H) {
+			try {
+				ScreenshotSaver.saveScreenshot("screenshot");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}		
 		
 		if (keycode == Input.Keys.F) {
