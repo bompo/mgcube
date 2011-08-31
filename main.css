@@ -51,3 +51,8 @@ width: auto;
 a.button {
     margin: 0 18px 9px 0;
 }
+
+.large {
+font-size: 1.2em; 
+border: 2px solid #ff2222; 
+}
