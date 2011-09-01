@@ -55,3 +55,8 @@ a.button {
 font-size: 1.2em; 
 border: 2px solid #ff2222; 
 }
+
+p {
+    font-size: 0.7em; 
+    color: #ff2222;
+}
