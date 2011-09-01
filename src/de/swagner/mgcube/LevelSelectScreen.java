@@ -473,7 +473,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		if(next>0)
 			font.draw(batch, "<", 377, 55);
 		if(mode == 0 && Resources.getInstance().levelcount > 12) {
-			if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))
+			if((next == 0 && Resources.getInstance().levelcount > 12) || ((Resources.getInstance().levelcount-1) / (12*next) > 1))
 				font.draw(batch, ">", 480, 55);
 		} else if(mode == 1 && Resources.getInstance().tutorialcount > 12) {
 			if((next == 0 && Resources.getInstance().tutorialcount > 12) || (Resources.getInstance().tutorialcount / (12*next) > 1))
@@ -623,7 +623,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		}
 		//render forward button
 		if (mode == 0 && Resources.getInstance().levelcount > 12)
-		{ if((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1)) {
+		{ if((next == 0 && Resources.getInstance().levelcount > 12) || ((Resources.getInstance().levelcount-1) / (12*next) > 1)) {
 				tmp.idt();
 				model.idt();
 
@@ -1045,7 +1045,7 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 		}
 		
 		if(mode == 0 && Resources.getInstance().levelcount > 12) {
-			if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().levelcount > 12) || (Resources.getInstance().levelcount / (12*next) > 1))) {
+			if(collisionLevelForward.contains(new Vector3(x,y,0)) && ((next == 0 && Resources.getInstance().levelcount > 12) || ((Resources.getInstance().levelcount-1) / (12*next) > 1))) {
 				next++;
 				initLevel(12*next +1);
 			}
