@@ -441,10 +441,10 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						font.drawMultiLine(fontbatch, "You can rotate the level\nby touching the screen", 40, 100);
 					} else if ( currentAction == 1 && Gdx.app.getType() == ApplicationType.Android) {
 						actionTime = 3;
-						font.drawMultiLine(fontbatch, "Pinch your fingers\nto zoom", 40, 100);
+						font.drawMultiLine(fontbatch, "Pinch your fingers\nto zoom.\nTry it now!", 40, 100);
 					} else if ( currentAction == 1 && Gdx.app.getType() == ApplicationType.Desktop) {
 						actionTime = 3;
-						font.drawMultiLine(fontbatch, "You can zoom by\nscrolling", 40, 100);
+						font.drawMultiLine(fontbatch, "You can zoom by\nscrolling your mousewheel.\nTry it now!", 40, 100);
 					} else if ( currentAction == 2 && Gdx.app.getType() == ApplicationType.Android) {
 						font.drawMultiLine(fontbatch, "If you tap the screen\nthe player will fly away\nfrom the camera", 40, 100);
 					}  else if ( currentAction == 2 && Gdx.app.getType() == ApplicationType.Desktop && actionTime > 0) {

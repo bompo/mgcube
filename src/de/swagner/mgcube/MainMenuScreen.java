@@ -258,7 +258,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		// render scene again
 		renderScene();
 		renderMenu();
-
+		
 		if(Resources.getInstance().bloomOnOff) {
 			frameBuffer.begin();
 			renderScene();

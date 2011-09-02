@@ -397,14 +397,14 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						movableBlocks.add(temp);
 					}
 					if (level[z][y][x] <= -10) {
-						SwitchableBlock temp = new SwitchableBlock(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2)));
-						temp.id = level[z][y][x];
-						switchblocks.add(temp);
-					}
-					if (level[z][y][x] >= 10) {
 						Switch temp = new Switch(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2)));
 						temp.id = level[z][y][x];
 						switches.add(temp);
+					}
+					if (level[z][y][x] >= 10) {
+						SwitchableBlock temp = new SwitchableBlock(new Vector3(10f - (x * 2), -10f + (y * 2), -10f + (z * 2)));
+						temp.id = level[z][y][x];
+						switchblocks.add(temp);
 					}
 				}
 			}
