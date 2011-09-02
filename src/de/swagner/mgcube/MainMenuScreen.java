@@ -399,7 +399,9 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		
 		if(exit == true) {
-			Gdx.app.exit();
+			if(!(Gdx.app.getType() == ApplicationType.Applet)) {
+				Gdx.app.exit();
+			}
 		}
 	}
 
