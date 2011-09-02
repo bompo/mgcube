@@ -2017,7 +2017,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				}
 				if(switchT==null) {
 					Switch switchBlock = new Switch(new Vector3(editorBlock.position));
-					switchBlock.id = 10;
+					switchBlock.id = -10;
 					switches.add(switchBlock);
 //					Gdx.app.log("", "new Switch(10)");
 				} else if(switchT.id==13) {
@@ -2027,9 +2027,9 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				} else {
 					Switch switchBlock = new Switch(new Vector3(editorBlock.position));
 					if(Math.abs(switchT.id) == 10) {
-						switchBlock.id = switchIDT+2;
+						switchBlock.id = -(switchIDT+2);
 					} else {
-						switchBlock.id = switchIDT+1;
+						switchBlock.id = -(switchIDT+1);
 					}
 					switches.add(switchBlock);
 //					Gdx.app.log("", "new Switch(" + switchBlock.id + ")");
