@@ -998,14 +998,16 @@ public class LevelSelectScreen extends DefaultScreen implements InputProcessor{
 			}
 		}
 		
-		if(keycode == Input.Keys.H) {
-			try {
-				ScreenshotSaver.saveScreenshot("screenshot");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}	
+		if(Resources.getInstance().debugMode) {	
+			if(keycode == Input.Keys.H) {
+				try {
+					ScreenshotSaver.saveScreenshot("screenshot");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}		
+		}
 		
 		return false;
 	}

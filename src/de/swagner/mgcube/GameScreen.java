@@ -1451,41 +1451,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			movePlayer();
 		}
 
-		if (keycode == Input.Keys.R) {
-			reset();
-			Resources.getInstance().time = 0;
-		}
-
-		if (keycode == Input.Keys.RIGHT) {
-			changeLevel = true;
-		}
-
-		if (keycode == Input.Keys.LEFT) {
-			prevLevel();
-		}
-		
-		if (keycode == Input.Keys.UP) {
-			Resources.getInstance().colorTheme++;
-			Resources.getInstance().switchColorTheme();
-		}
-		
-		if (keycode == Input.Keys.DOWN) {
-			Resources.getInstance().colorTheme--;
-			Resources.getInstance().switchColorTheme();
-		}
-		
 		if(keycode == Input.Keys.BACK) {
 			game.setScreen(new MainMenuScreen(game));
 		}
-		
-		if(keycode == Input.Keys.H) {
-			try {
-				ScreenshotSaver.saveScreenshot("screenshot");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}		
 		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
@@ -1498,6 +1466,41 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				Resources.getInstance().fullscreenOnOff = !Resources.getInstance().prefs.getBoolean("fullscreen");
 				Resources.getInstance().prefs.flush();
 			}
+		}
+		
+
+		if(Resources.getInstance().debugMode) {
+			if (keycode == Input.Keys.R) {
+				reset();
+				Resources.getInstance().time = 0;
+			}
+	
+			if (keycode == Input.Keys.RIGHT) {
+				changeLevel = true;
+			}
+	
+			if (keycode == Input.Keys.LEFT) {
+				prevLevel();
+			}
+			
+			if (keycode == Input.Keys.UP) {
+				Resources.getInstance().colorTheme++;
+				Resources.getInstance().switchColorTheme();
+			}
+			
+			if (keycode == Input.Keys.DOWN) {
+				Resources.getInstance().colorTheme--;
+				Resources.getInstance().switchColorTheme();
+			}
+					
+			if(keycode == Input.Keys.H) {
+				try {
+					ScreenshotSaver.saveScreenshot("screenshot");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}		
 		}
 		
 		return false;
@@ -1628,10 +1631,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		angleY += ((x - touchStartX) / 5.f);
 		angleX += ((y - touchStartY) / 5.f);
-
-		//update Player Shadow
-		updatePlayerShadow();
-
 		
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
 

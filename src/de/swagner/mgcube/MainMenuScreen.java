@@ -876,10 +876,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			exit  = true;
 		}
 		
-		if (keycode == Input.Keys.E) {
-			game.setScreen(new EditorScreen(game, 1, 1));
-		}
-		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
 				if(!org.lwjgl.opengl.Display.isFullscreen()) {
@@ -914,14 +910,16 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				selectedMenuItem = 3;
 		}
 		
-		if(keycode == Input.Keys.H) {
-			try {
-				ScreenshotSaver.saveScreenshot("screenshot");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}	
+		if(Resources.getInstance().debugMode) {	
+			if(keycode == Input.Keys.H) {
+				try {
+					ScreenshotSaver.saveScreenshot("screenshot");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}		
+		}
 		
 		return false;
 	}

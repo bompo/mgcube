@@ -1,8 +1,5 @@
 package de.swagner.mgcube;
 
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
@@ -14,12 +11,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.FloatArray;
 
 import de.swagner.gdx.obj.normalmap.shader.FastBloomShader;
 import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
 public class Resources {
+	
+	public final boolean debugMode = false;
 
 	// 1=Block, 2=Player, 3=Target, 4-8 Portals (the corresponding portal is
 	// marked by the respective negative number), 9 Movable Block, 10 - ?

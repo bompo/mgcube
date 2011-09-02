@@ -1,5 +1,6 @@
 package de.swagner.mgcube;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Game;
@@ -1646,29 +1647,6 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		if (keycode == Input.Keys.SPACE) {
 			movePlayer();
 		}
-
-		if (keycode == Input.Keys.R) {
-			reset();
-			Resources.getInstance().time = 0;
-		}
-
-		if (keycode == Input.Keys.RIGHT) {
-			changeLevel = true;
-		}
-
-		if (keycode == Input.Keys.LEFT) {
-			prevLevel();
-		}
-		
-		if (keycode == Input.Keys.UP) {
-			Resources.getInstance().colorTheme++;
-			Resources.getInstance().switchColorTheme();
-		}
-		
-		if (keycode == Input.Keys.DOWN) {
-			Resources.getInstance().colorTheme--;
-			Resources.getInstance().switchColorTheme();
-		}
 		
 		if(keycode == Input.Keys.BACK) {
 			game.setScreen(new MainMenuScreen(game));
@@ -1685,6 +1663,40 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 				Resources.getInstance().fullscreenOnOff = !Resources.getInstance().prefs.getBoolean("fullscreen");
 				Resources.getInstance().prefs.flush();
 			}
+		}
+		
+		if(Resources.getInstance().debugMode) {
+			if (keycode == Input.Keys.R) {
+				reset();
+				Resources.getInstance().time = 0;
+			}
+	
+			if (keycode == Input.Keys.RIGHT) {
+				changeLevel = true;
+			}
+	
+			if (keycode == Input.Keys.LEFT) {
+				prevLevel();
+			}
+			
+			if (keycode == Input.Keys.UP) {
+				Resources.getInstance().colorTheme++;
+				Resources.getInstance().switchColorTheme();
+			}
+			
+			if (keycode == Input.Keys.DOWN) {
+				Resources.getInstance().colorTheme--;
+				Resources.getInstance().switchColorTheme();
+			}
+					
+			if(keycode == Input.Keys.H) {
+				try {
+					ScreenshotSaver.saveScreenshot("screenshot");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}		
 		}
 		
 		return false;

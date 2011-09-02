@@ -1771,11 +1771,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		if (keycode == Input.Keys.SPACE) {
 			movePlayer();
 		}
-
-		if (keycode == Input.Keys.Y) {
-			reset();
-			Resources.getInstance().time = 0;
-		}
 		
 		if(keycode == Input.Keys.BACK) {
 			saveLevel();
@@ -1896,15 +1891,17 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				changeCurrentBlock();
 			}
 		}
-		
-		if(keycode == Input.Keys.H) {
-			try {
-				ScreenshotSaver.saveScreenshot("screenshot");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}	
+
+		if(Resources.getInstance().debugMode) {				
+			if(keycode == Input.Keys.H) {
+				try {
+					ScreenshotSaver.saveScreenshot("screenshot");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}		
+		}
 		
 		return false;
 	}
