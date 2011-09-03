@@ -3,6 +3,7 @@ package de.swagner.mgcube;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -64,6 +65,8 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 	boolean movwarplock = false;
 	
 	boolean lockInput = false;
+	
+	int currentMessage = 0;
 	
 	//fade
 	SpriteBatch fadeBatch;
@@ -287,6 +290,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		}	
 	
 		currentAction = 0;
+		currentMessage = 0;
 		
 	}
 
@@ -426,229 +430,121 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		//GUI
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
-			if(Resources.getInstance().currentlevel == 1) {
-				if(startTime < 3) {
-					lockInput = true;
-					font.drawMultiLine(fontbatch, "Welcome to the Qb tutorial!", 40, 100);
-				} else if(startTime >= 3 && startTime < 6) {
-					font.drawMultiLine(fontbatch, "See this yellow sphere?\nThat's you, the player!", 40, 100);
-				} else if(startTime >= 6 && startTime < 9) {
-					font.drawMultiLine(fontbatch, "Now your goal is to\nreach the green cylinder", 40, 100);
-				}
+		if(Resources.getInstance().currentlevel == 1) {
+			if(currentMessage < Resources.getInstance().tutorialText1.length - 1) {
+				lockInput = true;
+				if(Gdx.app.getType() == ApplicationType.Desktop )
+					font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText1PC[currentMessage], 40, 100);
 				else
-				{
-					if (currentAction == 0 || startTime < 12) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "You can rotate the level\nby touching the screen", 40, 100);
-					} else if ( currentAction == 1 && Gdx.app.getType() == ApplicationType.Android) {
-						actionTime = 3;
-						font.drawMultiLine(fontbatch, "Pinch your fingers\nto zoom.\nTry it now!", 40, 100);
-					} else if ( currentAction == 1 && Gdx.app.getType() == ApplicationType.Desktop) {
-						actionTime = 3;
-						font.drawMultiLine(fontbatch, "You can zoom by\nscrolling your mousewheel.\nTry it now!", 40, 100);
-					} else if ( currentAction == 2 && Gdx.app.getType() == ApplicationType.Android) {
-						font.drawMultiLine(fontbatch, "If you tap the screen\nthe player will fly away\nfrom the camera", 40, 100);
-					}  else if ( currentAction == 2 && Gdx.app.getType() == ApplicationType.Desktop && actionTime > 0) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "If you click the mouse or\nhit space, the player will\nfly into the screen", 40, 100);
-					}  else if ( currentAction == 2 && actionTime <= 0 && actionTime > -4) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Now try to reach that block\nright ahead of you", 40, 100);
-					}  else if ( currentAction == 2 && actionTime <= -4 && actionTime > -8) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Just don't fly off the screen,\nokay? Then you'd have to\nstart all over again!", 40, 100);
-					}  else if ( currentAction == 2 && actionTime <= -8) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Just don't fly off the screen,\nokay? Then you'd have to\nstart all over again!", 40, 100);
-						lockInput = false;
-					}  else if ( currentAction == 3 && actionTime > -11) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Go ahead and try to\nreach the exit", 40, 100);
-					}
-				}
+					font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText1[currentMessage], 40, 100);		
+			} else if(currentMessage == Resources.getInstance().tutorialText1.length -1 && currentAction == 2){
+				lockInput=false;
 			}
-			
-			if(Resources.getInstance().currentlevel == 2) {
-				if(startTime > 0.5 && startTime< 4) {
-					lockInput = true;
-					font.drawMultiLine(fontbatch, "Welcome to the second tutorial!", 40, 100);
-				} else if(startTime >= 4 && startTime < 7) {
-					font.drawMultiLine(fontbatch, "Today: Portals", 40, 100);
-				} else if(startTime >= 7 && startTime < 13) {
-					font.drawMultiLine(fontbatch, "See these rotating cubes?\nIf you fly in one of these\nyou're warped to the other one", 40, 100);
-				} else if(startTime >= 13 && startTime < 18) {
-					font.drawMultiLine(fontbatch, "You exit a Portal in the\ndirection you entered it", 40, 100);
-				}
-				else if(startTime >= 18 && startTime < 23) {
-					font.drawMultiLine(fontbatch, "You can enter a Portal from any\ndirection, so be sure to\ntry out different combinations", 40, 100);
-				}
-				else {
-					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Now go ahead and try to\nsolve this level", 40, 100);
-					}
-					else if (currentAction == 0 && actionTime <= 0 && startTime > 1)
-						lockInput = false;
-				}
+			else if(currentMessage == Resources.getInstance().tutorialText1.length -1 && currentAction == 3){
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText1[currentMessage], 40, 100);
 			}
-			
-			if(Resources.getInstance().currentlevel == 3) {
-				if(startTime > 0.5 && startTime< 4 && currentAction != 1) {
-					actionTime = 3;
-					lockInput = true;
-					font.drawMultiLine(fontbatch, "Welcome to the third tutorial!", 40, 100);
-				} else if(startTime >= 4 && startTime < 8 && currentAction != 1) {
-					font.drawMultiLine(fontbatch, "There are levels that feature\nmultiple Portals", 40, 100);
-				} else if(startTime >= 8 && startTime < 14 && currentAction != 1) {
-					font.drawMultiLine(fontbatch, "But how do you know which Portal\nleads where?", 40, 100);
-				} else if(startTime >= 14 && startTime < 20 && currentAction != 1) {
-					font.drawMultiLine(fontbatch, "Easy. Portals that belong\ntogether share the same color", 40, 100);
-				}
-				else {
-					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Now try to solve this one!", 40, 100);
-					} else if (currentAction == 0 && actionTime <= 0 && startTime > 1){
-						lockInput = false;
-					} 
-					if (currentAction == 1) {
-						font.drawMultiLine(fontbatch, "Hint:\nUse blue, then light blue", 40, 100);
-					}
-				}
+			else if(currentMessage == Resources.getInstance().tutorialText1.length) {
+				lockInput = false;
 			}
-			
-			if(Resources.getInstance().currentlevel == 4) {
-				
-				if(startTime > 0.5 && startTime< 4) {
-					actionTime = 3;
+		}
+		
+		if(Resources.getInstance().currentlevel == 2) {
+			if(currentMessage < Resources.getInstance().tutorialText2.length && startTime > 0.5) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText2[currentMessage], 40, 100);		
+			} else {
+				lockInput = false;
+			}
+		}
+		if(Resources.getInstance().currentlevel == 3) {
+			if(currentAction != 1) {
+				if(currentMessage < Resources.getInstance().tutorialText3.length -1 && startTime > 0.5) {
 					lockInput = true;
-					font.drawMultiLine(fontbatch, "Welcome to the fourth tutorial!", 40, 100);
-				} else if(startTime >= 4 && startTime < 10) {
-					font.drawMultiLine(fontbatch, "See this yellow block?\nIt's a Movable Block", 40, 100);
-				} else if(startTime >= 10 && startTime < 15) {
-					font.drawMultiLine(fontbatch, "If you push it, it will fly off", 40, 100);
-				} else if(startTime >= 15 && startTime < 20) {
-					font.drawMultiLine(fontbatch, "Use these blocks to manipulate\nthe level", 40, 100);
+					font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText3[currentMessage], 40, 100);		
 				} else {
-					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Go ahead and push the\nMovable Block", 40, 100);
-					} else if (currentAction == 0 && actionTime <= 0 && startTime > 1){
-						lockInput = false;
-					}	
-					if ( currentAction == 1 && actionTime <= 0 && startTime > 1 && actionTime > -6) {
-						lockInput = true;
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Notice how, unlike you,\nthe Movable Block just stops\nat the edge of the level", 40, 100);
-					}
-					else if (currentAction == 1 && actionTime <= -6 && startTime > 1)
-						lockInput = false;
-				}
-					
-			}
-			
-			if(Resources.getInstance().currentlevel == 5) {
-				if(startTime > 0.5 && startTime< 4) {
-					actionTime = 3;
-					lockInput = true;
-					font.drawMultiLine(fontbatch, "Welcome to the fifth tutorial!", 40, 100);
-				} else if(startTime >= 4 && startTime < 9) {
-					font.drawMultiLine(fontbatch, "Today you will solve a level with\nmultiple Movable Blocks", 40, 100);
-				} else if(startTime >= 9 && startTime < 16) {
-					font.drawMultiLine(fontbatch, "If two or more Movable Blocks\nare situated in a row,\nyou can cause a chain reaction", 40, 100);
-				} else {
-					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Now try to reach the exit", 40, 100);
-					} else if (currentAction == 0 && actionTime <= 0 && startTime > 1){
-						lockInput = false;
-					}
+					lockInput = false;	
 				}
 			}
-			
-			if(Resources.getInstance().currentlevel == 6) {
-				if(startTime > 0.5 && startTime< 4) {
-					actionTime = 3;
-					lockInput = true;
-					font.drawMultiLine(fontbatch, "Welcome to the sixth tutorial!", 40, 100);
-				} else if(startTime >= 4 && startTime < 9) {
-					font.drawMultiLine(fontbatch, "This is a level with\nMovable Blocks AND Portals", 40, 100);
-				} else if(startTime >= 9 && startTime < 14) {
-					font.drawMultiLine(fontbatch, "Just like you, Movable Blocks can\ntravel through Portals", 40, 100);
-				} else {
-					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Try and push this Movable Block\nthrough the Portal", 40, 100);
-					} else if (currentAction == 0 && actionTime <= 0 && startTime > 1){
-						lockInput = false;
-					}
-					if(currentAction == 1 && actionTime <= 0 && startTime > 1 && actionTime > -4.5) {
-						actionTime -= delta;
-						lockInput = true;
-						font.drawMultiLine(fontbatch, "Beautiful.\nNow reach the exit", 40, 100);
-					} else if (currentAction == 1 && actionTime <= -4.5 && startTime > 1){
-						lockInput = false;
-					}
+			else if(currentAction==1 && currentMessage <1){
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText3[Resources.getInstance().tutorialText3.length-1], 40, 100);
+			}
+			else if(currentAction==1&&currentMessage >= 1){
+				lockInput = false;
+			}
+		}
+		if(Resources.getInstance().currentlevel == 4) {
+			if(currentMessage < Resources.getInstance().tutorialText4.length - 1&& startTime > 0.5) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText4[currentMessage], 40, 100);		
+			} else {
+				if(currentAction == 0 && currentMessage == 5) {
+					lockInput=false;
+				}
+				else if(currentAction == 1 &&  currentMessage == 5) {
+					lockInput=true;
+					font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText4[Resources.getInstance().tutorialText4.length - 1], 40, 100);
+				}
+				else if(currentAction == 1 &&  currentMessage == 6) {
+					lockInput=false;
 				}
 			}
-			
-			if(Resources.getInstance().currentlevel == 7) {
-				if(startTime > 0.5 && startTime< 4) {
-					actionTime = 3;
-					lockInput = true;
-					font.drawMultiLine(fontbatch, "Welcome to the seventh tutorial!", 40, 100);
-				} else if(startTime >= 4 && startTime < 9) {
-					font.drawMultiLine(fontbatch, "This tutorial will introduce\nthe last gameplay mechanic:\nSwitches", 40, 100);
-				} else if(startTime >= 9 && startTime < 14) {
-					font.drawMultiLine(fontbatch, "You can activate a switch\nby standing on it", 40, 100);
-				} else {
-					if(currentAction == 0 && actionTime > 0 && startTime > 1) {
-						lockInput = true;
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Go ahead and fly towards\nthe switch", 40, 120);
-					} else if (currentAction == 0 && actionTime <= 0 && startTime > 1) {
-						lockInput = false;
-					}
-					if (currentAction == 1 && actionTime <= 0 && startTime > 1 && actionTime > -4) {
-						lockInput = true;
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Notice how the white block\ndisappears", 40, 120);
-					} else if(currentAction == 1 && actionTime <= -4 && startTime > 1 && actionTime > -8) {
-						lockInput = true;
-						font.drawMultiLine(fontbatch, "Now try and reach the exit!", 40, 120);
-						actionTime -= delta;
-					} else if (currentAction == 1 && actionTime <= -8 && startTime > 1)
-						lockInput = false;
-					if(currentAction == 2 && actionTime <= -8 && startTime > 1 && actionTime > -12) {
-						lockInput = true;
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Whoops.\nThat didn't seem to work.", 40, 120);
-					} else if(currentAction == 2 && actionTime <= -12 && startTime > 1 && actionTime > -16) {
-						lockInput = true;
-						font.drawMultiLine(fontbatch, "Maybe you should try and push\nthis Movable Block onto\nthe switch", 40, 120);
-						actionTime -= delta;
-					} else if (currentAction == 2 && actionTime <= -16 && startTime > 1)
-						lockInput = false;
-					if(currentAction == 3 && actionTime <= -16 && startTime > 1 && actionTime > -21) {
-						lockInput = true;
-						actionTime -= delta;
-						font.drawMultiLine(fontbatch, "Perfect.\nNotice this little shape\ninside the switch?", 40, 120);
-					} else if(currentAction == 3 && actionTime <= -21 && startTime > 1 && actionTime > -26) {
-						lockInput = true;
-						font.drawMultiLine(fontbatch, "That's how you can distinguish\nbetween different switches\n", 40, 120);
-						actionTime -= delta;
-					} else if(currentAction == 3 && actionTime <= -26 && startTime > 1 && actionTime > -31) {
-						lockInput = true;
-						font.drawMultiLine(fontbatch, "A switch will always disable\nblocks marked with it's symbol", 40, 120);
-						actionTime -= delta;
-					} else if(currentAction == 3 && actionTime <= -31 && startTime > 1 && actionTime > -34) {
-						lockInput = true;
-						font.drawMultiLine(fontbatch, "Now all that's left to do\nis reach the exit!", 40, 120);
-						actionTime -= delta;
-					} else if (currentAction == 3 && actionTime <= -34 && startTime > 1)
-						lockInput = false;					
-				}
+		}
+		if(Resources.getInstance().currentlevel == 5) {
+			if(currentMessage < Resources.getInstance().tutorialText5.length && startTime > 0.5) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText5[currentMessage], 40, 100);		
+			} else {
+				lockInput = false;
 			}
+		}
+		if(Resources.getInstance().currentlevel == 6) {
+			if(currentMessage < Resources.getInstance().tutorialText6.length -1 && startTime > 0.5) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText6[currentMessage], 40, 100);		
+			} else {
+				if(currentAction == 0 && currentMessage == 4) {
+					lockInput=false;
+				}
+				else if(currentAction==1 && currentMessage ==4) {
+					lockInput=true;
+					font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText6[Resources.getInstance().tutorialText6.length -1], 40, 100);
+				}
+				else if(currentAction==1 && currentMessage== 5)
+					lockInput = false;
+			}
+		}
+		if(Resources.getInstance().currentlevel == 7) {
+			if(currentMessage < 4 && startTime > 0.5) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText7[currentMessage], 40, 100);		
+			} 
+			else if(currentMessage == 4 && currentAction == 0){
+				lockInput = false;
+			}
+			else if(currentMessage >=4 && currentMessage < 6 && currentAction  == 1) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText7[currentMessage], 40, 100);
+			}
+			else if(currentMessage ==6 && currentAction  == 1) {
+				lockInput = false;
+			}
+			else if(currentMessage >=6 && currentMessage <8 && currentAction  == 2) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText7[currentMessage], 40, 100);
+			}
+			else if(currentMessage ==8 && currentAction  == 2) {
+				lockInput = false;
+			}
+			else if(currentMessage >=8 && currentMessage <11 && currentAction  == 3) {
+				lockInput = true;
+				font.drawMultiLine(fontbatch, Resources.getInstance().tutorialText7[currentMessage], 40, 100);
+			}
+			else if(currentMessage >=11 && currentAction  == 3) {
+				lockInput = false;
+			}
+		}
 			
 		fontbatch.end();
 
@@ -1623,7 +1519,11 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			}
 			setCorrespondingSwitchBlocks(s);
 		}
-
+		if(player.position.equals(new Vector3(-2.0f,0.0f,2.0f)) && Resources.getInstance().currentlevel==1)
+		{
+			if(currentAction==2)
+				currentAction=3;
+		}
 	}
 
 	@Override
@@ -1710,12 +1610,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 				player.direction.rot(new Matrix4().setToRotation(yAxis, -angleY));
 				player.move();
 			}
-			
-			if(Resources.getInstance().currentlevel == 1) {
-				if(currentAction == 2) {
-					++currentAction;
-				}
-			}
+		
 		}
 	}
 
@@ -1799,7 +1694,44 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			
 		} else {
 			if (Math.abs(touchDistance) < 1.0f && touchTime < 0.3f && startTime > 0.5) {
-				movePlayer();
+				if(!lockInput)
+					movePlayer();
+				else {
+					if(Resources.getInstance().currentlevel == 1 && currentMessage == 3) {
+						if(currentAction == 1)
+							currentMessage++;
+					}
+					else if(Resources.getInstance().currentlevel == 1 && currentMessage == 4) {
+						if(currentAction == 2)
+							currentMessage++;
+					}
+					else if(Resources.getInstance().currentlevel == 1 && currentMessage == 8) {
+						if(currentAction == 3)
+							currentMessage++;
+					}
+					else if(Resources.getInstance().currentlevel == 4 && currentMessage == 5) {
+						if(currentAction == 1)
+							currentMessage++;
+					}
+					else if(Resources.getInstance().currentlevel == 6 && currentMessage == 4) {
+						if(currentAction == 1)
+							currentMessage++;
+					}
+					else if(Resources.getInstance().currentlevel == 7 && currentMessage == 4) {
+						if(currentAction == 1)
+							currentMessage++;
+					}
+					else if(Resources.getInstance().currentlevel == 7 && currentMessage == 7) {
+						if(currentAction == 2)
+							currentMessage++;
+					}
+					else if(Resources.getInstance().currentlevel == 7 && currentMessage == 9) {
+						if(currentAction == 3)
+							currentMessage++;
+					}
+					else
+						currentMessage++;
+				}
 			}
 			
 		}
@@ -1855,7 +1787,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			
 			if(Resources.getInstance().currentlevel == 1) {
 				if(currentAction == 0 && touchTime > 0.3) {
-					++currentAction;
+					currentAction = 1;
 				}
 			}
 		}
@@ -1877,7 +1809,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		
 		if(Resources.getInstance().currentlevel == 1) {
 			if(currentAction == 1) {
-				++currentAction;
+				currentAction = 2;
 			}
 		}
 		return false;

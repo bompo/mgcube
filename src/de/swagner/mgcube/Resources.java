@@ -563,7 +563,16 @@ public class Resources {
 	public boolean bloomOnOff = true;
 	public boolean musicOnOff = true;
 	public boolean fullscreenOnOff = true;
-
+	
+	public String[] tutorialText1 = {"Welcome to the Qb tutorial!","See this yellow sphere?\nThat's you, the player!","Now your goal is to\nreach the green cylinder","You can rotate the level\nby touching the screen","Pinch your fingers\nto zoom.\nTry it now!","If you tap the screen\nthe player will fly away\nfrom the camera","Now try to reach that block\nright ahead of you","Just don't fly off the screen,\nokay? Then you'd have to\nstart all over again!","Go ahead and try to\nreach the exit" };
+	public String[] tutorialText1PC = {"Welcome to the Qb tutorial!","See this yellow sphere?\nThat's you, the player!","Now your goal is to\nreach the green cylinder","You can rotate the level\nby touching the screen","You can zoom by\nscrolling your mousewheel.\nTry it now!","If you click the mouse or\nhit space, the player will\nfly into the screen","Now try to reach that block\nright ahead of you","Just don't fly off the screen,\nokay? Then you'd have to\nstart all over again!","Go ahead and try to\nreach the exit" };
+	public String[] tutorialText2 = {"Welcome to the second tutorial!","Today: Portals","See these rotating cubes?\nIf you fly in one of these\nyou're warped to the other one","You exit a Portal in the\ndirection you entered it","You can enter a Portal from any\ndirection, so be sure to\ntry out different combinations","Now go ahead and try to\nsolve this level" };
+	public String[] tutorialText3 = {"Welcome to the third tutorial!","There are levels that feature\nmultiple Portals","But how do you know which Portal\nleads where?","Easy. Portals that belong\ntogether share the same color","Now try to solve this one!","Hint:\nUse blue, then light blue"};
+	public String[] tutorialText4 = {"Welcome to the fourth tutorial!","See this yellow block?\nIt's a Movable Block","If you push it, it will fly off","Use these blocks to manipulate\nthe level","Go ahead and push the\nMovable Block","Notice how, unlike you,\nthe Movable Block just stops\nat the edge of the level"};
+	public String[] tutorialText5 = {"Welcome to the fifth tutorial!","Today you will solve a level with\nmultiple Movable Blocks","If two or more Movable Blocks\nare situated in a row,\nyou can cause a chain reaction","Now try to reach the exit" };
+	public String[] tutorialText6 = {"Welcome to the sixth tutorial!","This is a level with\nMovable Blocks AND Portals","Just like you, Movable Blocks can\ntravel through Portals","Try and push this Movable Block\nthrough the Portal","Beautiful.\nNow reach the exit" };
+	public String[] tutorialText7 = {"Welcome to the seventh tutorial!","This tutorial will introduce\nthe last gameplay mechanic:\nSwitches","You can activate a switch\nby standing on it","Go ahead and fly towards\nthe switch","Notice how the white block\ndisappears","Now try and reach the exit!","Whoops.\nThat didn't seem to work.","Maybe you should try and push\nthis Movable Block onto\nthe switch","Perfect.\nNotice this little shape\ninside the switch?","That's how you can distinguish\nbetween different switches\n","A switch will always disable\nblocks marked with it's symbol","Now all that's left to do\nis reach the exit!" };
+	
 	public static Resources instance;
 
 	public static Resources getInstance() {
