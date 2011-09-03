@@ -1851,6 +1851,8 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			touchStartX = x;
 			touchStartY = y;
 			
+			updatePlayerDirection();
+			
 			if(Resources.getInstance().currentlevel == 1) {
 				if(currentAction == 0 && touchTime > 0.3) {
 					++currentAction;
@@ -1879,6 +1881,15 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			}
 		}
 		return false;
+	}
+	
+	private void updatePlayerDirection() {
+		if(!player.isMoving) {
+			player.direction.set(0, 0, -1);
+			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			player.setDirection();
+		}
 	}
 	
 	public void setCorrespondingSwitchBlocks(Switch s) {

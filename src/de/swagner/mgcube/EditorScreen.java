@@ -930,6 +930,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 //			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
 				
+		if(mode==0) {
 		// highlight renderable in line sight
 		if (player != null) {
 			pRay.set(player.position, player.direction);
@@ -949,6 +950,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			if (oldDst > 1.0f && nextBlock != null) {
 				nextBlock.isHighlightAnimation = true;
 			}
+		}
 		}
 		
 		// render all objects
@@ -2248,6 +2250,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 
 		touchStartX = x;
 		touchStartY = y;
+		
+		updatePlayerDirection();
 		}
 
 		return false;
@@ -2274,6 +2278,15 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			selectedMenuItem = -1;
 		}
 		return false;
+	}
+	
+	private void updatePlayerDirection() {
+		if(player!=null && !player.isMoving) {
+			player.direction.set(0, 0, -1);
+			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			player.setDirection();
+		}
 	}
 
 	@Override

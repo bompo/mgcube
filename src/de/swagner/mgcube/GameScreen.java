@@ -169,8 +169,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleX = 0;
 		
 		initLevel(level);
-		
-		updatePlayerShadow();
 	}
 	
 	public void initRender() {
@@ -300,7 +298,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		player.collideAnimation = 1;
 		animateWorld = false;
 		player.stop();
-		updatePlayerShadow();
+		
 		for(MovableBlock m : movableBlocks) {
 			m.stop();
 		}
@@ -598,15 +596,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		pRay.set(player.position, player.direction);
 		float oldDst = 1111f;
 		nextBlock = new Renderable();
-		for (Renderable renderable:renderObjects) {
-			if(!(renderable instanceof Player) && !(renderable instanceof Switch)) {
-				boolean intersect = Intersector.intersectRaySphere(pRay, renderable.position, 1f, intersection);
+		for (int i = 0; i<renderObjects.size;i++) {
+			if(!(renderObjects.get(i) instanceof Player) && !(renderObjects.get(i) instanceof Switch)) {
+				boolean intersect = Intersector.intersectRaySphere(pRay, renderObjects.get(i).position, 1f, intersection);
 				float dst = intersection.dst(player.position);
 				if(dst< oldDst && intersect) {
-					nextBlock = renderable;
+					nextBlock = renderObjects.get(i);
 					oldDst = dst;
 				}
-				renderable.isHighlightAnimation = false;
+				renderObjects.get(i).isHighlightAnimation = false;
 			}
 		}
 		if (oldDst > 1.0f && nextBlock != null) {
@@ -1633,12 +1631,23 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		angleX += ((y - touchStartY) / 5.f);
 		
 		touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
+		
+		updatePlayerDirection();
 
 		touchStartX = x;
 		touchStartY = y;
 		}
 
 		return false;
+	}
+	
+	private void updatePlayerDirection() {
+		if(!player.isMoving) {
+			player.direction.set(0, 0, -1);
+			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+			player.setDirection();
+		}
 	}
 
 	private void updatePlayerShadow() {
