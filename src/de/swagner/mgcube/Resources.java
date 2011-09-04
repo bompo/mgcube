@@ -17,7 +17,7 @@ import de.swagner.gdx.obj.normalmap.shader.TransShader;
 
 public class Resources {
 	
-	public final boolean debugMode = false;
+	public final boolean debugMode = true;
 
 	// 1=Block, 2=Player, 3=Target, 4-8 Portals (the corresponding portal is
 	// marked by the respective negative number), 9 Movable Block, 10 - ?

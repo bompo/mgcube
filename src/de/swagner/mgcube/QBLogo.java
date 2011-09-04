@@ -24,7 +24,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 
-public class MainMenuScreen extends DefaultScreen implements InputProcessor {
+public class QBLogo extends DefaultScreen implements InputProcessor {
 
 	float startTime = 0;
 	PerspectiveCamera cam;
@@ -81,7 +81,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 	Vector3 position = new Vector3();
 	private boolean exit = false;
 
-	public MainMenuScreen(Game game) {
+	public QBLogo(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
 
@@ -134,7 +134,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		initRender();
 
 		initLevel(0);
-		angleY = -70;
+		angleY = -85;
 		angleX = -10;
 		
 		button1.set(new Vector3(470, 110, 0), new Vector3(770, 50, 0));
@@ -245,6 +245,12 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 		delta = Math.min(0.02f, deltaTime);
 		startTime += delta;
 
+		cam.position.set(-1.0f, 0, 10f);
+		cam.direction.set(0, 0, -1);
+		cam.up.set(0, 1, 0);
+		cam.near = 1f;
+		cam.far = 1000;
+		
 		angleXBack += MathUtils.sin(startTime) * delta* 10f;
 		angleYBack += MathUtils.cos(startTime) *delta* 5f;
 
@@ -257,12 +263,10 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 
 		// render scene again
 		renderScene();
-		renderMenu();
 		
 		if(Resources.getInstance().bloomOnOff) {
 			frameBuffer.begin();
 			renderScene();
-			renderMenu();
 			frameBuffer.end();
 	
 			// PostProcessing
@@ -312,7 +316,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 				Gdx.gl.glClear(GL20.GL_COVERAGE_BUFFER_BIT_NV);
 				Gdx.graphics.getGL20().glColorMask(false, false, false, false);			
 				renderScene();
-				renderMenu();
 				Gdx.graphics.getGL20().glColorMask(true, true, true, true);
 				
 				Gdx.gl.glDisable(GL20.GL_CULL_FACE);
@@ -325,23 +328,6 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}	
-
-		batch.begin();
-		float y = 405;
-		for (String s : menuItems) {
-			if (selectedMenuItem<5 && selectedMenuItem > -1 && s.equals(menuItems.get(selectedMenuItem)))
-				selectedFont.draw(batch, s, 480, y);
-			else
-				font.draw(batch, s, 480, y);
-			y -= 80;
-		}
-		
-		if (selectedMenuItem == 5)
-			selectedFont.draw(batch, "Options", 50, 80);
-		else
-			font.draw(batch, "Options",50, 80);
-		
-		batch.end();
 
 		if (!finished && fade > 0) {
 			fade = Math.max(fade - (delta*2.f), 0);
@@ -920,11 +906,7 @@ public class MainMenuScreen extends DefaultScreen implements InputProcessor {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}	
-			
-			if(keycode == Input.Keys.O) {
-				game.setScreen(new QBLogo(game));
-			}	
+			}		
 		}
 		
 		return false;
