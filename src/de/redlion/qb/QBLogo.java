@@ -643,58 +643,6 @@ public class QBLogo extends DefaultScreen implements InputProcessor {
 
 		
 		transShader.setUniformMatrix("VPMatrix", cam.combined);
-		{
-			// render Background Wire
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(20.5f, 20.5f, 20.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX + angleXBack);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY + angleYBack);
-			model.mul(tmp);
-
-			tmp.setToTranslation(0, 0, 0);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-			
-			transShader.setUniformf("a_color", Resources.getInstance().backgroundWireColor[0],Resources.getInstance().backgroundWireColor[1],Resources.getInstance().backgroundWireColor[2],Resources.getInstance().backgroundWireColor[3]);
-//			bigMesh.render(transShader, GL20.GL_LINE_STRIP, 0, Resources.getInstance().bigMeshVerticesCntSubMesh.get(0));
-//Gdx.app.log("", Resources.getInstance().bigMeshVerticesCntSubMesh.get(1)+ " " + (Resources.getInstance().bigMeshVerticesCntSubMesh.get(2)-Resources.getInstance().bigMeshVerticesCntSubMesh.get(1)));
-			playerModel.render(transShader, GL20.GL_LINE_STRIP);
-		}
-		{
-			// render Wire
-			tmp.idt();
-			model.idt();
-
-			tmp.setToScaling(5.5f, 5.5f, 5.5f);
-			model.mul(tmp);
-
-			tmp.setToRotation(xAxis, angleX);
-			model.mul(tmp);
-			tmp.setToRotation(yAxis, angleY);
-			model.mul(tmp);
-
-			tmp.setToTranslation(0, 0, 0);
-			model.mul(tmp);
-
-			transShader.setUniformMatrix("MMatrix", model);
-
-			transShader.setUniformf("a_color", Resources.getInstance().clearColor[0],Resources.getInstance().clearColor[1],Resources.getInstance().clearColor[2],Resources.getInstance().clearColor[3]);
-//			bigMesh.render(transShader, GL20.GL_TRIANGLES, 0, Resources.getInstance().bigMeshVerticesCntSubMesh.get(0));
-			blockModel.render(transShader, GL20.GL_TRIANGLES);
-			
-			transShader.setUniformf("a_color", Resources.getInstance().wireCubeEdgeColor[0],Resources.getInstance().wireCubeEdgeColor[1],Resources.getInstance().wireCubeEdgeColor[2],Resources.getInstance().wireCubeEdgeColor[3]);
-//			bigMesh.render(transShader, GL20.GL_LINE_STRIP, Resources.getInstance().bigMeshVerticesCntSubMesh.get(3), Resources.getInstance().bigMeshVerticesCntSubMesh.get(4)-Resources.getInstance().bigMeshVerticesCntSubMesh.get(3));
-			wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
-			
-//			transShader.setUniformf("a_color", Resources.getInstance().wireCubeColor[0],Resources.getInstance().wireCubeColor[1],Resources.getInstance().wireCubeColor[2],Resources.getInstance().wireCubeColor[3]);
-//			blockModel.render(transShader, GL20.GL_TRIANGLES);
-		}
 				
 		// render all objects
 		for (int i = 0; i<renderObjects.size;++i) {
