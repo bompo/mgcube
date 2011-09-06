@@ -1,6 +1,6 @@
 @font-face {
   font-family: PressStart;
-  src: url(PressStart2P.ttf);
+  src: url(PressStart.ttf);
 }
 
 body {
@@ -17,34 +17,34 @@ body {
 }   
 
 #menu {
-  margin: 0 auto;
-  margin-top: 50px;
-  width: 800px;
-  height: 80px;
-  text-align: left;
+    margin: 0 auto;
+    margin-top: 50px;
+    width: 800px;
+    height: 80px;
+    text-align: left;
 }
 
 #applet_container {
-  margin: 0 auto;
-  width: 800px;
-  text-align: left;
+    margin: 0 auto;
+    width: 800px;
+    text-align: left;
 }
 
 .button { 
-background: none; 
-display: inline-block; 
-padding: 5px 15px 6px; 
-color: #ff2222 !important; 
-font-size: 0.7em; 
-font-weight: bold; 
-line-height: 1; 
-text-decoration: none; 
-text-shadow: 0 -1px 1px rgba(0,0,0,0.25); 
-border: 1px solid #ff2222; 
-position: relative; 
-cursor: pointer; 
-overflow: visible; 
-width: auto; 
+    background: none; 
+    display: inline-block; 
+    padding: 5px 15px 6px; 
+    color: #ff2222 !important; 
+    font-size: 0.7em; 
+    font-weight: bold; 
+    line-height: 1; 
+    text-decoration: none; 
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25); 
+    border: 1px solid #ff2222; 
+    position: relative; 
+    cursor: pointer; 
+    overflow: visible; 
+    width: auto; 
 }
 
 a.button {
@@ -52,12 +52,12 @@ a.button {
 }
 
 .large {
-font-size: 1.2em; 
-border: 2px solid #ff2222; 
+    font-size: 1.2em; 
+    border: 2px solid #ff2222; 
 }
 
 p {
-    font-size: 0.7em; 
+    font-size: 0.8em; 
     color: #ff2222;
 }
 
