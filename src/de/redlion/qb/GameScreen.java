@@ -1264,15 +1264,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			}
 
 			if (win) {
-				HighScoreManager.getInstance().newHighScore( (int) Resources.getInstance().time,Resources.getInstance().currentlevel);
+				if(!qbert) {
+					HighScoreManager.getInstance().newHighScore( (int) Resources.getInstance().time,Resources.getInstance().currentlevel);
+				}
 				player.stop();
 				
-				qbert = false;
-				int time = (int) Resources.getInstance().time;
-				if(time == 213) {
-					qbert = true;
-				}
-
 				Resources.getInstance().time = 0;
 				Resources.getInstance().timeAttackTime += 45;
 				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
@@ -1282,10 +1278,16 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					}
 				} else {
 					//game completed
-					if(mode==1) {
+					if(mode==1 &&!qbert) {
 						HighScoreManager.getInstance().newTimeAttackHighScore((int) Resources.getInstance().timeAttackTime, Resources.getInstance().levelcount);
 					}
 					changeLevel = true;
+				}
+				
+				qbert = false;
+				int time = (int) Resources.getInstance().time;
+				if(time == 213) {
+					qbert = true;
 				}
 			}
 
