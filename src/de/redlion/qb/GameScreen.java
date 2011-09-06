@@ -65,6 +65,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	boolean warplock = false;
 	boolean movwarplock = false;
 	
+	boolean qbert = false; //TOP SECRET
+	
 	//fade
 	SpriteBatch fadeBatch;
 	Sprite blackFade;
@@ -206,6 +208,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		} catch(ArrayIndexOutOfBoundsException e) {
 			
 		}
+		
+		if(qbert)
+			level = Resources.getInstance().qbert;
 
 		// finde player pos
 		int z = 0, y = 0, x = 0;
@@ -433,7 +438,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
 		
-		font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);	
+		if(!qbert)
+			font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);
+		else
+			font.draw(fontbatch, "Qbert", 620, 80);
 		
 		Resources.getInstance().time += delta;
 		Resources.getInstance().timeAttackTime -= delta;
@@ -1258,6 +1266,12 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			if (win) {
 				HighScoreManager.getInstance().newHighScore( (int) Resources.getInstance().time,Resources.getInstance().currentlevel);
 				player.stop();
+				
+				qbert = false;
+				int time = (int) Resources.getInstance().time;
+				if(time == 213) {
+					qbert = true;
+				}
 
 				Resources.getInstance().time = 0;
 				Resources.getInstance().timeAttackTime += 45;
@@ -1516,7 +1530,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	private void nextLevel() {
 		if(Resources.getInstance().currentlevel < Resources.getInstance().levelcount) {
-			Resources.getInstance().currentlevel++;
+			if(!qbert)
+				Resources.getInstance().currentlevel++;
 			Resources.getInstance().time = 0;
 			initLevel(Resources.getInstance().currentlevel);
 			changeLevel = false;
