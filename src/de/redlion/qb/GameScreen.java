@@ -1269,14 +1269,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 				player.stop();
 				
-				qbert = false;
-				int time = (int) Resources.getInstance().time;
-				if(time == 213) {
-					qbert = true;
-				}
-				
-				Resources.getInstance().time = 0;
-				Resources.getInstance().timeAttackTime += 45;
 				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
 					changeLevel = true;
 					if(Resources.getInstance().musicOnOff) {
@@ -1289,6 +1281,15 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					}
 					changeLevel = true;
 				}
+				
+				qbert = false;
+				int time = (int) Resources.getInstance().time;
+				if(time == 213) {
+					qbert = true;
+				}
+				
+				Resources.getInstance().time = 0;
+				Resources.getInstance().timeAttackTime += 45;
 			}
 
 			if (warp) {
