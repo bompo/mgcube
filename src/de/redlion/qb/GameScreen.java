@@ -1275,6 +1275,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 					if(mode==1) {
 						HighScoreManager.getInstance().newTimeAttackHighScore((int) Resources.getInstance().timeAttackTime, Resources.getInstance().levelcount);
 					}
+					changeLevel = true;
 				}
 			}
 
@@ -1518,10 +1519,17 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void nextLevel() {
-		Resources.getInstance().currentlevel++;
-		Resources.getInstance().time = 0;
-		initLevel(Resources.getInstance().currentlevel);
-		changeLevel = false;
+		if(Resources.getInstance().currentlevel++ < Resources.getInstance().levelcount) {
+			Resources.getInstance().currentlevel++;
+			Resources.getInstance().time = 0;
+			initLevel(Resources.getInstance().currentlevel);
+			changeLevel = false;
+		}
+		else {
+			game.setScreen(new LevelSelectScreen(game, 0));
+			changeLevel = false;
+		}
+		
 	}
 
 	private void prevLevel() {
