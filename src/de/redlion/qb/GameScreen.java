@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Intersector;
@@ -27,7 +26,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen extends DefaultScreen implements InputProcessor {
 
@@ -432,7 +430,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}	
 		
 		//GUI
-		if(!Resources.getInstance().debugMode) {
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
 		
@@ -458,8 +455,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		else
 			font.draw(fontbatch, "time: 0" + minutes + ":0" + seconds, 620, 60);
 		fontbatch.end();
-		}
-		
+				
 		//FadeInOut
 		if (!finished && fade > 0) {
 			fade = Math.max(fade - (delta*2.f), 0);
@@ -600,7 +596,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		float oldDst = 1111f;
 		nextBlock = new Renderable();
 		for (int i = 0; i<renderObjects.size;i++) {
-			if(!(renderObjects.get(i) instanceof Player) && !(renderObjects.get(i) instanceof Switch)) {
+			if(!(renderObjects.get(i) instanceof Player) && !(renderObjects.get(i) instanceof Switch) && !((renderObjects.get(i) instanceof SwitchableBlock) && ((SwitchableBlock)renderObjects.get(i)).isSwitched)) {
 				boolean intersect = Intersector.intersectRaySphere(pRay, renderObjects.get(i).position, 1f, intersection);
 				float dst = intersection.dst(player.position);
 				if(dst< oldDst && intersect) {
@@ -1519,7 +1515,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void nextLevel() {
-		if(Resources.getInstance().currentlevel++ < Resources.getInstance().levelcount) {
+		if(Resources.getInstance().currentlevel < Resources.getInstance().levelcount) {
 			Resources.getInstance().currentlevel++;
 			Resources.getInstance().time = 0;
 			initLevel(Resources.getInstance().currentlevel);
@@ -1658,31 +1654,6 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			player.setDirection();
-		}
-	}
-
-	private void updatePlayerShadow() {
-		if(!player.isMoving) {
-			player.direction.set(0, 0, -1);
-			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-			player.setDirection();
-//			if(!player.direction.equals(playerShadow.direction)) {
-//				playerShadow.position.set(player.position);
-//				playerShadow.direction.set(0, 0, -1);
-//				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-//				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-//				playerShadow.setDirection();
-//				playerShadow.isMoving = true;
-//				playerShadow.position.add(playerShadow.direction.x, playerShadow.direction.y, playerShadow.direction.z);
-//				for(Renderable renderable:renderObjects) {				
-//					if(!(renderable instanceof Player) && !(renderable instanceof PlayerShadow) && renderable.position.dst(playerShadow.position)<2.0f) {
-//						playerShadow.isMoving = false;
-//						break;
-//					}
-//				}
-//				playerShadow.position.set(player.position);
-//			}
 		}
 	}
 

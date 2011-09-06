@@ -677,15 +677,15 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		pRay.set(player.position, player.direction);
 		float oldDst = 1111f;
 		nextBlock = new Renderable();
-		for (Renderable renderable:renderObjects) {
-			if(!(renderable instanceof Player) && !(renderable instanceof Switch)) {
-				boolean intersect = Intersector.intersectRaySphere(pRay, renderable.position, 1f, intersection);
+		for (int i = 0; i<renderObjects.size;i++) {
+			if(!(renderObjects.get(i) instanceof Player) && !(renderObjects.get(i) instanceof Switch) && !((renderObjects.get(i) instanceof SwitchableBlock) && ((SwitchableBlock)renderObjects.get(i)).isSwitched)) {
+				boolean intersect = Intersector.intersectRaySphere(pRay, renderObjects.get(i).position, 1f, intersection);
 				float dst = intersection.dst(player.position);
 				if(dst< oldDst && intersect) {
-					nextBlock = renderable;
+					nextBlock = renderObjects.get(i);
 					oldDst = dst;
 				}
-				renderable.isHighlightAnimation = false;
+				renderObjects.get(i).isHighlightAnimation = false;
 			}
 		}
 		if (oldDst > 1.0f && nextBlock != null) {
