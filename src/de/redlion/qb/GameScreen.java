@@ -53,7 +53,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	BitmapFont font;
 	BitmapFont timeAttackFont; //used only for drawing the +45 notification
 	Player player = new Player();
-	PlayerShadow playerShadow = new PlayerShadow();
+//	PlayerShadow playerShadow = new PlayerShadow();
 	Target target = new Target();
 
 	Array<Block> blocks = new Array<Block>();
@@ -347,11 +347,11 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.position.add(player.direction.x * delta * 10f, player.direction.y * delta * 10f, player.direction.z * delta * 10f);
 		}
 				
-		if(playerShadow!= null && playerShadow.isMoving) {
-			playerShadow.position.add(playerShadow.direction.x * delta, playerShadow.direction.y * delta, playerShadow.direction.z * delta);
-		}
-		playerShadow.distance = player.position.dst(playerShadow.position);
-		if(playerShadow.distance>3.f) playerShadow.position.set(player.position);
+//		if(playerShadow!= null && playerShadow.isMoving) {
+//			playerShadow.position.add(playerShadow.direction.x * delta, playerShadow.direction.y * delta, playerShadow.direction.z * delta);
+//		}
+//		playerShadow.distance = player.position.dst(playerShadow.position);
+//		if(playerShadow.distance>3.f) playerShadow.position.set(player.position);
 		
 		for(MovableBlock m : movableBlocks) {
 			if(m.isMoving) {
@@ -1513,7 +1513,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			player.move();
-			playerShadow.isMoving = false;
+//			playerShadow.isMoving = false;
 		}
 	}
 
@@ -1659,22 +1659,22 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			player.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
 			player.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
 			player.setDirection();
-			if(!player.direction.equals(playerShadow.direction)) {
-				playerShadow.position.set(player.position);
-				playerShadow.direction.set(0, 0, -1);
-				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
-				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
-				playerShadow.setDirection();
-				playerShadow.isMoving = true;
-				playerShadow.position.add(playerShadow.direction.x, playerShadow.direction.y, playerShadow.direction.z);
-				for(Renderable renderable:renderObjects) {				
-					if(!(renderable instanceof Player) && !(renderable instanceof PlayerShadow) && renderable.position.dst(playerShadow.position)<2.0f) {
-						playerShadow.isMoving = false;
-						break;
-					}
-				}
-				playerShadow.position.set(player.position);
-			}
+//			if(!player.direction.equals(playerShadow.direction)) {
+//				playerShadow.position.set(player.position);
+//				playerShadow.direction.set(0, 0, -1);
+//				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.X, -angleX));
+//				playerShadow.direction.rot(new Matrix4().setToRotation(Vector3.Y, -angleY));
+//				playerShadow.setDirection();
+//				playerShadow.isMoving = true;
+//				playerShadow.position.add(playerShadow.direction.x, playerShadow.direction.y, playerShadow.direction.z);
+//				for(Renderable renderable:renderObjects) {				
+//					if(!(renderable instanceof Player) && !(renderable instanceof PlayerShadow) && renderable.position.dst(playerShadow.position)<2.0f) {
+//						playerShadow.isMoving = false;
+//						break;
+//					}
+//				}
+//				playerShadow.position.set(player.position);
+//			}
 		}
 	}
 
