@@ -30,6 +30,13 @@ body {
     text-align: left;
 }
 
+#applet_container_high {
+    margin: 0 auto;
+    width: 1024px;
+    text-align: left;
+}
+
+
 .button { 
     background: none; 
     display: inline-block; 
