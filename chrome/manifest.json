@@ -1,13 +1,13 @@
 {
   "name": "qb",
   "description": "a 3d puzzle game",
-  "version": "0.0.0.1",
+  "version": "0.0.0.2",
   "app": {
     "urls": [
-      "bompo.github.com/mgcube/"
+      "http://bompo.github.com/mgcube/"
     ],
     "launch": {
-      "web_url": "bompo.github.com/mgcube/play_high.html"
+      "web_url": "http://bompo.github.com/mgcube/play_high.html"
     }
   },
   "icons": {
