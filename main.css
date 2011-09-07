@@ -24,6 +24,14 @@ body {
     text-align: left;
 }
 
+#menu_high {
+    margin: 0 auto;
+    margin-top: 50px;
+    width: 1024px;
+    height: 80px;
+    text-align: left;
+}
+
 #applet_container {
     margin: 0 auto;
     width: 800px;
