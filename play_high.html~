@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset='utf-8'> 
+    <title>qb - 3d puzzle game</title> 
+<!--[if lt IE 9]><script src=http://html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
+    <link href=main.css rel=stylesheet />
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-541219-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+</head> 
+
+<body> 
+
+<div id="menu_high">    
+<a class="button" href="index.html">About</a> 
+<a class="button" href="play_high.html">Play</a> 
+</div>
+
+<div id="applet_container_high">
+  <applet code="org.lwjgl.util.applet.AppletLoader" archive="lwjgl_util_applet.jar" codebase="." width="1024" height="614">
+  
+    <param name="al_title" value="AppletStarter">
+    <param name="al_main" value="de.redlion.qb.AppletStarter">
+    <param name="al_logo" value="qb_logo_high.png">
+    <param name="al_progressbar" value="appletprogress.gif">
+
+    <param name="al_cache" value="true"
+    <param name="al_version" value="2">  
+ 
+    <param name="al_bgcolor" value="000000">
+    <param name="al_fgcolor" value="ffffff">
+    
+    <param name="al_jars" value="qb_high.jar, gdx.jar, gdx-backend-lwjgl.jar">
+
+    <param name="al_windows" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_linux" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_mac" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    <param name="al_solaris" value="gdx-natives.jar, gdx-backend-lwjgl-natives.jar">
+    
+    <param name="codebase_lookup" value="false">
+
+    <param name="java_arguments" value="-Dsun.java2d.noddraw=true -Dsun.awt.noerasebackground=true -Dsun.java2d.d3d=false -Dsun.java2d.opengl=false -Dsun.java2d.pmoffscreen=false -Xmx800M">
+   <param name="lwjgl_arguments" value="-Dorg.lwjgl.input.Mouse.allowNegativeMouseCoords=true">
+    <param name="separate_jvm" value="true">
+
+ <br/>You need Java installed to play this game. <br> You may use the button below to get it.<br/><br/> 
+    <a href="http://java.com/download" onclick="window.open( this.href ); return false"> 
+    <img src="http://java.com/en/img/everywhere/getjava_lg.gif" alt="Get Java" style="border-style: none"> 
+    </a> 
+  </applet>
+
+<br/><br/>
+<a class="button" href="play_webgl.html">WebGL</a> 
+<a class="button" href="play_high.html">JavaApplet (if WebGL doesn't work)</a> 
+</div>
+
+</body> 
+ 
+</html> 

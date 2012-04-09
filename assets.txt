@@ -1,0 +1,14 @@
+i:data/logo.png
+t:data/scorefont.fnt
+i:data/scorefont.png
+t:data/selected.fnt
+i:data/selected.png
+t:data/cone.obj
+t:data/cylinder.obj
+t:data/wirecube.obj
+t:data/sphere.obj
+t:data/sphere_small.obj
+t:data/block_sphere.obj
+i:data/blackfade.png
+t:data/cube.obj
+t:data/models.obj

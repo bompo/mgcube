@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset='utf-8'> 
+    <title>qb - 3d puzzle game</title> 
+<!--[if lt IE 9]><script src=http://html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
+    <link href=main.css rel=stylesheet />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+    <script src="galleria-1.2.5.min.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-541219-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head> 
+
+<body> 
+
+<div id="menu">    
+<a class="button" href="index.html">Home</a> 
+<a class="button" href="download.html">Download</a> 
+<a class="button" href="play.html">Play in Browser</a> 
+<a class="button" href="screenshots.html">Screenshots</a> 
+<a class="button" href="https://github.com/bompo/mgcube">GitHub</a> 
+</div>
+
+<div id="applet_container">
+<div id="gallery">
+    <img src="screen1.png">
+    <img src="screen2.png">
+    <img src="screen3.png">
+    <img src="screen4.png">
+    <img src="screen5.png">
+    <img src="screen6.png">
+    <img src="screen7.png">
+    <img src="screen8.png">
+</div>
+<script>
+    Galleria.loadTheme('themes/classic/galleria.classic.js');
+    $("#gallery").galleria({
+        width: 800,
+        height: 480
+    });
+</script>
+</div>
+
+</body> 
+ 
+</html> 
