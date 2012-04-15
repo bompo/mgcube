@@ -4,9 +4,9 @@
   "description": "a 3d puzzle game",
   "launch_path": "http://bompo.github.com/mgcube/play_webgl.html",
   "icons": {
-    "16": "http://bompo.github.com/mgcube/chrome/icon_16.png",
-    "48": "http://bompo.github.com/mgcube/chrome/icon_48.png",
-    "128": "http://bompo.github.com/mgcube/chrome/icon_128.png"
+    "16": "/chrome/icon_16.png",
+    "48": "/chrome/icon_48.png",
+    "128": /chrome/icon_128.png"
   },
   "developer": {
     "name": "Stefan Wagner",
