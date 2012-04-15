@@ -2,11 +2,11 @@
   "version": "1.0",
   "name": "qb",
   "description": "a 3d puzzle game",
-  "launch_path": "http://bompo.github.com/mgcube/play_webgl.html",
+  "launch_path": "/mgcube/play_webgl.html",
   "icons": {
-    "16": "mgcube/chrome/icon_16.png",
-    "48": "mgcube/chrome/icon_48.png",
-    "128": "mgcube/chrome/icon_128.png"
+    "16": "/mgcube/chrome/icon_16.png",
+    "48": "/mgcube/chrome/icon_48.png",
+    "128": "/mgcube/chrome/icon_128.png"
   },
   "developer": {
     "name": "Stefan Wagner",
