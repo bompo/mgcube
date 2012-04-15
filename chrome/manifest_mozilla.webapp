@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "name": "qb",
+  "description": "a 3d puzzle game",
+  "icons": {
+    "16": "http://bompo.github.com/mgcube/chrome/icon_16.png",
+    "48": "http://bompo.github.com/mgcube/chrome/icon_48.png",
+    "128": "http://bompo.github.com/mgcube/chrome/icon_128.png"
+  },
+  "developer": {
+    "name": "Stefan Wagner",
+    "url": "http://bompo.de"
+  },
+  "default_locale": "en"
+}
+
