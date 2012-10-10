@@ -222,7 +222,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
-				if(!org.lwjgl.opengl.Display.isFullscreen()) {
+				if(!Gdx.graphics.isFullscreen()) {
 					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);		
 				} else {
 					Gdx.graphics.setDisplayMode(800,480, false);		
@@ -274,7 +274,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	@Override
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -54,7 +54,7 @@ public class DesktopStarter extends Game {
 	@Override
 	public void create() {
 		setScreen(new IntroScreen(this));
-		Gdx.graphics.setIcon(new Pixmap(Gdx.files.internal("data/icon.png")));		
+		//Gdx.graphics.setIcon(new Pixmap(Gdx.files.internal("data/icon.png")));		
 	}
 
 }

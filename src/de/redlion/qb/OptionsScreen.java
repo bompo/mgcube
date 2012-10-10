@@ -124,7 +124,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 			menuItems.add("Bloom On");
 		}
 		if(Gdx.app.getType() == ApplicationType.Desktop) {
-			if(!org.lwjgl.opengl.Display.isFullscreen()) {
+			if(!Gdx.graphics.isFullscreen()) {
 				menuItems.add("Fullscreen");		
 			} else {
 				menuItems.add("Windowed");			
@@ -791,7 +791,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
-				if(!org.lwjgl.opengl.Display.isFullscreen()) {
+				if(!Gdx.graphics.isFullscreen()) {
 					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);		
 					menuItems.set(2, "Windowed");
 				} else {
@@ -858,7 +858,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 			Resources.getInstance().prefs.putBoolean("fullscreen", !Resources.getInstance().prefs.getBoolean("fullscreen"));
 			Resources.getInstance().fullscreenOnOff = !Resources.getInstance().prefs.getBoolean("fullscreen");
 			Resources.getInstance().prefs.flush();
-			if(!org.lwjgl.opengl.Display.isFullscreen()) {
+			if(!Gdx.graphics.isFullscreen()) {
 				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 				menuItems.set(2, "Windowed");
 			}
@@ -925,7 +925,7 @@ public class OptionsScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	@Override
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 

@@ -1781,7 +1781,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
-				if(!org.lwjgl.opengl.Display.isFullscreen()) {
+				if(!Gdx.graphics.isFullscreen()) {
 					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 				} else {
 					Gdx.graphics.setDisplayMode(800,480, false);		
@@ -2256,29 +2256,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 
 		return false;
 	}
-
-	@Override
-	public boolean touchMoved(int x, int y) {
-		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
-		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
-		
-		if (button1.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 0;
-		} else if (button2.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 1;
-		} else if (button3.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 2;
-		} else if (button4.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 3;
-		} else if (button5.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 4;
-		} else if (button6.contains(new Vector3(x, y, 0))) {
-			selectedMenuItem = 5;
-		} else {
-			selectedMenuItem = -1;
-		}
-		return false;
-	}
 	
 	private void updatePlayerDirection() {
 		if(player!=null && !player.isMoving) {
@@ -2337,6 +2314,29 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		}
 		if(next != null) {
 			recursiveCollisionCheck(next);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int x, int y) {
+		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
+		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
+		
+		if (button1.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 0;
+		} else if (button2.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 1;
+		} else if (button3.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 2;
+		} else if (button4.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 3;
+		} else if (button5.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 4;
+		} else if (button6.contains(new Vector3(x, y, 0))) {
+			selectedMenuItem = 5;
+		} else {
+			selectedMenuItem = -1;
 		}
 		return false;
 	}

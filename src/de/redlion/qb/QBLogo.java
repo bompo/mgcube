@@ -814,7 +814,7 @@ public class QBLogo extends DefaultScreen implements InputProcessor {
 		
 		if (keycode == Input.Keys.F) {
 			if(Gdx.app.getType() == ApplicationType.Desktop) {
-				if(!org.lwjgl.opengl.Display.isFullscreen()) {
+				if(!Gdx.graphics.isFullscreen()) {
 					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);		
 				} else {
 					Gdx.graphics.setDisplayMode(800,480, false);		
@@ -921,7 +921,7 @@ public class QBLogo extends DefaultScreen implements InputProcessor {
 	}
 
 	@Override
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		x = (int) (x / (float) Gdx.graphics.getWidth() * 800);
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 		
