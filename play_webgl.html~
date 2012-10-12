@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset='utf-8'> 
+    <title>qb - 3d puzzle game</title> 
+<!--[if lt IE 9]><script src=http://html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
+    <link href=main.css rel=stylesheet />
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-541219-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+</head> 
+
+<body> 
+
+<div id="menu_high">    
+<a class="button" href="index.html">About</a> 
+<a class="button" href="play_webgl.html">Play</a> 
+</div>
+
+<div id="applet_container_high"></div>
+
+<div style="width:1024px;     margin: 0 auto;">
+<br/><br/>
+<a class="button" href="play_webgl.html">WebGL</a> 
+<a class="button" href="play_high.html">JavaApplet (if WebGL doesn't work)</a> 
+</div>
+
+</body> 
+
+<script type="text/javascript" language="javascript" src="de.redlion.qb.QbGwt/de.redlion.qb.QbGwt.nocache.js"></script>
+ 
+</html> 
