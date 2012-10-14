@@ -204,7 +204,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		timeAttackFont.setColor(1,1,1,1);
 		int[][][] level = Resources.getInstance().level1;
 		try {
-		level = Resources.getInstance().levels[levelnumber-1];
+		level = Resources.getInstance().levels.get(levelnumber-1);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			
 		}
@@ -293,7 +293,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void reset() {
-		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().levelcount) {
+		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().levels.size()) {
 			finished = true;
 			return;
 		}
@@ -507,7 +507,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		
 		if(Resources.getInstance().timeAttackTime <= 0.5 && mode ==1) {
 			finished = true;
-			HighScoreManager.getInstance().newTimeAttackHighScore(0, Resources.getInstance().levelcount);
+			HighScoreManager.getInstance().newTimeAttackHighScore(0, Resources.getInstance().levels.size());
 		}
 
 	}
@@ -1269,7 +1269,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				}
 				player.stop();
 				
-				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
+				if(Resources.getInstance().currentlevel<Resources.getInstance().levels.size()) {
 					changeLevel = true;
 					if(Resources.getInstance().musicOnOff) {
 						Resources.getInstance().changeLevelSFX.play();
@@ -1277,7 +1277,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 				} else {
 					//game completed
 					if(mode==1 &&!qbert) {
-						HighScoreManager.getInstance().newTimeAttackHighScore((int) Resources.getInstance().timeAttackTime, Resources.getInstance().levelcount);
+						HighScoreManager.getInstance().newTimeAttackHighScore((int) Resources.getInstance().timeAttackTime, Resources.getInstance().levels.size());
 					}
 					changeLevel = true;
 				}
@@ -1532,7 +1532,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void nextLevel() {
-		if(Resources.getInstance().currentlevel < Resources.getInstance().levelcount) {
+		if(Resources.getInstance().currentlevel < Resources.getInstance().levels.size()) {
 			if(!qbert)
 				Resources.getInstance().currentlevel++;
 			Resources.getInstance().time = 0;

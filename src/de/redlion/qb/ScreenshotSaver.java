@@ -22,26 +22,26 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class ScreenshotSaver {
 
 	public static void saveScreenshot(String baseName) throws IOException {
-		if(Gdx.app.getType()==ApplicationType.Android){
-			return;
-		}
-
-		byte[] screenshotPixels = ScreenUtils.getFrameBufferPixels(true);
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
-
-		DataBufferByte dataBuffer = new DataBufferByte(screenshotPixels, screenshotPixels.length);
-
-		int[] offsets = { 0, 1, 2 };
-		PixelInterleavedSampleModel sampleModel = new PixelInterleavedSampleModel(DataBuffer.TYPE_BYTE, width, height, 4, 4 * width, offsets);
-
-		ColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8 }, false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
-
-		WritableRaster raster = Raster.createWritableRaster(sampleModel, dataBuffer, new Point(0, 0));
-
-		BufferedImage img = new BufferedImage(cm, raster, false, null);
-
-		ImageIO.write(img, "png", File.createTempFile(baseName, ".png"));
+//		if(Gdx.app.getType()==ApplicationType.Android){
+//			return;
+//		}
+//
+//		byte[] screenshotPixels = ScreenUtils.getFrameBufferPixels(true);
+//		int width = Gdx.graphics.getWidth();
+//		int height = Gdx.graphics.getHeight();
+//
+//		DataBufferByte dataBuffer = new DataBufferByte(screenshotPixels, screenshotPixels.length);
+//
+//		int[] offsets = { 0, 1, 2 };
+//		PixelInterleavedSampleModel sampleModel = new PixelInterleavedSampleModel(DataBuffer.TYPE_BYTE, width, height, 4, 4 * width, offsets);
+//
+//		ColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8 }, false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
+//
+//		WritableRaster raster = Raster.createWritableRaster(sampleModel, dataBuffer, new Point(0, 0));
+//
+//		BufferedImage img = new BufferedImage(cm, raster, false, null);
+//
+//		ImageIO.write(img, "png", File.createTempFile(baseName, ".png"));
 	}
 
 }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class HighScoreManager {
 
-	public Array<HighScore> highscores = new Array<HighScore>(true,Resources.getInstance().levelcount);
+	public Array<HighScore> highscores = new Array<HighScore>(true,Resources.getInstance().levels.size());
 	public Array<HighScoreTimeAttack> timeAttackhighscores = new Array<HighScoreTimeAttack>(true,5);
 
 	public static HighScoreManager instance;
@@ -17,7 +17,7 @@ public class HighScoreManager {
 	}
 	
 	private HighScoreManager() {
-		for(int i=1; i<= Resources.getInstance().levelcount; ++i) {
+		for(int i=1; i<= Resources.getInstance().levels.size(); ++i) {
 			HighScore highScore = new HighScore();
 			highScore.level = i;
 			highScore.first = Resources.getInstance().prefs.getInteger("score_first_level_"+i);

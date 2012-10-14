@@ -1,9 +1,12 @@
 package de.redlion.qb;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
@@ -11,6 +14,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g3d.loaders.obj.ObjLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import de.redlion.qb.shader.FastBloomShader;
 import de.redlion.qb.shader.TransShader;
@@ -24,106 +30,37 @@ public class Resources {
 	// Switchable Block ( the corresponding switch is marked by the respective
 	// negative number
 
-	public int[][][] locked = new int[10][10][10];
+	public int[][][] locked;
 
-	public int[][][] opening = new int[10][10][10];
+	public int[][][] opening;
 
 	// Leveleditor hash: falchfkbihffleecfbWhjYbaof
-	public int[][][] tut1 = new int[10][10][10];
+	public int[][][] tut1;
 
 	// eckYShUhUhUhYhYhYhUfUfcffYfUhcifebhjYfUfYhUfYfUfYhYeYfUhUhYhfmhjjabXXblffllef
-	public int[][][] tut2 = new int[10][10][10];
+	public int[][][] tut2;
 
-	public int[][][] tut3 = new int[10][10][10];
+	public int[][][] tut3;
 
 	// eajYTkoTjZbjefafbffjhi
-	public int[][][] tut4 = new int[10][10][10];
+	public int[][][] tut4;
 
 	// eYkYTjoSiTiZbkffafaabhfidii
-	public int[][][] tut5 = new int[10][10][10];
+	public int[][][] tut5;
 
 	// fajajWkkXcflTiZXlbfSfUffcfhi
-	public int[][][] tut6 = new int[10][10][10];
+	public int[][][] tut6;
 
 	// eZjXThpYkZhZbbjfXfdfSfeflhdheodkdYcfmYdclf
-	public int[][][] tut7 = new int[10][10][10];
+	public int[][][] tut7;
 
-	// fcichVkfWfcaahahmamfcfbWhbcihaekeafdbhii
-	public int[][][] level1 = new int[10][10][10];
-
-	// ebkdcecSbUhamlafZWkhebfnehcfefhhSZchjelhlcchehfcahnUbWidWfifcjfhZkh
-	public int[][][] level2 = new int[10][10][10];
-
-	//
-	public int[][][] level3 = new int[10][10][10];
-
-	public int[][][] level4 = new int[10][10][10];
-
-	public int[][][] level5 = new int[10][10][10];
-
-	// fcmdjfbbddehmjffabkcllXbfcahjZdjViffdjeeWfjehddaniafkadfedhhTfh
-	public int[][][] level6 = new int[10][10][10];
-
-	// eYobYhYhYhYhYhYhUfYeYfYfcefYhYhYhYhYhYhUfYeYfYfcefYhYhYhYhYhYhUfUfYfYfUhYfUfYfUhcffYfUhUiUifjebhTmhfeefhViiUidkcfXikcacfalcYablhjVihfbcfcalcachelklebcjUkekeYecdlWjcUiakfSnWci
-	public int[][][] level7 = new int[10][10][10];
-
-	// ebnWUZecnkekZdWhfTkkVjdVjkcddZmeadjTahXkfcShadjYfeocjShYffdlcnddXZXhdnXhfZcjnackeoZjacZUhaknUecfiehihUhUhUhUhSfSaafmchXSfUhcffWhdfdmkifjaakeahm
-	public int[][][] level8 = new int[10][10][10];
-
-	public int[][][] level9 = new int[10][10][10];
-
-	// fbjZoTkZZkfafbfedhi
-	public int[][][] level10 = new int[10][10][10];
-
-	// falaodhiYWZkfcichdkfhXfdeecifSpekkYacjekckcfkclfebhZekbnafZYfUhYhcfeYhUjUhUhUhYfShcdfSfUhejffWelajfefjdUaUhUhcheUhefkkWfbedehefjf
-	public int[][][] level11 = new int[10][10][10];
-
-	// ebjdahfbfcoXffYWkjejaecfmcdfaheainahfafbaZlchhWfeefehehfhWhhbhfoffdcZfhiih
-	public int[][][] level12 = new int[10][10][10];
-
-	// fYldofkecYcffWkfcddWflejiZUfXjphXibfWfeXfkoXceYedhlejmaWfdedfoWfeWejWefcehahaWmhclfeffmWbfWjcWfmfbeXidpjecfdccheefjcfk
-	public int[][][] level13 = new int[10][10][10];
-
-	// faidjZcefoibfYfbdhjZddchdWhleklbcdffhbfifkjheaefaflaihbfeofhjdYedfiejdbWkhcifafjWjfcbfejZkaedckhafeedjf
-	public int[][][] level14 = new int[10][10][10];
-
-	// fajehZlfSffZfdjfikkdcleUheZdYVfifekoeahYbhhoblfYahobffoXecbTklZhYShcfdccheefZahjefhdemfoUhehlYchaUhUhceeahnShUhWfY
-	public int[][][] level15 = new int[10][10][10];
-
-	// adXdiiifZeleakhaefeehaejfmYhefhaUiUdUkehilWehWjjVdjfehddWfhbffoZdZfncafUhUhcejXehkXdncYheflhebceehohdmdkdhicedefecbifhjYjdjcd
-	public int[][][] level16 = new int[10][10][10];
-
-	public int[][][] level17 = new int[10][10][10];
-
-	// fbhfifcfbecohecieefhhYdeikhchbVkofiZeYcahahjWkfekekcclekhceiZfUfWfhccneldkcecehkaWkieiffaeeYhefhnedfaefdhelhfcekcefejdjaifeffeWfhedjhekbjcfhcfeehhhYfehjfcfkeddiahfUfTfhVffZeoddhYahhaheWdheiiheihhedheejfdShefcfVkpfieifbeehdeeXYfejkdWckVip
-	public int[][][] level18 = new int[10][10][10];
-
-	// eYkZTjpVhXVcjXihdflhihTcofifkXbebobhfYaZhSeehdjelikWjdebkbenbkddcifdjceekdiWheXjhjfbeedWmo
-	public int[][][] level19 = new int[10][10][10];
-
-	public int[][][] level20 = new int[10][10][10];
-
-	// eajZVfpSfZlXcfjXfkjVjlfaZdYVljTmfXcaefmhlhbbYfWnhcmfafmaYfehabeijhcefchdWfkWiiefhfckfebefUhakiVmkfdaecehfiUhaefdhfk
-	public int[][][] level21 = new int[10][10][10];
-
-	public int[][][] level22 = new int[10][10][10];
-
-	public int[][][] level23 = new int[10][10][10];
-
-	public int[][][] level24 = new int[10][10][10];
-
-	public int[][][] qbert = new int[10][10][10];
+	public int[][][] level1, level2, level3, level4, level5, level6, level7, level8, level9, level10, level11, level12, level13, level14, level15, level16, level17, level18, level19, level20, level21, level22, level23, level24, qbert;
 
 	public int currentlevel = 0;
-	// please update after adding a new level
-	public int levelcount = 24;
-	public int[][][][] levels = { level1, level2, level3, level4, level5,
-			level6, level7, level8, level9, level10, level11, level12, level13,
-			level14, level15, level16, level17, level18, level19, level20,
-			level21, level22, level23, level24 };
+	
+	public ArrayList<int[][][]> levels = new ArrayList<int[][][]>();
 
-	public int tutorialcount = 7;
-	public int[][][][] tutorials = { tut1, tut2, tut3, tut4, tut5, tut6, tut7 };
+	public ArrayList<int[][][]> tutorials = new ArrayList<int[][][]>();
 
 	public Array<String> customLevels = new Array<String>();
 	public String questionLevel = new String(
@@ -280,6 +217,105 @@ public class Resources {
 	}
 
 	public void reInit() {
+
+//		System.out.println("\"level1\": \"" + encode(level1) + "\"");
+//		System.out.println("\"level2\": \"" + encode(level2) + "\"");
+//		System.out.println("\"level3\": \"" + encode(level3) + "\"");
+//		System.out.println("\"level4\": \"" + encode(level4) + "\"");
+//		System.out.println("\"level5\": \"" + encode(level5) + "\"");
+//		System.out.println("\"level6\": \"" + encode(level6) + "\"");
+//		System.out.println("\"level7\": \"" + encode(level7) + "\"");
+//		System.out.println("\"level8\": \"" + encode(level8) + "\"");
+//		System.out.println("\"level9\": \"" + encode(level9) + "\"");
+//		System.out.println("\"level10\": \"" + encode(level10) + "\"");
+//		System.out.println("\"level11\": \"" + encode(level11) + "\"");
+//		System.out.println("\"level12\": \"" + encode(level12) + "\"");
+//		System.out.println("\"level13\": \"" + encode(level13) + "\"");
+//		System.out.println("\"level14\": \"" + encode(level14) + "\"");
+//		System.out.println("\"level15\": \"" + encode(level15) + "\"");
+//		System.out.println("\"level16\": \"" + encode(level16) + "\"");
+//		System.out.println("\"level17\": \"" + encode(level17) + "\"");
+//		System.out.println("\"level18\": \"" + encode(level18) + "\"");
+//		System.out.println("\"level19\": \"" + encode(level19) + "\"");
+//		System.out.println("\"level20\": \"" + encode(level20) + "\"");
+//		System.out.println("\"level21\": \"" + encode(level21) + "\"");
+//		System.out.println("\"level22\": \"" + encode(level22) + "\"");
+//		System.out.println("\"level23\": \"" + encode(level23) + "\"");
+//		System.out.println("\"level24\": \"" + encode(level24) + "\"");
+//		System.out.println("\"qbert\": \"" + encode(qbert) + "\"");
+
+		ObjectMap<String, ?> map = new Json().fromJson(ObjectMap.class,
+				Gdx.files.internal("data/levels.json"));
+		locked = decode((String) map.get("locked"));
+		opening = decode((String) map.get("opening"));
+		tut1 = decode((String) map.get("tut1"));
+		tut2 = decode((String) map.get("tut2"));
+		tut3 = decode((String) map.get("tut3"));
+		tut4 = decode((String) map.get("tut4"));
+		tut5 = decode((String) map.get("tut5"));
+		tut6 = decode((String) map.get("tut6"));
+		tut7 = decode((String) map.get("tut7"));
+		tutorials.clear();
+		tutorials.add(tut1);
+		tutorials.add(tut2);
+		tutorials.add(tut3);
+		tutorials.add(tut4);
+		tutorials.add(tut5);
+		tutorials.add(tut6);
+		tutorials.add(tut7);
+		
+		level1 = decode((String) map.get("level1"));
+		level2 = decode((String) map.get("level2"));
+		level3 = decode((String) map.get("level3"));
+		level4 = decode((String) map.get("level4"));
+		level5 = decode((String) map.get("level5"));
+		level6 = decode((String) map.get("level6"));
+		level7 = decode((String) map.get("level7"));
+		level8 = decode((String) map.get("level8"));
+		level9 = decode((String) map.get("level9"));
+		level10 = decode((String) map.get("level10"));
+		level11 = decode((String) map.get("level11"));
+		level12 = decode((String) map.get("level12"));
+		level13 = decode((String) map.get("level13"));
+		level14 = decode((String) map.get("level14"));
+		level15 = decode((String) map.get("level15"));
+		level16 = decode((String) map.get("level16"));
+		level17 = decode((String) map.get("level17"));
+		level18 = decode((String) map.get("level18"));
+		level19 = decode((String) map.get("level19"));
+		level20 = decode((String) map.get("level20"));
+		level21 = decode((String) map.get("level21"));
+		level22 = decode((String) map.get("level22"));
+		level23 = decode((String) map.get("level23"));
+		level24 = decode((String) map.get("level24"));
+		qbert = decode((String) map.get("qbert"));
+		levels.clear();
+		levels.add(level1);
+		levels.add(level2);
+		levels.add(level3);
+		levels.add(level4);
+		levels.add(level5);
+		levels.add(level6);
+		levels.add(level7);
+		levels.add(level8);
+		levels.add(level9);
+		levels.add(level10);
+		levels.add(level11);
+		levels.add(level12);
+		levels.add(level13);		
+		levels.add(level14);
+		levels.add(level15);
+		levels.add(level16);
+		levels.add(level17);
+		levels.add(level18);
+		levels.add(level19);
+		levels.add(level20);
+		levels.add(level21);
+		levels.add(level22);
+		levels.add(level23);
+		levels.add(level24);
+		
+		
 		blockModel = ObjLoader.loadObj(Gdx.files.internal("data/cube.obj")
 				.read());
 		playerModel = ObjLoader.loadObj(Gdx.files.internal(

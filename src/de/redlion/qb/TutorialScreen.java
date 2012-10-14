@@ -211,7 +211,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 		timeAttackFont.setColor(1,1,1,1);
 		int[][][] level = Resources.getInstance().tut1;
 		try {
-			level = Resources.getInstance().tutorials[levelnumber-1];
+			level = Resources.getInstance().tutorials.get(levelnumber - 1);
 		} catch(ArrayIndexOutOfBoundsException e) {
 			
 		}
@@ -295,7 +295,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 	}
 
 	private void reset() {
-		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().tutorialcount) {
+		if(Resources.getInstance().currentlevel-1 >= Resources.getInstance().tutorials.size()) {
 			finished = true;
 			return;
 		}
@@ -1349,7 +1349,7 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 
 				Resources.getInstance().time = 0;
 				Resources.getInstance().timeAttackTime += 45;
-				if(Resources.getInstance().currentlevel<Resources.getInstance().levelcount) {
+				if(Resources.getInstance().currentlevel<Resources.getInstance().levels.size()) {
 					changeLevel = true;
 				} 
 			}
