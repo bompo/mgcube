@@ -1393,7 +1393,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 						}
 				}
 				
-				for(MovableBlock mm : movableBlocks) {
+				for (int i=0;i<movableBlocks.size;i++) {
+					MovableBlock mm = movableBlocks.get(i);
 					if(m.id!=mm.id) {
 						boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
 						float dst = intersection.dst(m.position);
