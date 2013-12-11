@@ -142,42 +142,42 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		batch.begin();
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		batch.getProjectionMatrix().setToOrtho2D(0, 30, 800, 480);
 		batch.draw(title, 0, 0);
 		batch.end();
 		
-		if(Resources.getInstance().bloomOnOff) {
-			frameBuffer.begin();		
-			batch.begin();
-			batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-			batch.draw(title, 0, 0);
-			batch.end();			
-			frameBuffer.end();
-			
-			//PostProcessing
-			Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-			Gdx.gl.glDisable(GL20.GL_BLEND);
-			
-			bloomShader.begin();
-			
-			frameBuffer.getColorBufferTexture().bind(0);
-			frameBufferVert.begin();
-			bloomShader.setUniformi("sTexture", 0);
-			bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 0.2f);
-			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-			bloomShader.setUniformf("TexelOffsetY",  Resources.getInstance().m_fTexelOffset);
-			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-			bloomShader.end(); 
-			frameBufferVert.end();
-			
-			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
-			batch.getProjectionMatrix().setToOrtho2D(0, 0, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize);
-			batch.begin();
-			batch.draw(frameBufferVert.getColorBufferTexture(), 0, 0);	
-			batch.end();
-			batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-		}
+//		if(Resources.getInstance().bloomOnOff) {
+//			frameBuffer.begin();		
+//			batch.begin();
+//			batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+//			batch.draw(title, 0, 0);
+//			batch.end();			
+//			frameBuffer.end();
+//			
+//			//PostProcessing
+//			Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+//			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+//			Gdx.gl.glDisable(GL20.GL_BLEND);
+//			
+//			bloomShader.begin();
+//			
+//			frameBuffer.getColorBufferTexture().bind(0);
+//			frameBufferVert.begin();
+//			bloomShader.setUniformi("sTexture", 0);
+//			bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 0.2f);
+//			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
+//			bloomShader.setUniformf("TexelOffsetY",  Resources.getInstance().m_fTexelOffset);
+//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+//			bloomShader.end(); 
+//			frameBufferVert.end();
+//			
+//			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
+//			batch.getProjectionMatrix().setToOrtho2D(0, 0, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize);
+//			batch.begin();
+//			batch.draw(frameBufferVert.getColorBufferTexture(), 0, 0);	
+//			batch.end();
+//			batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+//		}
 		
 		if (!finished && fade > 0) {
 			fade = Math.max(fade - delta / 2.f, 0);

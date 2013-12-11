@@ -1370,7 +1370,8 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 			warplock = false;
 		
 		// collisiontest for movable blocks
-		for(MovableBlock m : movableBlocks) {
+		for(int i1 = 0; i1 < movableBlocks.size; i1++) {
+			MovableBlock m = movableBlocks.get(i1);
 			mRay.set(m.position, m.direction);
 			if(m.isMoving) {
 				player.stop();
@@ -1453,7 +1454,8 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 						port.correspondingPortal.isCollidedAnimation = true;
 				}
 				
-				for(MovableBlock mm : movableBlocks) {
+				for(int i2 = 0; i2 < movableBlocks.size; i2++) {
+					MovableBlock mm = movableBlocks.get(i2);
 					if(m.id!=mm.id) {
 						boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
 						float dst = intersection.dst(m.position);
@@ -1777,6 +1779,8 @@ public class TutorialScreen extends DefaultScreen implements InputProcessor {
 
 			angleY += ((x - touchStartX) / 5.f);
 			angleX += ((y - touchStartY) / 5.f);
+			
+			angleX = Math.max(-90, Math.min(angleX, 90));
 
 			touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
 
