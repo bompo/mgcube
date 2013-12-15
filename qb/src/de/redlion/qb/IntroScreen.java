@@ -1,10 +1,10 @@
 package de.redlion.qb;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 
 public class IntroScreen extends DefaultScreen implements InputProcessor {
@@ -32,7 +31,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	Sprite title;
 	float fade = 1.0f;
 	boolean finished = false;
-	
+
 	// GLES20
 	Matrix4 model = new Matrix4().idt();
 	Matrix4 modelView = new Matrix4().idt();
@@ -45,10 +44,11 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 	public IntroScreen(Game game) {
 		super(game);
 		Gdx.input.setInputProcessor(this);
-		
-//		if(Resources.getInstance().fullscreenOnOff)
-//			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
-		
+
+		// if(Resources.getInstance().fullscreenOnOff)
+		// Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
+		// Gdx.graphics.getDesktopDisplayMode().height, true);
+
 		title = new Sprite(new Texture(Gdx.files.internal("data/logo.png")));
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 
@@ -62,45 +62,45 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		cam.far = 1000;
 
 		cam.update();
-		
+
 		// controller = new PerspectiveCamController(cam);
 		// Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = new BitmapFont();
-		
+
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		bloomShader = Resources.getInstance().bloomShader;
-		
+
 		initRender();
 	}
-	
+
 	public void initRender() {
 		Gdx.graphics.getGL20().glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);		
+		frameBuffer = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 		frameBufferVert = new FrameBuffer(Format.RGB565, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize, false);
 	}
-	
+
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		initRender();
 	}
-	
+
 	@Override
 	public void show() {
-		
+
 		Resources.getInstance().reInit();
-		
+
 		Gdx.input.setInputProcessor(this);
-		
-		if(Resources.getInstance().fullscreenOnOff)
+
+		if (Resources.getInstance().fullscreenOnOff)
 			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
-		
+
 		title = new Sprite(new Texture(Gdx.files.internal("data/logo.png")));
 		blackFade = new Sprite(new Texture(Gdx.files.internal("data/blackfade.png")));
 
@@ -114,30 +114,31 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		cam.far = 1000;
 
 		cam.update();
-		
+
 		// controller = new PerspectiveCamController(cam);
 		// Gdx.input.setInputProcessor(controller);
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		font = new BitmapFont();
-		
+
 		fadeBatch = new SpriteBatch();
 		fadeBatch.getProjectionMatrix().setToOrtho2D(0, 0, 2, 2);
 
 		bloomShader = Resources.getInstance().bloomShader;
-		
+
 		initRender();
 	}
 
 	@Override
 	public void render(float delta) {
 		delta = Math.min(0.06f, delta);
-		
+
 		startTime += delta;
 
-		if(startTime>2.5f) finished = true;
-		
+		if (startTime > 2.5f)
+			finished = true;
+
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -145,40 +146,45 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		batch.getProjectionMatrix().setToOrtho2D(0, 30, 800, 480);
 		batch.draw(title, 0, 0);
 		batch.end();
-		
-//		if(Resources.getInstance().bloomOnOff) {
-//			frameBuffer.begin();		
-//			batch.begin();
-//			batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-//			batch.draw(title, 0, 0);
-//			batch.end();			
-//			frameBuffer.end();
-//			
-//			//PostProcessing
-//			Gdx.gl.glDisable(GL20.GL_CULL_FACE);
-//			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-//			Gdx.gl.glDisable(GL20.GL_BLEND);
-//			
-//			bloomShader.begin();
-//			
-//			frameBuffer.getColorBufferTexture().bind(0);
-//			frameBufferVert.begin();
-//			bloomShader.setUniformi("sTexture", 0);
-//			bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f) * 0.1f) + 0.2f);
-//			bloomShader.setUniformf("TexelOffsetX", Resources.getInstance().m_fTexelOffset);
-//			bloomShader.setUniformf("TexelOffsetY",  Resources.getInstance().m_fTexelOffset);
-//			quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
-//			bloomShader.end(); 
-//			frameBufferVert.end();
-//			
-//			batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
-//			batch.getProjectionMatrix().setToOrtho2D(0, 0, Resources.getInstance().m_i32TexSize, Resources.getInstance().m_i32TexSize);
-//			batch.begin();
-//			batch.draw(frameBufferVert.getColorBufferTexture(), 0, 0);	
-//			batch.end();
-//			batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
-//		}
-		
+
+		// if(Resources.getInstance().bloomOnOff) {
+		// frameBuffer.begin();
+		// batch.begin();
+		// batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		// batch.draw(title, 0, 0);
+		// batch.end();
+		// frameBuffer.end();
+		//
+		// //PostProcessing
+		// Gdx.gl.glDisable(GL20.GL_CULL_FACE);
+		// Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		// Gdx.gl.glDisable(GL20.GL_BLEND);
+		//
+		// bloomShader.begin();
+		//
+		// frameBuffer.getColorBufferTexture().bind(0);
+		// frameBufferVert.begin();
+		// bloomShader.setUniformi("sTexture", 0);
+		// bloomShader.setUniformf("bloomFactor", (MathUtils.sin(startTime * 1f)
+		// * 0.1f) + 0.2f);
+		// bloomShader.setUniformf("TexelOffsetX",
+		// Resources.getInstance().m_fTexelOffset);
+		// bloomShader.setUniformf("TexelOffsetY",
+		// Resources.getInstance().m_fTexelOffset);
+		// quadModel.render(bloomShader, GL20.GL_TRIANGLE_STRIP);
+		// bloomShader.end();
+		// frameBufferVert.end();
+		//
+		// batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_ALPHA);
+		// batch.getProjectionMatrix().setToOrtho2D(0, 0,
+		// Resources.getInstance().m_i32TexSize,
+		// Resources.getInstance().m_i32TexSize);
+		// batch.begin();
+		// batch.draw(frameBufferVert.getColorBufferTexture(), 0, 0);
+		// batch.end();
+		// batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
+		// }
+
 		if (!finished && fade > 0) {
 			fade = Math.max(fade - delta / 2.f, 0);
 			fadeBatch.begin();
@@ -197,13 +203,13 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 				game.setScreen(new MainMenuScreen(game));
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void hide() {
 	}
-	
+
 	@Override
 	public void dispose() {
 		frameBuffer.dispose();
@@ -219,13 +225,13 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		if (keycode == Input.Keys.SPACE) {
 			finished = true;
 		}
-		
+
 		if (keycode == Input.Keys.F) {
-			if(Gdx.app.getType() == ApplicationType.Desktop) {
-				if(!Gdx.graphics.isFullscreen()) {
-					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);		
+			if (Gdx.app.getType() == ApplicationType.Desktop) {
+				if (!Gdx.graphics.isFullscreen()) {
+					Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 				} else {
-					Gdx.graphics.setDisplayMode(800,480, false);		
+					Gdx.graphics.setDisplayMode(800, 480, false);
 				}
 				Resources.getInstance().prefs.putBoolean("fullscreen", !Resources.getInstance().prefs.getBoolean("fullscreen"));
 				Resources.getInstance().fullscreenOnOff = !Resources.getInstance().prefs.getBoolean("fullscreen");
@@ -253,7 +259,7 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 		y = (int) (y / (float) Gdx.graphics.getHeight() * 480);
 
 		finished = true;
-		
+
 		return false;
 	}
 
@@ -281,8 +287,8 @@ public class IntroScreen extends DefaultScreen implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-			cam.translate(0, 0, 1 * amount);
-		if((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
+		cam.translate(0, 0, 1 * amount);
+		if ((cam.position.z < 2 && amount < -0) || (cam.position.z > 20 && amount > 0))
 			cam.translate(0, 0, 1 * -amount);
 		return false;
 	}

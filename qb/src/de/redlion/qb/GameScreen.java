@@ -10,6 +10,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,6 +32,7 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 	float startTime = 0;
 	PerspectiveCamera cam;
+	OrthographicCamera camMenu;
 	Mesh blockModel;
 	Mesh playerModel;
 	Mesh coneModel;
@@ -120,6 +122,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 	// 0 = puzzle
 	// 1 = time attack
 	int mode = 0;
+	
+	BoundingBox collisionLevelBackButton = new BoundingBox();
 
 	public GameScreen(Game game, int level, int mode) {
 		super(game);
@@ -146,6 +150,8 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		cam.up.set(0, 1, 0);
 		cam.near = 1f;
 		cam.far = 1000;
+		
+		camMenu = new OrthographicCamera(800, 480);
 
 		batch = new SpriteBatch();
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
@@ -167,6 +173,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		initRender();
 		angleY = 160;
 		angleX = 0;
+		
+		if(Constants.renderBackButton) {
+			collisionLevelBackButton.set(new Vector3(670, 25, 0), new Vector3(730, 85, 0));
+		}
 
 		initLevel(level);
 	}
@@ -369,6 +379,9 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		// render scene again
 		renderScene();
+		if(Constants.renderBackButton) {
+			renderBackButton();
+		}
 
 		if (Resources.getInstance().bloomOnOff) {
 			frameBuffer.begin();
@@ -439,10 +452,19 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
 
+		int backButtonOffsetX = 0;
+		
+		if (Constants.renderBackButton) {
+			font.setScale(1.5f);
+			font.draw(fontbatch, "X", 682, 55);
+			font.setScale(1);
+			backButtonOffsetX = -570;
+		}
+		
 		if (!qbert)
-			font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620, 80);
+			font.draw(fontbatch, "level: " + Resources.getInstance().currentlevel, 620 + backButtonOffsetX, 60);
 		else
-			font.draw(fontbatch, "Qbert", 620, 80);
+			font.draw(fontbatch, "Qbert", 620 + backButtonOffsetX, 40);
 
 		Resources.getInstance().time += delta;
 		Resources.getInstance().timeAttackTime -= delta;
@@ -456,13 +478,13 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 		}
 
 		if (seconds > 9 && minutes > 9)
-			font.draw(fontbatch, "time: " + minutes + ":" + seconds, 620, 60);
+			font.draw(fontbatch, "time: " + minutes + ":" + seconds, 620 + backButtonOffsetX, 40);
 		else if (seconds > 9 && minutes < 10)
-			font.draw(fontbatch, "time: 0" + minutes + ":" + seconds, 620, 60);
+			font.draw(fontbatch, "time: 0" + minutes + ":" + seconds, 620 + backButtonOffsetX, 40);
 		else if (seconds < 10 && minutes > 9)
-			font.draw(fontbatch, "time: " + minutes + ":0" + seconds, 620, 60);
+			font.draw(fontbatch, "time: " + minutes + ":0" + seconds, 620 + backButtonOffsetX, 40);
 		else
-			font.draw(fontbatch, "time: 0" + minutes + ":0" + seconds, 620, 60);
+			font.draw(fontbatch, "time: 0" + minutes + ":0" + seconds, 620 + backButtonOffsetX, 40);
 		fontbatch.end();
 
 		// FadeInOut
@@ -539,6 +561,42 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 			renderable.sortPosition = cam.position.dst(position);
 		}
 		renderObjects.sort();
+	}
+	
+	private void renderBackButton() {
+
+		Gdx.gl.glEnable(GL20.GL_CULL_FACE);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+
+		Gdx.gl20.glEnable(GL20.GL_BLEND);
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		transShader.begin();
+		transShader.setUniformMatrix("VPMatrix", camMenu.combined);
+
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+
+		tmp.idt();
+		model.idt();
+
+		tmp.setToTranslation(-350.0f, -240.0f, 0.0f);
+		model.mul(tmp);
+
+		tmp.setToTranslation(650, 55, 0);
+		model.mul(tmp);
+
+		tmp.setToScaling(30.0f, 30.0f, 10.0f);
+		model.mul(tmp);
+
+		transShader.setUniformMatrix("MMatrix", model);
+
+		transShader.setUniformf("a_color", Resources.getInstance().blockEdgeColor[0], Resources.getInstance().blockEdgeColor[1], Resources.getInstance().blockEdgeColor[2], Resources.getInstance().blockEdgeColor[3] + 0.2f);
+		wireCubeModel.render(transShader, GL20.GL_LINE_STRIP);
+
+		transShader.setUniformf("a_color", Resources.getInstance().blockColor[0], Resources.getInstance().blockColor[1], Resources.getInstance().blockColor[2], Resources.getInstance().blockColor[3] + 0.2f);
+		blockModel.render(transShader, GL20.GL_TRIANGLES);
+			
+		transShader.end();
 	}
 
 	private void renderScene() {
@@ -1636,6 +1694,10 @@ public class GameScreen extends DefaultScreen implements InputProcessor {
 
 		touchStartX = x;
 		touchStartY = y;
+		
+		if (Constants.renderBackButton && collisionLevelBackButton.contains(new Vector3(x,  480 - y, 0))) {
+			game.setScreen(new MainMenuScreen(game));
+		}
 
 		if (pointers.size() == 0) {
 			// no fingers down so assign v1
