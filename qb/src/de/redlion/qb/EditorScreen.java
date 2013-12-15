@@ -198,12 +198,12 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		button3.set(new Vector3(180, 450, 0), new Vector3(240, 390, 0));
 		button4.set(new Vector3(100, 375, 0), new Vector3(160, 315, 0));
 		if (Constants.renderBackButton) {
-			button5.set(new Vector3(590, 90, 0), new Vector3(790, 10, 0));			
+			button5.set(new Vector3(590, 90, 0), new Vector3(790, 10, 0));
 		} else {
 			button5.set(new Vector3(590, 450, 0), new Vector3(790, 370, 0));
 		}
 		button6.set(new Vector3(30, 90, 0), new Vector3(190, 30, 0));
-		
+
 		if (Constants.renderBackButton) {
 			collisionLevelBackButton.set(new Vector3(670, 25, 0), new Vector3(730, 85, 0));
 		}
@@ -581,11 +581,11 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 		// GUI
 		fontbatch.getProjectionMatrix().setToOrtho2D(0, 0, 800, 480);
 		fontbatch.begin();
-		
+
 		if (Constants.renderBackButton) {
 			font.draw(fontbatch, "X", 680, 62);
 		}
-		
+
 		if (mode == 1) {
 			if (selectedMenuItem == 0) {
 				timeAttackFont.draw(fontbatch, "a", 40, 60);
@@ -867,7 +867,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 						transShader.setUniformf("a_color", Resources.getInstance().blockColor[0], Resources.getInstance().blockColor[1], Resources.getInstance().blockColor[2], Resources.getInstance().blockColor[3] - 0.2f);
 						blockModel.render(transShader, GL20.GL_TRIANGLES);
 					}
-					
+
 				} else {
 					tmp.idt();
 					model.idt();
@@ -931,9 +931,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 				blockModel.render(transShader, GL20.GL_TRIANGLES);
 			}
 		}
-		
-		
-		if(Constants.renderBackButton) {
+
+		if (Constants.renderBackButton) {
 			tmp.idt();
 			model.idt();
 
@@ -954,7 +953,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			transShader.setUniformf("a_color", Resources.getInstance().blockColor[0], Resources.getInstance().blockColor[1], Resources.getInstance().blockColor[2], Resources.getInstance().blockColor[3] + 0.2f);
 			blockModel.render(transShader, GL20.GL_TRIANGLES);
 		}
-		
 
 		transShader.end();
 	}
@@ -1773,7 +1771,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 			warplock = false;
 
 		// collisiontest for movable blocks
-		for (MovableBlock m : movableBlocks) {
+		for (int im = 0; im < movableBlocks.size; im++) {
+			MovableBlock m = movableBlocks.get(im);
 			mRay.set(m.position, m.direction);
 			if (m.isMoving) {
 				player.stop();
@@ -1855,7 +1854,8 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 					port.correspondingPortal.isCollidedAnimation = true;
 				}
 
-				for (MovableBlock mm : movableBlocks) {
+				for (int imm = 0; imm < movableBlocks.size; imm++) {
+					MovableBlock mm = movableBlocks.get(imm);
 					if (m.id != mm.id) {
 						boolean intersect = Intersector.intersectRaySphere(mRay, mm.position, 1f, intersection);
 						float dst = intersection.dst(m.position);
@@ -2271,7 +2271,6 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 
 		touchStartX = x;
 		touchStartY = y;
-		
 
 		if (Constants.renderBackButton && collisionLevelBackButton.contains(new Vector3(x, 480 - y, 0))) {
 			game.setScreen(new MainMenuScreen(game));
@@ -2402,7 +2401,7 @@ public class EditorScreen extends DefaultScreen implements InputProcessor {
 
 			angleY += ((x - touchStartX) / 5.f);
 			angleX += ((y - touchStartY) / 5.f);
-			
+
 			angleX = Math.max(-90, Math.min(angleX, 90));
 
 			touchDistance += ((x - touchStartX) / 5.f) + ((y - touchStartY) / 5.f);
